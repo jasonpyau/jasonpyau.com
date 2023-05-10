@@ -1,0 +1,17 @@
+# MariaDB Spring Boot Connection
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mariadb://<SERVER_URL>/<DATABASE_NAME>
+spring.datasource.username=YOUR_USERNAME_HERE
+spring.datasource.password=YOUR_PASSWORD_HERE
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+# Keep Connection Alive
+spring.datasource.testWhileIdle=true
+spring.datasource.validationQuery=SELECT 1
+# Print for Each SQL Query
+spring.jpa.show-sql=true
+
+server.port=9000
+spring.profiles.active=default
+
+# Admin password
+com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE

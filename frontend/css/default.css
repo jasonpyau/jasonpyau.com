@@ -1,0 +1,50 @@
+#Logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 55%;
+    outline: none;
+}
+
+.move_when_hovered {
+    transition: transform .2s ease 0s;
+    transform: translateY(2px);
+}
+
+.move_when_hovered:hover {
+    transform: translateY(0px);
+}
+
+.opaque_when_hovered {
+    transition: opacity .5s
+}
+
+.opaque_when_hovered:hover {
+    opacity: .7;
+}
+
+#BodyContainer {
+    margin-top: 70px;
+}
+
+.LinkButton {
+    width: 50%;
+    height: 60px;
+    border: rgba(255, 255, 255, 0.651);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 15px;
+    background-color: midnightblue;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color:white;
+}
+
+@media (max-width: 700px) {
+    #CenterHeaderContainer {
+        display: none;
+    }
+}
