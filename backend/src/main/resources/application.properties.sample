@@ -10,8 +10,19 @@ spring.datasource.validationQuery=SELECT 1
 # Print for Each SQL Query
 spring.jpa.show-sql=true
 
+# Email Service
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=YOUR_USERNAME_HERE
+spring.mail.password=YOUR_PASSWORD_HERE
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Backend Configuration
 server.port=9000
 spring.profiles.active=default
 
-# Admin password
+# Admin Panel password
 com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE
+# Email to send contact notifications to
+com.jasonpyau.email=YOUR_EMAIL_HERE

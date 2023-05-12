@@ -1,14 +1,8 @@
 export async function apiCall(url, type, headers, body) {
-    return await $.ajax({
-        url: url,
-        type: type,
-        data: body,
-        headers: headers,
-        success: function(response) {
-          return response;
-        },
-        error: function(error) {
-          return error;
-        }
+    headers['Content-Type'] = "application/json";
+    return await fetch(url, {
+      method: type,
+      headers: headers,
+      body: JSON.stringify(body)
     });
 };

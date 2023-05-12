@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class Authorization {
 
-    private String password;
     private static String appPassword;
+    
+    private String password;
 
     @Value("${com.jasonpyau.appPassword}")
     @SuppressWarnings("static-access")

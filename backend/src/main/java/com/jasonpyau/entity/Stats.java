@@ -1,4 +1,4 @@
-package com.jasonpyau.model;
+package com.jasonpyau.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +11,7 @@ public class Stats {
     private String date;
     private Long views;
 
-    public Integer getId() {
+    public Integer getId() { 
         return this.id;
     }
 

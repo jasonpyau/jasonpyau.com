@@ -1,8 +1,11 @@
 package com.jasonpyau.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import com.jasonpyau.model.Stats;
+import org.springframework.stereotype.Repository;
 
+import com.jasonpyau.entity.Stats;
+
+@Repository
 public interface StatsRepository extends CrudRepository<Stats, Integer> {
     
 }

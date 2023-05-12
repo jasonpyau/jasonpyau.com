@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.jasonpyau.model.Stats;
+import com.jasonpyau.entity.Stats;
 import com.jasonpyau.service.Authorization;
 import com.jasonpyau.service.StatsService;
 import com.jasonpyau.util.Response;
@@ -24,7 +24,7 @@ public class StatsController {
     @Autowired
     private StatsService statsService;
 
-    @GetMapping(path = "/get", produces = "application/json")
+    @GetMapping(path = "/get", consumes = "application/json", produces = "application/json")
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getStats() {
         Stats stats = statsService.getStats();
@@ -33,7 +33,7 @@ public class StatsController {
         return new ResponseEntity<>(body, status);
     }
 
-    @PostMapping(path = "/update/views", produces = "application/json")
+    @PostMapping(path = "/update/views", consumes = "application/json", produces = "application/json")
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateViews() {
         Stats stats = statsService.updateViews();
@@ -42,7 +42,7 @@ public class StatsController {
         return new ResponseEntity<>(body, status);
     }
 
-    @PostMapping(path = "/update/last_updated", produces = "application/json")
+    @PostMapping(path = "/update/last_updated", consumes = "application/json", produces = "application/json")
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateLastUpdated(@RequestBody(required = true) Authorization authorization) {
         if (!authorization.authorize()) {

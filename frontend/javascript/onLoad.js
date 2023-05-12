@@ -1,5 +1,5 @@
 import { apiCall } from "./apiCall.js";
-import { SERVER_URL } from "./variables.js";
+import { SERVER_URL } from "./constants.js";
 
 $(document).ready(function() {
     $("#Header").load("../html/header.html");
@@ -23,11 +23,14 @@ function loadFooter() {
             const headers = {};
             const body = {};
             const result = await apiCall(url, "POST", headers, body);
-            console.log(result);
+            if (result.status !== 200)
+                return;
+            const json = await result.json();
+            console.log(json);
             const viewCount = document.getElementById("ViewCountStat");
             const lastUpdated = document.getElementById("LastUpdatedStat");
-            viewCount.textContent = result.stats.views;
-            lastUpdated.textContent = result.stats.date;
+            viewCount.textContent = json.stats.views;
+            lastUpdated.textContent = json.stats.date;
         }
     }
 }

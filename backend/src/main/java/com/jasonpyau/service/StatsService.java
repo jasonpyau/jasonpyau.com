@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jasonpyau.model.Stats;
+import com.jasonpyau.entity.Stats;
 import com.jasonpyau.repository.StatsRepository;
 
 @Service
