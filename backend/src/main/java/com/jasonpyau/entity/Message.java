@@ -18,6 +18,8 @@ public class Message {
     private String contactInfo;
     @Column(nullable = false)
     private String body;
+    @Column(nullable = false)
+    private String date;
 
     public Long getId() {
         return id;
@@ -35,6 +37,10 @@ public class Message {
         return body;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,5 +55,9 @@ public class Message {
 
     public void setBody(String body) {
         this.body = body;
+    }
+    
+    public void setDate(String date) {
+        this.date = date;
     }
 }

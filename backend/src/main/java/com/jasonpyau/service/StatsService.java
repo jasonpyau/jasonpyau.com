@@ -1,7 +1,5 @@
 package com.jasonpyau.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Stats;
 import com.jasonpyau.repository.StatsRepository;
+import com.jasonpyau.util.DateFormat;
 
 @Service
 public class StatsService {
@@ -24,8 +23,7 @@ public class StatsService {
     }
 
     public Stats updateLastUpdated() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        String date = simpleDateFormat.format(new Date());
+        String date = DateFormat.date();
         Stats stats = getStats();
         if (stats == null)
             return null;

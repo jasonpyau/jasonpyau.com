@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Message;
 import com.jasonpyau.repository.ContactRepository;
+import com.jasonpyau.util.DateFormat;
 
 @Service
 public class ContactService {
@@ -29,6 +30,7 @@ public class ContactService {
         String name = message.getName();
         String contactInfo = message.getContactInfo();
         String body = message.getBody();
+        message.setDate(DateFormat.dateTime());
         if (name == null || name.length() < 3 || name.length() > 50 || name.isBlank()) {
             return MESSAGE_NAME_ERROR;
         } else if (contactInfo == null || contactInfo.length() < 6 || contactInfo.length() > 100 || contactInfo.isBlank()) {

@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jasonpyau.entity.Message;
 import com.jasonpyau.service.Authorization;
 import com.jasonpyau.service.ContactService;
+import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.util.Response;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(path="/contact")
@@ -24,10 +27,14 @@ public class ContactController {
     
     @Autowired
     private ContactService contactService;
+    private RateLimitService sendMessageRateLimitService = new RateLimitService(RateLimitService.SEND_MESSAGES_TYPE);
     
     @PutMapping(path = "/send", consumes = "application/json", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> sendMessage(@RequestBody(required = true) Message message) {
+    public ResponseEntity<HashMap<String, Object>> sendMessage(HttpServletRequest request, @RequestBody(required = true) Message message) {
+        if (sendMessageRateLimitService.rateLimit(request)) {
+            return Response.rateLimit();
+        }
         String errorMessage = contactService.sendMessage(message);
         if (errorMessage != null) {
             return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
@@ -37,7 +44,10 @@ public class ContactController {
 
     @GetMapping(path = "/get", consumes = "application/json", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getMessages(@RequestBody GetMesssagesForm getMesssagesForm) {
+    public ResponseEntity<HashMap<String, Object>> getMessages(HttpServletRequest request, @RequestBody(required = true) GetMesssagesForm getMesssagesForm) {
+        if (RateLimitService.adminRateLimitService.rateLimit(request)) {
+            return Response.rateLimit();
+        }
         Authorization authorization = new Authorization();
         authorization.setPassword(getMesssagesForm.getPassword());
         if (!authorization.authorize()) {

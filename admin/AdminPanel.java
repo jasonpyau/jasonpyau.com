@@ -60,7 +60,18 @@ public class AdminPanel {
         int pageNum = scan.nextInt();
         scan.nextLine();
         System.out.println();
-        getMessages(pageSize, pageNum);
+        while (true) {
+            getMessages(pageSize, pageNum);
+            System.out.println("0.) Return");
+            System.out.println("1.) Next page");
+            int input = scan.nextInt();
+            scan.nextLine();
+            if (input == 1) {
+                pageNum++;
+            } else {
+                break;
+            }
+        }
     }
     private static void printContinue() {
         System.out.println("Press enter to continue.");

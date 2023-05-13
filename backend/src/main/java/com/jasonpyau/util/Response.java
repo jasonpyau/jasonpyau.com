@@ -24,6 +24,6 @@ public class Response {
     }
 
     public static ResponseEntity<HashMap<String, Object>> rateLimit() {
-        return new ResponseEntity<>(null, HttpStatus.TOO_MANY_REQUESTS);
+        return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
     }
 }
