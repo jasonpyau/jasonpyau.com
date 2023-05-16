@@ -8,7 +8,7 @@ spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 spring.datasource.testWhileIdle=true
 spring.datasource.validationQuery=SELECT 1
 # Print for Each SQL Query
-spring.jpa.show-sql=true
+spring.jpa.show-sql=false
 
 # Email Service
 spring.mail.host=smtp.gmail.com

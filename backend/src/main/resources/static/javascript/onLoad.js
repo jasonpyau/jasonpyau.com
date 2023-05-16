@@ -1,25 +1,24 @@
 import { apiCall } from "./apiCall.js";
-import { SERVER_URL } from "./constants.js";
 
 $(document).ready(function() {
-    $("#Header").load("../html/header.html");
+    $("#Header").load("header");
     loadFooter();
 });
 
 function loadFooter() {
-    $("#SourceCode").load("../html/sourcecode.html");
+    $("#SourceCode").load("sourcecode");
     let loaded = 0;
-    $("#ViewCount").load("../html/viewcount.html", null, function() {
+    $("#ViewCount").load("viewcount", null, function() {
         loadStats();
     });
-    $("#LastUpdated").load("../html/lastupdated.html", null, function() {
+    $("#LastUpdated").load("lastupdated", null, function() {
         loadStats();
     });
 
     async function loadStats() {
         loaded++;
         if (loaded == 2) {
-            const url = `${SERVER_URL}/stats/update/views`;
+            const url = '/stats/update/views';
             const result = await apiCall(url, "POST", null, null);
             if (result.status !== 200)
                 return;

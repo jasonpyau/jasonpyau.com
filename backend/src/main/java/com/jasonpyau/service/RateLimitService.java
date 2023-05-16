@@ -49,7 +49,7 @@ public class RateLimitService {
                 break;
             case DEFAULT_TYPE:
             default:
-                this.requestsPerInterval = 30;
+                this.requestsPerInterval = 35;
                 this.durationInSeconds = 10;
                 this.maximumCacheSize = 10000;
         }

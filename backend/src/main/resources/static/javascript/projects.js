@@ -1,10 +1,9 @@
 import { apiCall } from "./apiCall.js";
-import { SERVER_URL } from "./constants.js";
 
 $(document).ready(function() {
-    $.get("../html/projects.html", async function(projectElement) {
-        $("#ProjectRows").append(projectElement);
-        const url = `${SERVER_URL}/projects/get`;
+    $.get("projects", async function(projectTemplate) {
+        $("#ProjectRows").append(projectTemplate);
+        const url = `projects/get`;
         const result = await apiCall(url, "GET", null, null);
         if (result.status !== 200)
             return;
@@ -32,7 +31,7 @@ class Project {
     #startDate;
     #endDate;
     #technologies = [];
-    #link
+    #link;
     constructor(id) {
         $("#ProjectTemplate").clone()
                                 .prop('id', "Project"+id)

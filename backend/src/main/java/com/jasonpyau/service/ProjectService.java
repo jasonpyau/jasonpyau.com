@@ -17,7 +17,7 @@ public class ProjectService {
     private static final String PROJECT_DESCRIPTION_ERROR = "'description' should be between 10-150 characters.";
     private static final String PROJECT_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     private static final String PROJECT_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
-    private static final String PROJECT_TECHNOLOGIES_ERROR = "'technologies' should have length between 1-10 and each technology should be less than length 15.";
+    private static final String PROJECT_TECHNOLOGIES_ERROR = "'technologies' should have length between 1-10 and each technology between 1-15 characters.";
     private static final String PROJECT_LINK_ERROR = "'link' should be between 4-250 characters.";
 
     @Autowired
@@ -100,7 +100,7 @@ public class ProjectService {
             return PROJECT_LINK_ERROR;
         }
         for (String technology : technologies) {
-            if (technology.length() > 15) {
+            if (technology.length() < 1 || technology.length() > 15) {
                 return PROJECT_TECHNOLOGIES_ERROR;
             }
         }

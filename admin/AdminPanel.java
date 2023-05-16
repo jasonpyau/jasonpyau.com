@@ -12,20 +12,20 @@ public class AdminPanel {
     private static Scanner scan = new Scanner(System.in);
 
     private static void getMessages(int pageSize, int pageNum) {
-        apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET");
+        apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
     }
 
     private static void deleteMessage(int id) {
-        apiCall("/contact/delete/"+id, "{ }", "DELETE");
+        apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
     private static void updateLastUpdated() {
-        apiCall("/stats/update/last_updated", "{ }", "POST");
+        apiCall("/stats/update/last_updated", "{ }", "POST", true);
     }
 
     private static void newProject() {
         String body = getProjectBody();
-        apiCall("/projects/new", body, "PUT");
+        apiCall("/projects/new", body, "PUT", true);
     }
 
     private static void updateProject() {
@@ -34,35 +34,37 @@ public class AdminPanel {
         scan.nextLine();
         System.out.println("You may leave blank any fields you don't want to update.");
         String body = getProjectBody();
-        apiCall("/projects/update/"+id, body, "PUT");
+        apiCall("/projects/update/"+id, body, "PUT", true);
     }
 
     private static void deleteProject() {
         System.out.println("Input the id of the project you'd like to delete:");
         int id = scan.nextInt();
         scan.nextLine();
-        apiCall("/projects/delete/"+id, "{ }", "DELETE");
+        apiCall("/projects/delete/"+id, "{ }", "DELETE", true);
     }
 
     private static void getProjects() {
-        apiCall("/projects/get", "{ }", "GET");
+        apiCall("/projects/get", "{ }", "GET", false);
     }
 
-    private static void apiCall(String endpoint, String body, String method) {
-        System.out.println("This will send a "+method+" request with the body: \n");
-        System.out.println(body);
-        System.out.println("\nto "+endpoint+".");
-        System.out.println("Confirm ('Y'/'N'):");
-        String input = scan.nextLine();
-        switch (input) {
-            case "Y":
-            case "y":
-                break;
-            case "N":
-            case "n":
-            default:
-                System.out.println("Exited.");
-                return;
+    private static void apiCall(String endpoint, String body, String method, boolean showConfirmation) {
+        if (showConfirmation) {
+            System.out.println("This will send a "+method+" request with the body: \n");
+            System.out.println(body);
+            System.out.println("\nto "+endpoint+".");
+            System.out.println("Confirm ('Y'/'N'):");
+            String input = scan.nextLine();
+            switch (input) {
+                case "Y":
+                case "y":
+                    break;
+                case "N":
+                case "n":
+                default:
+                    System.out.println("Exited.");
+                    return;
+            }
         }
         try {
             Builder builder = HttpRequest.newBuilder();
