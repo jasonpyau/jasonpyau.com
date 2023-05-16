@@ -20,9 +20,7 @@ function loadFooter() {
         loaded++;
         if (loaded == 2) {
             const url = `${SERVER_URL}/stats/update/views`;
-            const headers = {};
-            const body = {};
-            const result = await apiCall(url, "POST", headers, body);
+            const result = await apiCall(url, "POST", null, null);
             if (result.status !== 200)
                 return;
             const json = await result.json();

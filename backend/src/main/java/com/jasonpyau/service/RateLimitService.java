@@ -43,7 +43,7 @@ public class RateLimitService {
                 this.maximumCacheSize = 100;
                 break;
             case SEND_MESSAGES_TYPE:
-                this.requestsPerInterval = 3;
+                this.requestsPerInterval = 5;
                 this.durationInSeconds = 30;
                 this.maximumCacheSize = 10000;
                 break;

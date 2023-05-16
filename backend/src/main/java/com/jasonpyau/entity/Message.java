@@ -5,20 +5,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "messages")
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(name = "contact_info", nullable = false)
     private String contactInfo;
-    @Column(nullable = false)
+    @Column(name = "body", nullable = false)
     private String body;
-    @Column(nullable = false)
+    @Column(name = "date", nullable = false)
     private String date;
 
     public Long getId() {

@@ -23,7 +23,7 @@ public class StatsService {
     }
 
     public Stats updateLastUpdated() {
-        String date = DateFormat.date();
+        String date = DateFormat.MMddyyyy();
         Stats stats = getStats();
         if (stats == null)
             return null;

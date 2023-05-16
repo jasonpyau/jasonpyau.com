@@ -1,3 +1,9 @@
+:root {
+    --themeColor: #191970;
+    --secondaryColor: #4141df;
+    --headerTextColor: #cde0ffe5;
+}
+
 #Logo {
     height: 40px;
     width: 40px;
@@ -7,7 +13,7 @@
 
 .move_when_hovered {
     transition: transform .2s ease 0s;
-    transform: translateY(2px);
+    transform: translateY(8px);
 }
 
 .move_when_hovered:hover {
@@ -26,6 +32,37 @@
     margin-top: 70px;
 }
 
+.HeaderTextColor {
+    color: var(--headerTextColor);
+}
+
+.ThemeColor {
+    background-color: var(--themeColor);
+}
+
+.SecondaryColor {
+    background-color: var(--secondaryColor);
+}
+
+.SecondaryColor:focus {
+    background-color: var(--secondaryColor);
+}
+
+.Rounded {
+    border-radius: 10px;
+}
+
+.ThemeToSecondaryGradient {
+    /* fallback for old browsers */
+    background: var(--themeColor);
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #19197080, #4141df80);
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #19197080, #4141df80)
+  }
+
 .LinkButton {
     width: 50%;
     height: 60px;
@@ -33,14 +70,28 @@
     border-style: solid;
     border-width: 1px;
     border-radius: 15px;
-    background-color: midnightblue;
+    background-color: var(--themeColor);
     margin-top: 10px;
     margin-bottom: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    color:white;
+    color: white;
+}
+
+#MessageInput {
+    height: 300px;
+}
+
+.SuccessMessage {
+    color: var(--bs-success);
+    display: none;
+}
+
+.ErrorMessage {
+    color: var(--bs-danger);
+    display: none;
 }
 
 @media (max-width: 700px) {

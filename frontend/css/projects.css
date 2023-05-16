@@ -1,0 +1,14 @@
+.Project {
+    height: auto;
+    width: 300px;
+    display: none;
+    background: rgb(25,25,112);
+    background: linear-gradient(135deg, rgba(25,25,112,1) 25%, rgba(65,65,223,1) 100%);
+    margin: 5px;
+    text-decoration: none;
+    color: white;
+    border: rgba(255, 255, 255, 0.651);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 15px;
+}

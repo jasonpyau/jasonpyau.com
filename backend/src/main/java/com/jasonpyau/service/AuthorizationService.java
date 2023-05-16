@@ -3,12 +3,12 @@ package com.jasonpyau.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
-public class Authorization {
+public class AuthorizationService {
 
     private static String appPassword;
-    
-    private String password;
 
     @Value("${com.jasonpyau.appPassword}")
     @SuppressWarnings("static-access")
@@ -16,15 +16,10 @@ public class Authorization {
         this.appPassword = appPassword;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    private AuthorizationService() {}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean authorize() {
+    public static boolean authorize(HttpServletRequest request) {
+        String password = request.getHeader("Authorization");
         return (password != null && !password.isBlank() && password.equals(appPassword));
     }
 }
