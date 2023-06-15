@@ -1,6 +1,28 @@
-# Get Started (Ubuntu)
+# Table of Contents
+1. [About](#About)
+2. [Dependencies](#Dependencies)
+3. [Get Started](#GetStarted)
 
-# Create application.properties (./backend/src/main/resouces/application.properties)
+<a name="About"/>
+## About
+This is a personal portfolio site made by me using Java Springboot. It utilizes the backend so that the site dynamically loads projects, skills, etc. stored in the database that can be changed without the need to modify any code. This project is open source so you may use any of the code, credit appreciated. 
+
+<a name="Dependencies"/>
+## Dependencies
+```
+1. Spring Web
+2. Spring Data JPA - Database
+3. Thymeleaf - Load webpages through SpringBoot
+4. MariaDB Driver - Database
+5. Java Mail Sender - Send email notifications to myself
+6. Bucket4J - Rate Limitter
+7. Google Guava - Cache to Rate Limit
+```
+
+<a name="GetStarted"/>
+## Get Started (Ubuntu) <a name="GetStarted"></a>
+
+**Create application.properties (./backend/src/main/resouces/application.properties)**
 ```
 # MariaDB Spring Boot Connection
 spring.jpa.hibernate.ddl-auto=update
@@ -32,7 +54,7 @@ com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE #example password
 com.jasonpyau.email=YOUR_EMAIL_HERE #example jason@gmail.com
 
 ```
-# Create Constants.java (./admin/Constants.java)
+**Create Constants.java (./admin/Constants.java)**
 ```
 // Rename file & class to "Constants"
 public class Constants {
@@ -43,7 +65,7 @@ public class Constants {
 }
 
 ```
-# Run Spring Boot Project
+**Run Spring Boot Project**
 ```
 sudo apt update
 

@@ -15,63 +15,47 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.jasonpyau.entity.Project;
+import com.jasonpyau.entity.Skill;
 import com.jasonpyau.service.AuthorizationService;
-import com.jasonpyau.service.ProjectService;
 import com.jasonpyau.service.RateLimitService;
+import com.jasonpyau.service.SkillService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(path = "/projects")
-public class ProjectController {
-    
+@RequestMapping(path = "/skills")
+public class SkillController {
+
     @Autowired
-    private ProjectService projectService;
+    private SkillService skillService;
 
     @PutMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> newProject(HttpServletRequest request, @RequestBody Project project) {
+    public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @RequestBody Skill skill) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
         if (!AuthorizationService.authorize(request)) {
             return Response.unauthorized();
         }
-        String errorMessage = projectService.newProject(project);
+        String errorMessage = skillService.newSkill(skill);
         if (errorMessage != null) {
             return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
+    @DeleteMapping(path = "/delete/{name}", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> updateProject(HttpServletRequest request, @RequestBody Project updateProject, @PathVariable("id") Integer id) {
+    public ResponseEntity<HashMap<String, Object>> deleteSkill(HttpServletRequest request, @PathVariable("name") String skillName) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
         if (!AuthorizationService.authorize(request)) {
             return Response.unauthorized();
         }
-        String errorMessage = projectService.updateProject(updateProject, id);
-        if (errorMessage != null) {
-            return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/delete/{id}", produces = "application/json")
-    @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> deleteProject(HttpServletRequest request, @PathVariable("id") Integer id) {
-        if (RateLimitService.adminRateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
-        if (!AuthorizationService.authorize(request)) {
-            return Response.unauthorized();
-        }
-        String errorMessage = projectService.deleteProject(id);
+        String errorMessage = skillService.deleteSkill(skillName);
         if (errorMessage != null) {
             return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
         }
@@ -80,11 +64,22 @@ public class ProjectController {
 
     @GetMapping(path = "/get", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getProjects(HttpServletRequest request) {
+    public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
         if (RateLimitService.rateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
-        List<Project> projects = projectService.getProjects();
-        return new ResponseEntity<>(Response.createBody("projects", projects), HttpStatus.OK);
+        HashMap<String, List<String>> skills = skillService.getSkills();
+        return new ResponseEntity<>(Response.createBody("skills", skills), HttpStatus.OK);
     }
+
+    @GetMapping(path = "/valid_types", produces = "application/json")
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> validTypes(HttpServletRequest request) {
+        if (RateLimitService.rateLimitService.rateLimit(request)) {
+            return Response.rateLimit();
+        }
+        List<String> validTypes = skillService.validTypes();
+        return new ResponseEntity<>(Response.createBody("validTypes", validTypes), HttpStatus.OK);
+    }
+    
 }

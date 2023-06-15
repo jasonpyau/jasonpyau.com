@@ -19,13 +19,14 @@ public class AdminPanel {
         apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
-    private static void updateLastUpdated() {
-        apiCall("/stats/update/last_updated", "{ }", "POST", true);
+    private static void updateLastUpdated(boolean showConfirmation) {
+        apiCall("/stats/update/last_updated", "{ }", "POST", showConfirmation);
     }
 
     private static void newProject() {
         String body = getProjectBody();
         apiCall("/projects/new", body, "PUT", true);
+        updateLastUpdated(false);
     }
 
     private static void updateProject() {
@@ -35,6 +36,7 @@ public class AdminPanel {
         System.out.println("You may leave blank any fields you don't want to update.");
         String body = getProjectBody();
         apiCall("/projects/update/"+id, body, "PUT", true);
+        updateLastUpdated(false);
     }
 
     private static void deleteProject() {
@@ -42,10 +44,36 @@ public class AdminPanel {
         int id = scan.nextInt();
         scan.nextLine();
         apiCall("/projects/delete/"+id, "{ }", "DELETE", true);
+        updateLastUpdated(false);
     }
 
     private static void getProjects() {
         apiCall("/projects/get", "{ }", "GET", false);
+    }
+
+    private static void newSkill() {
+        System.out.println("Input name of the skill:");
+        String name = scan.nextLine();
+        System.out.println("Loading valid types for a skill...");
+        apiCall("/skills/valid_types", "{ }", "GET", false);
+        System.out.println("These are the valid types. Input the type of skill:");
+        String type = scan.nextLine();
+        String body = "{\"name\": \""+name+"\"," +
+                        "\"type\": \""+type+"\"}";
+        apiCall("/skills/new", body, "PUT", true);
+        updateLastUpdated(false);
+        
+    }
+
+    private static void deleteSkill() {
+        System.out.println("Input name of the skill:");
+        String name = scan.nextLine();
+        apiCall("/skills/delete/"+name, "{ }", "DELETE", true);
+        updateLastUpdated(false);
+    }
+
+    private static void viewSkills() {
+        apiCall("/skills/get", "{ }", "GET", false);
     }
 
     private static void apiCall(String endpoint, String body, String method, boolean showConfirmation) {
@@ -110,6 +138,34 @@ public class AdminPanel {
                 getProjects();
                 break;
             case 5:
+                return;
+            default:
+                System.out.println("Invalid input.");
+                printContinue();            
+        }
+    }
+
+    private static void printSkillsMenu() {
+        System.out.println("=======================");
+        System.out.println("     SKILLS MENU     ");
+        System.out.println("=======================");
+        System.out.println("1.) New Skill");
+        System.out.println("2.) Delete Skill");
+        System.out.println("3.) View Skills");
+        System.out.println("4.) Back");
+        int input = scan.nextInt();
+        scan.nextLine();
+        switch (input) {
+            case 1:
+                newSkill();
+                break;
+            case 2:
+                deleteSkill();
+                break;
+            case 3:
+                viewSkills();
+                break;
+            case 4:
                 return;
             default:
                 System.out.println("Invalid input.");
@@ -206,10 +262,11 @@ public class AdminPanel {
         System.out.println("       MAIN MENU       ");
         System.out.println("=======================");
         System.out.println("1.) Projects Menu");
-        System.out.println("2.) Get Messages");
-        System.out.println("3.) Delete Message");
-        System.out.println("4.) Update Recently Updated");
-        System.out.println("5.) Exit");
+        System.out.println("2.) Skills Menu");
+        System.out.println("3.) Get Messages");
+        System.out.println("4.) Delete Message");
+        System.out.println("5.) Update Recently Updated");
+        System.out.println("6.) Exit");
         int input = scan.nextInt();
         scan.nextLine();
         switch (input) {
@@ -218,18 +275,22 @@ public class AdminPanel {
                 printContinue();
                 break;
             case 2:
-                printGetMessagesMenu();
+                printSkillsMenu();
                 printContinue();
                 break;
             case 3:
-                printDeleteMessagesMenu();
+                printGetMessagesMenu();
                 printContinue();
                 break;
             case 4:
-                updateLastUpdated();
+                printDeleteMessagesMenu();
                 printContinue();
                 break;
             case 5:
+                updateLastUpdated(true);
+                printContinue();
+                break;
+            case 6:
                 System.exit(0);
             default:
                 System.out.println("Invalid input.");

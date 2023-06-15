@@ -3,7 +3,7 @@
 <head th:replace="~{template.html :: head}"></head>
 <head>
     <title>Jason Yau</title>
-    <link href="css/projects.css" rel="stylesheet" type="text/css"/>
+    <link href="css/index.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body class="bg-black text-white">
@@ -12,26 +12,19 @@
     <header th:replace="~{template.html :: header}"></header>
 
     <!-- Body Container -->
-    <div class="bg-dark bg-gradient" id="BodyContainer">
+    <div class="bg-dark bg-gradient" id="BodyContainer" style="margin-top: 0px!important;">
+        <div class="vh-100 d-flex flex-column justify-content-center align-items-center px-3 ThemeToSecondaryGradient">
+            <div class="fs-3 HeaderTextColor move_when_hovered">Hi, my name is</div>
+            <div class="display-1 HeaderTextColor fw-bold move_when_hovered">Jason Yau.</div>
+            <div class="fs-3 my-2 HeaderTextColor move_when_hovered">I'm a student studying Computer Science at the University of Central Florida.</div>
+            <div>
+                <a href="#AboutMe" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;">About Me</a>
+                <a href="files/Jason_Yau_Resume_Public.pdf" target="_blank" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;">Resume</a>
+            </div>
+        </div>
         <div class="text-center"> 
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-
             <br id="AboutMe"><br><br>
             <u class="fs-1 text-center HeaderTextColor fw-bold">About Me</u>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-
-            <br id="Resume"><br><br>
-            <u class="fs-1 text-center HeaderTextColor fw-bold">Resume</u>
             <div class="fs-3">PlaceHolder</div>
             <div class="fs-3">PlaceHolder</div>
             <div class="fs-3">PlaceHolder</div>
@@ -45,6 +38,20 @@
                 <div class="spinner-border" id="projectSpinner" role="status"></div>
                 <div class="row row-cols-auto justify-content-center" id="ProjectRows">
                     
+                </div>
+            </div>
+
+            <br id="Skills"><br><br>
+            <u class="fs-1 text-center HeaderTextColor fw-bold">Skills</u>
+            <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-4 py-3" id="SkillsContainer">
+                <div class="spinner-border" id="skillSpinner" role="status"></div>
+                <div id="SkillsTypeRow">
+                    <div id="SkillsTypeRowTemplate">
+                        <u class="fs-3 HeaderTextColor fw-bold" id="SkillType">Type</u>
+                        <div class="Rounded my-3 SkillsRowContainer" id="SkillsRowContainer">
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -88,5 +95,6 @@
     <th:block th:replace="~{template.html :: scripts}"></th:block>
     <script src="javascript/ContactForm.js"  type="module"></script>
     <script src="javascript/projects.js"  type="module"></script>
+    <script src="javascript/skills.js"  type="module"></script>
 </body>
 </html>
