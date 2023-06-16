@@ -16,25 +16,22 @@
         <div class="vh-100 d-flex flex-column justify-content-center align-items-center px-3 ThemeToSecondaryGradient">
             <div class="fs-3 HeaderTextColor move_when_hovered">Hi, my name is</div>
             <div class="display-1 HeaderTextColor fw-bold move_when_hovered">Jason Yau.</div>
-            <div class="fs-3 my-2 HeaderTextColor move_when_hovered">I'm a student studying Computer Science at the University of Central Florida.</div>
+            <div class="fs-3 my-2 HeaderTextColor move_when_hovered">I'm a student studying Computer Science at the University of Central Florida. </div>
             <div>
                 <a href="#AboutMe" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;">About Me</a>
                 <a href="files/Jason_Yau_Resume_Public.pdf" target="_blank" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;">Resume</a>
             </div>
         </div>
-        <div class="text-center"> 
+        <div class=""> 
             <br id="AboutMe"><br><br>
-            <u class="fs-1 text-center HeaderTextColor fw-bold">About Me</u>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
-            <div class="fs-3">PlaceHolder</div>
+            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">About Me</u>
+            <div class="container-xxl Rounded p-5 HeaderTextColor fs-4 fw-semibold text-left my-3" id="AboutMeContainer">
+                <div class="spinner-border" id="aboutMeSpinner" role="status"></div>
+            </div>
 
             <br id="Projects"><br><br>
-            <u class="fs-1 text-center HeaderTextColor fw-bold">Projects</u>
-            <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-4 py-3" id="ProjectsContainer">
+            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Projects</u>
+            <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-3 py-3" id="ProjectsContainer">
                 <div class="spinner-border" id="projectSpinner" role="status"></div>
                 <div class="row row-cols-auto justify-content-center" id="ProjectRows">
                     
@@ -42,8 +39,8 @@
             </div>
 
             <br id="Skills"><br><br>
-            <u class="fs-1 text-center HeaderTextColor fw-bold">Skills</u>
-            <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-4 py-3" id="SkillsContainer">
+            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Skills</u>
+            <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-3 py-3" id="SkillsContainer">
                 <div class="spinner-border" id="skillSpinner" role="status"></div>
                 <div id="SkillsTypeRow">
                     <div id="SkillsTypeRowTemplate">
@@ -56,8 +53,8 @@
             </div>
 
             <br id="Contact"><br><br>
-            <u class="fs-1 text-center HeaderTextColor fw-bold">Contact Me</u>
-            <div class="container-xxl ThemeToSecondaryGradient Rounded d-flex align-items-center my-4 flex-column">
+            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Contact Me</u>
+            <div class="container-xxl ThemeToSecondaryGradient Rounded d-flex align-items-center my-3 flex-column">
                 <div class="form-floating mb-3 w-75 mt-3">
                     <input class="form-control SecondaryColor text-white" id="NameInput" placeholder="John Doe">
                     <label for="NameInput">Name</label>
@@ -94,6 +91,7 @@
     <!-- Scripts -->
     <th:block th:replace="~{template.html :: scripts}"></th:block>
     <script src="javascript/ContactForm.js"  type="module"></script>
+    <script src="javascript/aboutMe.js"  type="module"></script>
     <script src="javascript/projects.js"  type="module"></script>
     <script src="javascript/skills.js"  type="module"></script>
 </body>

@@ -76,6 +76,22 @@ public class AdminPanel {
         apiCall("/skills/get", "{ }", "GET", false);
     }
 
+    private static void updateAboutMe() {
+        System.out.println("Input text:");
+        String text = scan.nextLine();
+        String body = "{\"text\": \""+text+"\"}";
+        apiCall("/about_me/update", body, "PUT", true);
+        updateLastUpdated(false);
+    }
+
+    private static void getAboutMe() {
+        apiCall("/about_me/get", "{ }", "GET", false);
+    }
+
+    private static void shutDownServer() {
+        apiCall("/shut_down", "{ }", "DELETE", true);
+    }
+
     private static void apiCall(String endpoint, String body, String method, boolean showConfirmation) {
         if (showConfirmation) {
             System.out.println("This will send a "+method+" request with the body: \n");
@@ -147,7 +163,7 @@ public class AdminPanel {
 
     private static void printSkillsMenu() {
         System.out.println("=======================");
-        System.out.println("     SKILLS MENU     ");
+        System.out.println("      SKILLS MENU      ");
         System.out.println("=======================");
         System.out.println("1.) New Skill");
         System.out.println("2.) Delete Skill");
@@ -166,6 +182,30 @@ public class AdminPanel {
                 viewSkills();
                 break;
             case 4:
+                return;
+            default:
+                System.out.println("Invalid input.");
+                printContinue();            
+        }
+    }
+
+    private static void printAboutMeMenu() {
+        System.out.println("=======================");
+        System.out.println("     ABOUT ME MENU     ");
+        System.out.println("=======================");
+        System.out.println("1.) Update About Me");
+        System.out.println("2.) Get About Me");
+        System.out.println("3.) Back");
+        int input = scan.nextInt();
+        scan.nextLine();
+        switch (input) {
+            case 1:
+                updateAboutMe();
+                break;
+            case 2:
+                getAboutMe();
+                break;
+            case 3:
                 return;
             default:
                 System.out.println("Invalid input.");
@@ -263,10 +303,12 @@ public class AdminPanel {
         System.out.println("=======================");
         System.out.println("1.) Projects Menu");
         System.out.println("2.) Skills Menu");
-        System.out.println("3.) Get Messages");
-        System.out.println("4.) Delete Message");
-        System.out.println("5.) Update Recently Updated");
-        System.out.println("6.) Exit");
+        System.out.println("3.) About Me Menu");
+        System.out.println("4.) Get Messages");
+        System.out.println("5.) Delete Message");
+        System.out.println("6.) Update Recently Updated");
+        System.out.println("7.) Shut down Server");
+        System.out.println("8.) Exit");
         int input = scan.nextInt();
         scan.nextLine();
         switch (input) {
@@ -279,18 +321,26 @@ public class AdminPanel {
                 printContinue();
                 break;
             case 3:
-                printGetMessagesMenu();
+                printAboutMeMenu();
                 printContinue();
                 break;
             case 4:
-                printDeleteMessagesMenu();
+                printGetMessagesMenu();
                 printContinue();
                 break;
             case 5:
-                updateLastUpdated(true);
+                printDeleteMessagesMenu();
                 printContinue();
                 break;
             case 6:
+                updateLastUpdated(true);
+                printContinue();
+                break;
+            case 7:
+                shutDownServer();
+                printContinue();
+                break;
+            case 8:
                 System.exit(0);
             default:
                 System.out.println("Invalid input.");

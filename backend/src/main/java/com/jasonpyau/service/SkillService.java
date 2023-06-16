@@ -64,14 +64,14 @@ public class SkillService {
         return new ArrayList<String>(validTypes);
     }
 
-    public String checkSkill(Skill skill) {
+    private String checkSkill(Skill skill) {
         if (!validTypes.contains(skill.getType())) {
             return SKILL_TYPE_ERROR;
         }
         return checkSkill(skill.getName());
     }
 
-    public String checkSkill(String skillName) {
+    private String checkSkill(String skillName) {
         if (skillName == null || skillName.length() < 1 || skillName.length() > 15) {
             return SKILL_NAME_ERROR;
         }
