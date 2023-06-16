@@ -1,15 +1,19 @@
-# Table of Contents
-<li><a href="#about">About</a></li>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#get-started">Get Started</a></li>
+# jasonpyau.com - Personal Portfolio Website
+
+## Table of Contents
+<ol>
+  <li><a href="#about">About</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#get-started">Get Started</a></li>
+</ol>
 
 
 ## About
 This is a personal portfolio site made by me using Java Spring Boot. It utilizes the backend so that the site dynamically loads projects, skills, etc. stored in the database that can be changed without the need to modify any code. This project is open source so you may use any of the code, credit appreciated. 
 
-**Link:** <a href="https://jasonpyau.com" target="_blank">jasonpyau.com/</a>
+**Link:** <a href="https://jasonpyau.com">jasonpyau.com/</a>
 <br>
-**API Documentation:** <a href="https://app.swaggerhub.com/apis/JASONYAU/jasonpyau.com/1.0.0#/" target="_blank">swaggerhub.com/apis/JASONYAU/jasonpyau.com/1.0.0#/</a>
+**API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/">swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/</a>
 
 This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certification and DDoS protection.
 
