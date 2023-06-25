@@ -11,5 +11,5 @@ import com.jasonpyau.entity.Message;
 @Repository
 public interface ContactRepository extends JpaRepository<Message, Long> {
     @Query(value = "SELECT * FROM messages ORDER BY date DESC", nativeQuery = true)
-    Page<Message> findAllWithPaginationOrderedByDate(Pageable pageable);
+    public Page<Message> findAllWithPaginationOrderedByDate(Pageable pageable);
 }

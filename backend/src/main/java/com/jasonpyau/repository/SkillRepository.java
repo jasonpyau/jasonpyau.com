@@ -13,7 +13,7 @@ import com.jasonpyau.entity.Skill;
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Integer> {
     @Query(value = "SELECT name FROM skills WHERE type = :type ORDER BY name ASC", nativeQuery = true)
-    List<String> findAllSkillNameByType(@Param("type") String type);
-    @Query(value = "SELECT * FROM skills where name = :name", nativeQuery = true)
-    Optional<Skill> findSkillByName(@Param("name") String name);
+    public List<String> findAllSkillNameByType(@Param("type") String type);
+    @Query(value = "SELECT * FROM skills WHERE name = :name", nativeQuery = true)
+    public Optional<Skill> findSkillByName(@Param("name") String name);
 }

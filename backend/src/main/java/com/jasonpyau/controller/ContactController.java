@@ -1,9 +1,9 @@
 package com.jasonpyau.controller;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,7 +73,9 @@ public class ContactController {
         if (pageNum == null || pageSize == null || pageSize <= 0 || pageSize > 50) {
             return Response.notAcceptable();
         }
-        List<Message> messages = contactService.getMessages(pageNum, pageSize);
-        return new ResponseEntity<>(Response.createBody("messages", messages), HttpStatus.OK);
+        Page<Message> page = contactService.getMessages(pageNum, pageSize);
+        String[] keys = {"messages", "totalPages", "hasNext"};
+        Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
+        return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);
     }
 }

@@ -14,7 +14,7 @@ public class ProjectService {
 
     private static final String PROJECT_ID_ERROR = "Invalid 'id', project not found.";
     private static final String PROJECT_NAME_ERROR = "'name' should be between 3-30 characters.";
-    private static final String PROJECT_DESCRIPTION_ERROR = "'description' should be between 10-150 characters.";
+    private static final String PROJECT_DESCRIPTION_ERROR = "'description' should be between 10-250 characters.";
     private static final String PROJECT_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     private static final String PROJECT_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
     private static final String PROJECT_TECHNOLOGIES_ERROR = "'technologies' should have length between 1-10 and each technology between 1-15 characters.";
@@ -88,7 +88,7 @@ public class ProjectService {
         String link = project.getLink();
         if (name == null || name.length() < 3 || name.length() > 30) {
             return PROJECT_NAME_ERROR;
-        } else if (description == null || description.length() < 10 || description.length() > 150) {
+        } else if (description == null || description.length() < 10 || description.length() > 250) {
             return PROJECT_DESCRIPTION_ERROR;
         } else if (!Project.checkDate(startDate)) {
             return PROJECT_START_DATE_ERROR;

@@ -88,6 +88,43 @@ public class AdminPanel {
         apiCall("/about_me/get", "{ }", "GET", false);
     }
 
+    private static void newBlog() {
+        System.out.println("Input title of blog:");
+        String title = scan.nextLine();
+        System.out.println("Input body of blog:");
+        String body = scan.nextLine();
+        String apiBody = "{\"title\": \""+title+"\"," +
+                        "\"body\": \""+body+"\"}";
+        apiCall("/blogs/new", apiBody, "PUT", true);
+    }
+
+    private static void deleteBlog() {
+        System.out.println("Input id of the blog you'd like to delete:");
+        String id = scan.nextLine();
+        apiCall("/blogs/delete/"+id, "{ }", "DELETE", true);
+    }
+
+    private static void getBlogs() {
+        System.out.print("Input a page size: ");
+        String pageSize = scan.nextLine();
+        System.out.println();
+        System.out.print("Input a page number: ");
+        int pageNum = Integer.parseInt(scan.nextLine());
+        System.out.println();
+        while (true) {
+            apiCall("/blogs/get/page?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
+            System.out.println("0.) Return");
+            System.out.println("1.) Next page");
+            int input = scan.nextInt();
+            scan.nextLine();
+            if (input == 1) {
+                pageNum++;
+            } else {
+                break;
+            }
+        }
+    }
+
     private static void shutDownServer() {
         apiCall("/shut_down", "{ }", "DELETE", true);
     }
@@ -126,6 +163,34 @@ public class AdminPanel {
             }
         } catch (Exception e) {
             System.out.println("Error in sending HTTP Request:\n" + e);
+        }
+    }
+
+    private static void printBlogsMenu() {
+        System.out.println("=======================");
+        System.out.println("      BLOGS MENU       ");
+        System.out.println("=======================");
+        System.out.println("1.) New Blog");
+        System.out.println("2.) Delete Blog");
+        System.out.println("3.) Get Blogs");
+        System.out.println("4.) Back");
+        int input = scan.nextInt();
+        scan.nextLine();
+        switch (input) {
+            case 1:
+                newBlog();
+                break;
+            case 2:
+                deleteBlog();
+                break;
+            case 3:
+                getBlogs();
+                break;
+            case 4:
+                return;
+            default:
+                System.out.println("Invalid input.");
+                printContinue();            
         }
     }
 
@@ -301,46 +366,51 @@ public class AdminPanel {
         System.out.println("=======================");
         System.out.println("       MAIN MENU       ");
         System.out.println("=======================");
-        System.out.println("1.) Projects Menu");
-        System.out.println("2.) Skills Menu");
-        System.out.println("3.) About Me Menu");
-        System.out.println("4.) Get Messages");
-        System.out.println("5.) Delete Message");
-        System.out.println("6.) Update Recently Updated");
-        System.out.println("7.) Shut down Server");
-        System.out.println("8.) Exit");
+        System.out.println("1.) Blogs Menu");
+        System.out.println("2.) Projects Menu");
+        System.out.println("3.) Skills Menu");
+        System.out.println("4.) About Me Menu");
+        System.out.println("5.) Get Messages");
+        System.out.println("6.) Delete Message");
+        System.out.println("7.) Update Recently Updated");
+        System.out.println("8.) Shut down Server");
+        System.out.println("9.) Exit");
         int input = scan.nextInt();
         scan.nextLine();
         switch (input) {
             case 1:
+                printBlogsMenu();
+                printContinue();;
+                break;
+            case 2:
                 printProjectsMenu();
                 printContinue();
                 break;
-            case 2:
+            case 3:
                 printSkillsMenu();
                 printContinue();
                 break;
-            case 3:
+            case 4:
                 printAboutMeMenu();
                 printContinue();
                 break;
-            case 4:
+            case 5:
                 printGetMessagesMenu();
                 printContinue();
                 break;
-            case 5:
+            case 6:
                 printDeleteMessagesMenu();
                 printContinue();
                 break;
-            case 6:
+            case 7:
                 updateLastUpdated(true);
                 printContinue();
                 break;
-            case 7:
+            case 8:
                 shutDownServer();
                 printContinue();
                 break;
-            case 8:
+            case 9:
                 System.exit(0);
             default:
                 System.out.println("Invalid input.");

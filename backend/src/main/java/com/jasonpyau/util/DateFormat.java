@@ -24,4 +24,8 @@ public class DateFormat {
         String dateTime = simpleDateFormat.format(new Date());
         return dateTime;
     }
+
+    public static Long getUnixTime() {
+        return System.currentTimeMillis()/1000L;
+    }
 }

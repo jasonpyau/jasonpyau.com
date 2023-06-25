@@ -1,0 +1,12 @@
+#BlogBodyContainer{
+    background: rgb(25,25,112);
+    background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgba(45,45,200,1) 100%);
+    height: auto;
+    min-height: 400px;
+    width: 80%;
+}
+
+#BlogTitle {
+    width: 65%;
+    display: block;
+}

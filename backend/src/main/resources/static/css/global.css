@@ -80,6 +80,11 @@
     color: white;
 }
 
+.NoDecoration {
+    text-decoration: none;
+    color: white;
+}
+
 #MessageInput {
     height: 300px;
 }
@@ -92,10 +97,4 @@
 .ErrorMessage {
     color: var(--bs-danger);
     display: none;
-}
-
-@media (max-width: 650px) {
-    #CenterHeaderContainer {
-        display: none;
-    }
 }

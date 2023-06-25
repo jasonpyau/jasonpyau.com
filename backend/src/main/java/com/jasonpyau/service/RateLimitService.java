@@ -38,18 +38,18 @@ public class RateLimitService {
     public RateLimitService(int type) {
         switch(type) {
             case ADMIN_TYPE:
-                this.requestsPerInterval = 80;
+                this.requestsPerInterval = 50;
                 this.durationInSeconds = 20;
                 this.maximumCacheSize = 100;
                 break;
             case SEND_MESSAGES_TYPE:
-                this.requestsPerInterval = 5;
+                this.requestsPerInterval = 4;
                 this.durationInSeconds = 30;
                 this.maximumCacheSize = 10000;
                 break;
             case DEFAULT_TYPE:
             default:
-                this.requestsPerInterval = 50;
+                this.requestsPerInterval = 40;
                 this.durationInSeconds = 20;
                 this.maximumCacheSize = 10000;
         }

@@ -3,10 +3,12 @@ import { apiCall } from "./apiCall.js";
 $(document).ready(function() {
     $.get("projects", async function(projectTemplate) {
         $("#ProjectRows").append(projectTemplate);
-        const url = `projects/get`;
+        const url = `/projects/get`;
         const result = await apiCall(url, "GET", null, null);
-        if (result.status !== 200)
+        if (result.status !== 200) {
+            alert("Error in loading projects, refresh. If this problem persists, contact me.");
             return;
+        }
         const json = await result.json();
         const projects = json.projects;
         for (let i = 0; i < projects.length; i++) {

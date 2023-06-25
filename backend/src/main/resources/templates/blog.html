@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
+<head th:replace="~{template.html :: head}"></head>
+<head>
+    <title th:text="${title}"></title>
+    <link href="/css/blog.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body class="bg-black text-white">
+    
+    <!-- Header -->
+    <header th:replace="~{template.html :: header}"></header>
+
+    <!-- Body Container -->
+    <div class="bg-dark bg-gradient" id="BodyContainer">
+
+        <div class="container-xxl ThemeToSecondaryGradient" id="BlogContainer">
+            <div class="text-center mt-4">
+                <!-- Title -->
+                <u class="display-4 fw-bold HeaderTextColor mx-auto" th:text="${title}" id="BlogTitle"></u>
+                <!-- Stats -->
+                <div id="BlogDateStatsContainer" class="d-flex justify-content-around">
+                    <span th:text="${date}" class="mx-3 my-auto fs-5 fw-semibold"></span>
+                    <span class="mx-3" id="BlogStatsContainer"></span>
+                </div>
+            </div>
+            <hr>
+            <!-- Body -->
+            <div class="Rounded p-4 fs-4 fw-semibold mx-auto text-left" th:utext="${body}" id="BlogBodyContainer">
+
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{template.html :: footer}"></footer>
+
+    <!-- Scripts -->
+    <th:block th:replace="~{template.html :: scripts}"></th:block>
+    <script src="/javascript/BlogStats.js"  type="module"></script>
+    <script type="module" th:inline="javascript">
+        import { BlogStats } from "/javascript/BlogStats.js";
+        const id = /*[[${id}]]*/ 0;
+        const viewCount = /*[[${blogViewCount}]]*/ 0;
+        const likeCount = /*[[${blogLikeCount}]]*/ 0;
+        const isInitallyLiked = /*[[${isLikedByUser}]]*/ false;
+        $(document).ready(function() {
+            const blogStats = new BlogStats(id, viewCount, likeCount, isInitallyLiked, document.getElementById("BlogStatsContainer"));
+        });
+    </script>
+</body>
+</html>

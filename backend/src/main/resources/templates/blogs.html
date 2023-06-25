@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
+<head th:replace="~{template.html :: head}"></head>
+<head>
+    <title th:text="${title}"></title>
+    <link href="/css/blogs.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body class="bg-black text-white">
+    
+    <!-- Header -->
+    <header th:replace="~{template.html :: header}"></header>
+
+    <!-- Body Container -->
+    <div class="bg-dark bg-gradient" id="BodyContainer">
+
+        <div class="container-xxl ThemeToSecondaryGradient pb-2" id="BlogContainer">
+            <div class="text-center my-5 pt-4">
+                <u class="display-4 fw-bold HeaderTextColor">
+                    Blogs
+                </u>
+            </div>
+            <div class="accordion accordion-flush mx-auto w-75">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#Options" aria-expanded="true" aria-controls="Options">
+                        Options
+                    </button>
+                </h2>
+                <div id="Options" class="accordion-collapse collapse show">
+                    <div class="FormContainer accordion-body mx-auto">
+                        <div class="w-50 form-check-label">
+                            <span>
+                              Page Size:
+                            </span>
+                            <span id="PageSizeText">
+                              5
+                            </span>
+                            <div>
+                                <input type="range" min="1" max="20" value="5" class="NumberInput mt-2 w-75" id="PageSizeRange">
+                            </div>
+                        </div>
+                        <div class="form-check form-switch my-4">
+                            <input class="form-check-input" type="checkbox" role="switch" id="ShowLikedSwitch">
+                            <label class="form-check-label" for="ShowLikedSwitch">Show Liked Only</label>
+                        </div>
+                        <button type="button" class="btn btn-light" id="ApplyButton">Apply</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-5" id="BlogsContainer">
+
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" id="BlogsPreviewSpinner" role="status"></div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" id="LoadMoreButton" class="btn btn-light btn-lg mt-3 mb-4" style="display: none;">Load More</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{template.html :: footer}"></footer>
+
+    <!-- Scripts -->
+    <th:block th:replace="~{template.html :: scripts}"></th:block>
+    <script src="/javascript/BlogStats.js"  type="module"></script>
+    <script src="/javascript/BlogPreview.js" type="module"></script>
+</body>
+</html>

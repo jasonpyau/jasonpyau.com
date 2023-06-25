@@ -1,6 +1,5 @@
 package com.jasonpyau.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class ContactService {
     private static final String MESSAGE_ID_ERROR = "Invalid 'id', message not found.";
     private static final String MESSAGE_NAME_ERROR = "'name' should be between 3-50 characters.";
     private static final String MESSAGE_CONTACT_INFO_ERROR = "'contactInfo' should be between 6-100 characters.";
-    private static final String MESSAGE_BODY_ERROR = "'body' should be between 15-3000 characters.";
+    private static final String MESSAGE_BODY_ERROR = "'body' should be between 15-1000 characters.";
     
     @Autowired
     private ContactRepository contactRepository;
@@ -48,10 +47,10 @@ public class ContactService {
         return null;
     }
 
-    public List<Message> getMessages(int pageNum, int pageSize) {
+    public Page<Message> getMessages(int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
         Page<Message> page = contactRepository.findAllWithPaginationOrderedByDate(pageable);
-        return page.getContent();
+        return page;
     }
 
     // Returns error message if applicable, else null.
@@ -63,4 +62,5 @@ public class ContactService {
         contactRepository.delete(optional.get());
         return null;
     }
+
 }

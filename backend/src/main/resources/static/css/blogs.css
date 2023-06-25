@@ -1,0 +1,54 @@
+.FormContainer, .accordion-button {
+    background: rgb(25,25,112);
+    background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgb(38, 38, 170) 100%);
+}
+
+.accordion-button, .accordion-button:not(.collapsed) {
+    color: white;
+}
+
+.accordion-button:after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+.NumberInput {
+    outline: none;
+    height: 30px;
+    background: whitesmoke;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 10px;
+}
+
+.NumberInput::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 40px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    border-radius: 5px;
+    background: rgb(22, 22, 222);
+    cursor: pointer;
+}
+  
+.NumberInput::-moz-range-thumb {
+    width: 25px;
+    height: 35px;
+    background: rgb(22, 22, 222);
+    cursor: pointer;
+}
+
+.BlogPreview {
+    transition: background-color .5s ease;
+}
+
+.BlogPreview:hover {
+    background-color: hsl(240, 100%, 61%);
+}
+
+#PageSizeRange {
+    min-width: 140px;
+}
+ 

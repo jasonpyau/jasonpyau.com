@@ -9,7 +9,7 @@
 
 
 ## About
-This is a personal portfolio site made by me using Java Spring Boot. It utilizes the backend so that the site dynamically loads projects, skills, etc. stored in the database that can be changed without the need to modify any code. This project is open source so you may use any of the code, credit appreciated. 
+This is a personal portfolio site made by me using Java Spring Boot. It utilizes the backend so that the site dynamically loads blog posts, projects, skills, etc. stored in the database that can be changed without the need to modify any code. This project is open source so you may use any of the code, credit appreciated. 
 
 **Link:** <a href="https://jasonpyau.com">jasonpyau.com/</a>
 <br>
@@ -26,6 +26,7 @@ This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling ser
 5. Java Mail Sender - Send email notifications to myself
 6. Bucket4J - Rate Limitter
 7. Google Guava - Cache to Rate Limit
+8. Lombok - reduce repetitive code (Getter/Setters)
 ```
 
 ## Get Started

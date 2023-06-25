@@ -10,8 +10,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name="projects")
 public class Project {
     // Note: dates should be in form MM/YYYY
@@ -33,70 +37,6 @@ public class Project {
     private List<String> technologies;
     @Column(name = "link", nullable = false)
     private String link;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public String getDateOrder() {
-        return dateOrder;
-    }
-
-    public List<String> getTechnologies() {
-        return technologies;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setDateOrder(String order) {
-        this.dateOrder = order;
-    }
-
-    public void setTechnologies(List<String> technologies) {
-        this.technologies = technologies;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
 
     public static boolean checkDate(String date) {
         if (date == null) {
