@@ -31,4 +31,4 @@ jobs:
       - name: Run Spring Boot
         run: |
             cd backend
-            sudo mvn spring-boot:run > spring-log.txt
+            sudo mvn spring-boot:run
