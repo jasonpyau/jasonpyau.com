@@ -35,10 +35,11 @@ jobs:
         env:
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         run: |
-            curl -s -o '/dev/null/' -X 'DELETE' \
-            'https://jasonpyau.com/shut_down' \
+            curl -s -X 'DELETE' \
+            'http://jasonpyau.com/shut_down' \
             -H 'CF-Connecting-IP: localhost' \
-            -H 'Authorization: $APP_PASSWORD'
+            -H 'Authorization: $APP_PASSWORD' \
+            > /dev/null
       - name: Run Spring Boot
         run: |
             cd backend
