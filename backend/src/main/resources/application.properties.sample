@@ -20,7 +20,7 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 
 # Backend Configuration
 server.port=9000
-spring.profiles.active=default
+spring.profiles.active=dev
 
 # Admin Panel password
 com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE

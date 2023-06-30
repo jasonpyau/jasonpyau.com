@@ -8,7 +8,7 @@
 <body class="bg-black text-white">
     
     <!-- Header -->
-    <header th:fragment="header" th:insert="~{header.html}" class="fixed-top" id="Header"></header>
+    <header th:replace="~{template.html :: header}"></header>
 
     <!-- Body Container -->
     <div class="bg-gradient bg-dark" id="BodyContainer">

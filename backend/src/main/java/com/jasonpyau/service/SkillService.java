@@ -15,11 +15,11 @@ import com.jasonpyau.repository.SkillRepository;
 
 @Service
 public class SkillService {
-    private static final String SKILL_NAME_ERROR = "'name' should be between 1-15 characters.";
-    private static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
-    private static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
-    private static final String SKILL_TYPE_ERROR = "Invalid 'type'.";
-    private static final HashSet<String> validTypes = new HashSet<>(Arrays.asList("Language", "Framework/Library", "Database", "Software"));
+    public static final String SKILL_NAME_ERROR = "'name' should be between 1-15 characters.";
+    public static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
+    public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
+    public static final String SKILL_TYPE_ERROR = "Invalid 'type'.";
+    public static final HashSet<String> validTypes = new HashSet<>(Arrays.asList("Language", "Framework/Library", "Database", "Software"));
 
     @Autowired
     private SkillRepository skillRepository;

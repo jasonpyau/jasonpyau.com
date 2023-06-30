@@ -15,7 +15,7 @@ This is a personal portfolio site made by me using Java Spring Boot. It utilizes
 <br>
 **API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/">swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/</a>
 
-This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certification and DDoS protection.
+This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git commit.
 
 ## Dependencies
 ```
@@ -26,7 +26,7 @@ This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling ser
 5. Java Mail Sender - Send email notifications to myself
 6. Bucket4J - Rate Limitter
 7. Google Guava - Cache to Rate Limit
-8. Lombok - reduce repetitive code (Getter/Setters)
+8. Lombok - Reduce repetitive code (Getter/Setters)
 ```
 
 ## Get Started

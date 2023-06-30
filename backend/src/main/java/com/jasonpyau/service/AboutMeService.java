@@ -11,8 +11,8 @@ import com.jasonpyau.repository.AboutMeRepository;
 @Service
 public class AboutMeService {
 
-    private static final String ABOUT_ME_TEXT_ERROR = "'text' should be between 1-1000 characters.";
-    private static final String ABOUT_ME_LOAD_ERROR = "Error in loading About Me.";
+    public static final String ABOUT_ME_TEXT_ERROR = "'text' should be between 1-1000 characters.";
+    public static final String ABOUT_ME_LOAD_ERROR = "Error in loading About Me.";
 
     @Autowired
     private AboutMeRepository aboutMeRepository;

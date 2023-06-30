@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.jasonpyau.entity.Blog;
 import com.jasonpyau.entity.Stats;
+import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
 import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.service.StatsService;
@@ -21,6 +22,8 @@ public class FrontendController {
     private StatsService statsService;
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private AboutMeService aboutMeService;
     
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
@@ -28,6 +31,7 @@ public class FrontendController {
             return "ratelimit";
         }
         updateStats(model);
+        model.addAttribute("aboutMe", aboutMeService.getAboutMe());
         return "index";
     }
 

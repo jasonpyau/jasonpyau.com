@@ -14,7 +14,18 @@ $(document).ready(async function() {
     document.getElementById("PageSizeRange").addEventListener("input", updatePageSizeText);
 
     document.getElementById("LoadMoreButton").addEventListener("click", async() => {
+        document.getElementById("SearchInput").value = "";
+        for (const blogPreview of blogPreviews) {
+            blogPreview.updateVisibility(true);
+        }
         loadBlogsPage(false);
+    });
+
+    document.getElementById("SearchInput").addEventListener("input", () => {
+        const val = document.getElementById("SearchInput").value.toLowerCase();
+        for (const blogPreview of blogPreviews) {
+            blogPreview.updateVisibility(blogPreview.toString().includes(val));
+        }
     });
 
     document.getElementById("ApplyButton").addEventListener("click", async () => {
@@ -22,9 +33,11 @@ $(document).ready(async function() {
         showOnlyLiked = document.getElementById("ShowLikedSwitch").checked;
         localStorage.blogPageSize = pageSize;
         localStorage.blogShowOnlyLiked = showOnlyLiked;
-        deleteBlogPreviews();
+        document.getElementById("SearchInput").value = "";
+        pageNum = 0;
         await loadBlogsPage(true);
     });
+
     await loadBlogsPage(false);
     function updatePageSizeText() {
         document.getElementById("PageSizeText").innerHTML = document.getElementById("PageSizeRange").value;
@@ -47,9 +60,8 @@ async function loadBlogsPage(deleteFirst) {
     if (deleteFirst) {
         deleteBlogPreviews();
     }
-    for (let i = 0; i < blogs.length; i++) {
-        const blog = blogs[i];
-        const blogPreview = new BlogPreview(blog.id, blog.title, blog.date, blog.viewCount, blog.likeCount, blog.isLikedByUser, container);
+    for (const blog of blogs) {
+        const blogPreview = new BlogPreview(blog, container);
         blogPreviews.push(blogPreview);
     }
     pageNum++;
@@ -58,25 +70,26 @@ async function loadBlogsPage(deleteFirst) {
 }
 
 function deleteBlogPreviews() {
-    for (let i = 0; i < blogPreviews.length; i++) {
-        blogPreviews[i].delete();
+    for (const blogPreview of blogPreviews) {
+        blogPreview.delete();
     }
-    pageNum = 0;
     blogPreviews = [];
 }
 
 class BlogPreview {
     #container;
     #element;
-    #blogStats;
+    #blogStats
+    #blogString;
 
-    constructor(id, title, date, viewCount, likeCount, isInitallyLiked, container) {
+    constructor(blog, container) {
         this.#container = container;
         this.#element = document.createElement("div");
+        this.#blogString = `${blog.title}, ${blog.body}, ${blog.date}`.toLowerCase();
         this.#element.innerHTML =
         `
-            <div class="my-2 SecondaryColor border border-white Rounded container-xxl d-flex justify-content-between p-3 BlogPreview">
-                <a class="w-75 NoDecoration" href="/blogs/${id}">
+            <div class="my-2 SecondaryColor border border-white Rounded container-xxl d-flex py-3 BlogPreview">
+                <a class="NoDecoration flex-grow-1 mx-2" href="/blogs/${blog.id}" title="${blog.title}">
                     <u class="fs-4 fw-bold" id="Title">
                         Title
                     </u>
@@ -84,16 +97,24 @@ class BlogPreview {
                         Date
                     </div>
                 </a>
-                <span id="BlogStatsContainer">
+                <span id="BlogStatsContainer" class="mx-2">
 
                 </span>
             </div>
         `;
-        this.#element.querySelector("#Title").innerHTML = title;
-        this.#element.querySelector("#Date").innerHTML = date;
+        this.#element.querySelector("#Title").innerHTML = blog.title;
+        this.#element.querySelector("#Date").innerHTML = blog.date;
         const BlogStatsContainer = this.#element.querySelector("#BlogStatsContainer");
-        this.#blogStats = new BlogStats(id, viewCount, likeCount, isInitallyLiked, BlogStatsContainer);
+        this.#blogStats = new BlogStats(blog.id, blog.viewCount, blog.likeCount, blog.isLikedByUser, BlogStatsContainer);
         this.#container.append(this.#element);
+    }
+
+    toString() {
+        return this.#blogString;
+    }
+
+    updateVisibility(isVisible) {
+        this.#element.style.display = (isVisible) ? "inline" : "none";
     }
 
     delete() {

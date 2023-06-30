@@ -19,9 +19,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class BlogService {
     
-    private static final String BLOG_ID_ERROR = "Invalid 'id', blog not found.";
-    private static final String BLOG_TITLE_ERROR = "'title' should be between 3-250 characters.";
-    private static final String BLOG_BODY_ERROR = "'body' should be between 1-5000 characters.";
+    public static final String BLOG_ID_ERROR = "Invalid 'id', blog not found.";
+    public static final String BLOG_TITLE_ERROR = "'title' should be between 3-250 characters.";
+    public static final String BLOG_BODY_ERROR = "'body' should be between 1-5000 characters.";
 
     @Autowired
     private BlogRepository blogRepository;
@@ -81,9 +81,8 @@ public class BlogService {
     }
 
     public Page<Blog> getLikedBlogs(HttpServletRequest request, int pageNum, int pageSize) {
-        User user = userService.getUser(request);
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Blog> page = blogRepository.findLikedBlogsWithPaginationOrderedByUnixTime(pageable, user.getAddress());
+        Page<Blog> page = blogRepository.findLikedBlogsWithPaginationOrderedByUnixTime(pageable, UserService.getUserAddress(request));
         List<Blog> blogs = page.getContent();
         for (Blog blog : blogs) {
             blog.setIsLikedByUser(true);

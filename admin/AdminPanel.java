@@ -372,7 +372,7 @@ public class AdminPanel {
         System.out.println("4.) About Me Menu");
         System.out.println("5.) Get Messages");
         System.out.println("6.) Delete Message");
-        System.out.println("7.) Update Recently Updated");
+        System.out.println("7.) Update Last Updated");
         System.out.println("8.) Shut down Server");
         System.out.println("9.) Exit");
         int input = scan.nextInt();

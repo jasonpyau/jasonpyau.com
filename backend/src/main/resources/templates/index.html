@@ -25,8 +25,8 @@
         <div> 
             <br id="AboutMe"><br><br>
             <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">About Me</u>
-            <div class="container-xxl Rounded p-5 HeaderTextColor fs-4 fw-semibold text-left my-3" id="AboutMeContainer">
-                <div class="spinner-border" id="aboutMeSpinner" role="status"></div>
+            <div class="container-xxl Rounded p-5 HeaderTextColor fs-4 fw-semibold text-left my-3" id="AboutMeContainer" th:text="${aboutMe}">
+
             </div>
 
             <br id="Projects"><br><br>
@@ -70,7 +70,7 @@
                 <div id="SubmitContainer" class="d-flex align-items-center flex-column">
                     <div class="SuccessMessage" id="ContactFormSuccess">Success</div>
                     <div class="ErrorMessage" id="ContactFormError">Error</div>
-                    <button class="btn btn-primary border-0" onclick="contactFormSubmit()" type="submit">Send</button>
+                    <button class="btn btn-primary border-0" onclick="contactFormSubmit()" type="submit" title="Send Message">Send</button>
                     <div>
                         Note: This sends an email notification to me.
                     </div>
@@ -91,7 +91,6 @@
     <!-- Scripts -->
     <th:block th:replace="~{template.html :: scripts}"></th:block>
     <script src="/javascript/ContactForm.js"  type="module"></script>
-    <script src="/javascript/aboutMe.js"  type="module"></script>
     <script src="/javascript/projects.js"  type="module"></script>
     <script src="/javascript/skills.js"  type="module"></script>
 </body>

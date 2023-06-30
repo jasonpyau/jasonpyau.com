@@ -49,7 +49,7 @@ public class RateLimitService {
                 break;
             case DEFAULT_TYPE:
             default:
-                this.requestsPerInterval = 40;
+                this.requestsPerInterval = 50;
                 this.durationInSeconds = 20;
                 this.maximumCacheSize = 10000;
         }
@@ -84,7 +84,7 @@ public class RateLimitService {
 
     // Return true if user is rate limited, false otherwise.
     public boolean rateLimit(HttpServletRequest request) {
-        String key = request.getRemoteAddr();
+        String key = UserService.getUserAddress(request);
         Bucket bucket = cache.getUnchecked(key);
         boolean rateLimited = true;
         if (bucket.tryConsume(1)) {

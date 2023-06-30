@@ -15,10 +15,10 @@ import com.jasonpyau.util.DateFormat;
 @Service
 public class ContactService {
     
-    private static final String MESSAGE_ID_ERROR = "Invalid 'id', message not found.";
-    private static final String MESSAGE_NAME_ERROR = "'name' should be between 3-50 characters.";
-    private static final String MESSAGE_CONTACT_INFO_ERROR = "'contactInfo' should be between 6-100 characters.";
-    private static final String MESSAGE_BODY_ERROR = "'body' should be between 15-1000 characters.";
+    public static final String MESSAGE_ID_ERROR = "Invalid 'id', message not found.";
+    public static final String MESSAGE_NAME_ERROR = "'name' should be between 3-50 characters.";
+    public static final String MESSAGE_CONTACT_INFO_ERROR = "'contactInfo' should be between 6-100 characters.";
+    public static final String MESSAGE_BODY_ERROR = "'body' should be between 15-1000 characters.";
     
     @Autowired
     private ContactRepository contactRepository;

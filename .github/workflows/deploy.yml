@@ -1,0 +1,34 @@
+name: Build and Deploy Spring Boot Application on Git push
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+          
+jobs:
+  build:
+  
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Create Constants.java on Admin Panel
+        env:
+          CONSTANTS: ${{ secrets.ADMIN_PANEL_CONSTANTS_JAVA }}
+        run: |
+            echo $CONSTANTS > admin/Constants.java
+      - name: Create application.properties on Spring Boot
+        env:
+          PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
+        run: |
+            echo $PROPERTIES > backend/src/main/resources/application.properties
+      - name: Run Unit Tests
+        run: |
+            cd backend
+            sudo mvn test
+      - name: Run Spring Boot
+        run: |
+            cd backend
+            sudo mvn spring-boot:run > spring-log.txt
