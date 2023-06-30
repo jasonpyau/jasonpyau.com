@@ -15,7 +15,7 @@ This is a personal portfolio site made by me using Java Spring Boot. It utilizes
 <br>
 **API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/">swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/</a>
 
-This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git commit.
+This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git push.
 
 ## Dependencies
 ```
@@ -34,7 +34,7 @@ This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling ser
 
 **Create application.properties (./backend/src/main/resouces/application.properties)**
 
-https://github.com/jasonpyau/jasonpyau.com/blob/ac427271c88fe2a8cbfa2917f3cfd3e36ceeebf4/backend/src/main/resources/application.properties.sample#L1-L28
+https://github.com/jasonpyau/jasonpyau.com/blob/b04584651ed0a0187a32f8f5b591a41b7f692d9d/backend/src/main/resources/application.properties.sample#L1-L28
 
 **Create Constants.java (./admin/Constants.java)**
 
