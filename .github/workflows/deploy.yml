@@ -12,6 +12,9 @@ jobs:
     runs-on: self-hosted
     
     steps:
+      - name: File Permissions
+        run: |
+            sudo chown -R jasonpyau:jasonpyau .
       - name: Checkout
         uses: actions/checkout@v2
       - name: Create Constants.java on Admin Panel
@@ -28,7 +31,15 @@ jobs:
         run: |
             cd backend
             sudo mvn test
+      - name: Shut Down Old Version
+        env:
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        run: |
+            curl -X 'DELETE' \  
+            'https://jasonpyau.com/shut_down' \
+            -H 'CF-Connecting-IP: localhost' \
+            -H 'Authorization: $APP_PASSWORD'
       - name: Run Spring Boot
         run: |
             cd backend
-            sudo mvn spring-boot:run
+            sudo nohup mvn spring-boot:run > spring-log.txt 2>&1 &
