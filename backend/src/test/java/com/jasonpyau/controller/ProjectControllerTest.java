@@ -36,7 +36,8 @@ public class ProjectControllerTest {
         List<Project> projects = new ArrayList<>(Arrays.asList(project));
         given(projectService.getProjects()).willReturn(projects);
         mockMvc.perform(MockMvcRequestBuilders.get("/projects/get")
-            .header("X-Forwarded-For", "localhost"))
+            .header("X-Forwarded-For", "localhost")
+            .header("CF-Connecting-IP", "localhost"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.projects", hasSize(1)))
             .andExpect(jsonPath("$.projects[0].id", is(project.getId())))

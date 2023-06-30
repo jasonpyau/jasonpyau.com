@@ -35,7 +35,8 @@ public class SkillControllerTest {
         skills.put("Software", Arrays.asList("Git"));
         given(skillService.getSkills()).willReturn(skills);
         mockMvc.perform(MockMvcRequestBuilders.get("/skills/get")
-            .header("X-Forwarded-For", "localhost"))
+            .header("X-Forwarded-For", "localhost")
+            .header("CF-Connecting-IP", "localhost"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.skills.Language", hasSize(2)))
             .andExpect(jsonPath("$.skills.Language[0]", is("React Native")))
