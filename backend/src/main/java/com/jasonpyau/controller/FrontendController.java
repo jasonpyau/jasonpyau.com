@@ -83,6 +83,11 @@ public class FrontendController {
         return "blog";
     }
 
+    @GetMapping({"/resume", "/resume/"})
+    public String resume() {
+        return "redirect:/files/Jason_Yau_Resume.pdf";
+    }
+
     private void updateStats(Model model) {
         Stats stats = statsService.updateViews();
         if (stats == null) {
