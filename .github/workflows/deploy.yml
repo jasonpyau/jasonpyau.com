@@ -36,8 +36,7 @@ jobs:
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         run: |
             curl -s -X 'DELETE' \
-            'http://jasonpyau.com/shut_down' \
-            -H 'CF-Connecting-IP: localhost' \
+            'https://jasonpyau.com/shut_down' \
             -H 'Authorization: $APP_PASSWORD' \
             > /dev/null
       - name: Run Spring Boot
