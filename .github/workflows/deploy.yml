@@ -39,6 +39,7 @@ jobs:
             'https://jasonpyau.com/shut_down' \
             -H 'Authorization: $APP_PASSWORD' \
             > /dev/null
+            sleep 6
       - name: Run Spring Boot
         run: |
             cd backend
