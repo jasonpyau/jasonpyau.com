@@ -37,7 +37,7 @@ jobs:
         run: |
             curl -s -X 'DELETE' \
             'https://jasonpyau.com/shut_down' \
-            -H 'Authorization: $APP_PASSWORD' \
+            -H 'Authorization: "$APP_PASSWORD"' \
             > /dev/null
             sleep 6
       - name: Run Spring Boot
