@@ -29,18 +29,32 @@ public class Response {
     }
 
     public static ResponseEntity<HashMap<String, Object>> rateLimit() {
-        return new ResponseEntity<>(createBody("status", "Rate Limit, try again later."), HttpStatus.TOO_MANY_REQUESTS);
+        String[] keys = {"status", "reason"};
+        String[] values = {"error", "Rate Limit, try again later."};
+        return new ResponseEntity<>(createBody(keys, values), HttpStatus.TOO_MANY_REQUESTS);
     }
 
     public static ResponseEntity<HashMap<String, Object>> serverError() {
-        return new ResponseEntity<>(createBody("status", "Server Error."), HttpStatus.INTERNAL_SERVER_ERROR);
+        String[] keys = {"status", "reason"};
+        String[] values = {"error", "Server Error."};
+        return new ResponseEntity<>(createBody(keys, values), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public static ResponseEntity<HashMap<String, Object>> unauthorized() {
-        return new ResponseEntity<>(createBody("status", "Unauthorized Request, please give valid credentials."), HttpStatus.UNAUTHORIZED);
+        String[] keys = {"status", "reason"};
+        String[] values = {"error", "Unauthorized Request, please give valid credentials."};
+        return new ResponseEntity<>(createBody(keys, values), HttpStatus.UNAUTHORIZED);
     }
 
     public static ResponseEntity<HashMap<String, Object>> notAcceptable() {
-        return new ResponseEntity<>(createBody("status", "Invalid request, bad input."), HttpStatus.NOT_ACCEPTABLE);
+        String[] keys = {"status", "reason"};
+        String[] values = {"error", "Invalid request, bad input."};
+        return new ResponseEntity<>(createBody(keys, values), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    public static ResponseEntity<HashMap<String, Object>> errorMessage(String reason, HttpStatus status) {
+        String[] keys = {"status", "reason"};
+        String[] values = {"error", reason};
+        return new ResponseEntity<>(createBody(keys, values), status);
     }
 }

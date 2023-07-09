@@ -15,7 +15,7 @@ async function contactFormSubmit() {
         contactInfo: contactInfo,
         body: message
     };
-    const result = await apiCall(url, "PUT", headers, body);
+    const result = await apiCall(url, "POST", headers, body);
     const json = await result.json();
     const contactFormSuccessElement = document.getElementById("ContactFormSuccess");
     const contactFormErrorElement = document.getElementById("ContactFormError");
@@ -25,6 +25,6 @@ async function contactFormSubmit() {
     } else {
         contactFormSuccessElement.style.display = "none";
         contactFormErrorElement.style.display = "flex";
-        contactFormErrorElement.textContent = json.status;
+        contactFormErrorElement.textContent = json.reason;
     }
 }

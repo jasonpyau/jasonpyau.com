@@ -20,12 +20,12 @@ public class AdminPanel {
     }
 
     private static void updateLastUpdated(boolean showConfirmation) {
-        apiCall("/stats/update/last_updated", "{ }", "POST", showConfirmation);
+        apiCall("/stats/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
 
     private static void newProject() {
         String body = getProjectBody();
-        apiCall("/projects/new", body, "PUT", true);
+        apiCall("/projects/new", body, "POST", true);
         updateLastUpdated(false);
     }
 
@@ -35,7 +35,7 @@ public class AdminPanel {
         scan.nextLine();
         System.out.println("You may leave blank any fields you don't want to update.");
         String body = getProjectBody();
-        apiCall("/projects/update/"+id, body, "PUT", true);
+        apiCall("/projects/update/"+id, body, "PATCH", true);
         updateLastUpdated(false);
     }
 
@@ -60,7 +60,7 @@ public class AdminPanel {
         String type = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
                         "\"type\": \""+type+"\"}";
-        apiCall("/skills/new", body, "PUT", true);
+        apiCall("/skills/new", body, "POST", true);
         updateLastUpdated(false);
         
     }
@@ -95,7 +95,7 @@ public class AdminPanel {
         String body = scan.nextLine();
         String apiBody = "{\"title\": \""+title+"\"," +
                         "\"body\": \""+body+"\"}";
-        apiCall("/blogs/new", apiBody, "PUT", true);
+        apiCall("/blogs/new", apiBody, "POST", true);
     }
 
     private static void deleteBlog() {

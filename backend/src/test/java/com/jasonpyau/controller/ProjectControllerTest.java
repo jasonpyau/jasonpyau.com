@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.jasonpyau.entity.Project;
+import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.service.ProjectService;
 
 
@@ -28,11 +29,14 @@ public class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
 
+    @MockBean
+    private ProjectRepository projectRepository;
+
+    private Project project = new Project(1, "Project1", "Test Description of Project1", "05/2023", "06/2023", 
+                                        "202305202306", new ArrayList<>(Arrays.asList("Java")), "project1.com");
 
     @Test
-    void testGetProjects() throws Exception {
-        Project project = new Project(1, "Project1", "Test Description of Project1", "05/2023", "06/2023", 
-                                        "202305202306", new ArrayList<>(Arrays.asList("Java")), "project1.com");
+    public void testGetProjects() throws Exception {
         List<Project> projects = new ArrayList<>(Arrays.asList(project));
         given(projectService.getProjects()).willReturn(projects);
         mockMvc.perform(MockMvcRequestBuilders.get("/projects/get")

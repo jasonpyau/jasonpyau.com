@@ -18,39 +18,29 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class BlogService {
-    
-    public static final String BLOG_ID_ERROR = "Invalid 'id', blog not found.";
-    public static final String BLOG_TITLE_ERROR = "'title' should be between 3-250 characters.";
-    public static final String BLOG_BODY_ERROR = "'body' should be between 1-5000 characters.";
 
     @Autowired
     private BlogRepository blogRepository;
     @Autowired
     private UserService userService;
 
-    // Returns error message if applicable, else null.
-    public String newBlog(String title, String body) {
-        if (title == null || body.isBlank() || title.length() < 3 || title.length() > 250) {
-            return BLOG_TITLE_ERROR;
-        } else if (body == null || body.isBlank() || body.length() > 5000) {
-            return BLOG_BODY_ERROR;
-        }
-        Blog blog = new Blog();
-        blog.setTitle(title);
-        blog.setBody(body);
-        blog.setDate(DateFormat.MMddyyyy());
-        blog.setUnixTime(DateFormat.getUnixTime());
-        blog.setLikeCount(0);
-        blog.setViewCount(0L);
+    public void newBlog(String title, String body) {
+        Blog blog = Blog.builder()
+                        .title(title)
+                        .body(body)
+                        .date(DateFormat.MMddyyyy())
+                        .unixTime(DateFormat.getUnixTime())
+                        .likeCount(0)
+                        .viewCount(0L)
+                        .build();
         blogRepository.save(blog);
-        return null;
     }
 
     // Returns error message if applicable, else null.
     public String deleteBlog(Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return BLOG_ID_ERROR;
+            return Blog.BLOG_ID_ERROR;
         }
         blogRepository.delete(optional.get());
         return null;
@@ -94,7 +84,7 @@ public class BlogService {
     public String like(HttpServletRequest request, Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return BLOG_ID_ERROR;
+            return Blog.BLOG_ID_ERROR;
         }
         User user = userService.getUser(request);
         Blog blog = optional.get();
@@ -107,7 +97,7 @@ public class BlogService {
     public String unlike(HttpServletRequest request, Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return BLOG_ID_ERROR;
+            return Blog.BLOG_ID_ERROR;
         }
         User user = userService.getUser(request);
         Blog blog = optional.get();

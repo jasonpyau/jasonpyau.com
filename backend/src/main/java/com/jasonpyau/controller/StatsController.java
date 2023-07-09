@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jasonpyau.entity.Stats;
@@ -33,26 +33,20 @@ public class StatsController {
             return Response.rateLimit();
         }
         Stats stats = statsService.getStats();
-        if (stats == null) {
-            return Response.serverError();
-        }
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/update/views", produces = "application/json")
+    @PatchMapping(path = "/update/views", produces = "application/json")
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateViews(HttpServletRequest request) {
         if (RateLimitService.rateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
         Stats stats = statsService.updateViews();
-        if (stats == null) {
-            return Response.serverError();
-        }
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/update/last_updated", produces = "application/json")
+    @PatchMapping(path = "/update/last_updated", produces = "application/json")
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateLastUpdated(HttpServletRequest request) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
@@ -62,9 +56,6 @@ public class StatsController {
             return Response.unauthorized();
         }
         Stats stats = statsService.updateLastUpdated();
-        if (stats == null) {
-            return Response.serverError();
-        }
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }
 }

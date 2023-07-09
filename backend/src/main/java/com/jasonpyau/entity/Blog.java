@@ -16,8 +16,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,34 +28,53 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "blogs", indexes = @Index(name = "unix_time_ind", columnList = "unix_time"))
 public class Blog {
+
+    public static final String BLOG_ID_ERROR = "Invalid 'id', blog not found.";
+    public static final String BLOG_TITLE_ERROR = "'title' should be between 3-250 characters.";
+    public static final String BLOG_BODY_ERROR = "'body' should be between 1-5000 characters.";
+    public static final String BLOG_PAGE_NUM_ERROR = "'pageNum' should be a positive integer.";
+    public static final String BLOG_PAGE_SIZE_ERROR = "'pageSize' should be between 1-50.";
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-    @Column (name = "title")
+
+    @Column(name = "title")
+    @Size(min = 3, max = 250, message = BLOG_TITLE_ERROR)
+    @NotBlank(message = BLOG_TITLE_ERROR)
     private String title;
-    @Column (name = "body", columnDefinition = "varchar(5000)")
+
+    @Column(name = "body", columnDefinition = "varchar(5000)")
+    @Size(max = 5000, message = BLOG_BODY_ERROR)
+    @NotBlank(message = BLOG_BODY_ERROR)
     private String body;
-    @Column (name = "like_count")
+
+    @Column(name = "like_count")
     private Integer likeCount;
-    @Column (name = "view_count")
+
+    @Column(name = "view_count")
     private Long viewCount;
-    @Column (name = "date")
+
+    @Column(name = "date")
     private String date;
-    @Column (name = "unix_time")
+
+    @Column(name = "unix_time")
     private Long unixTime;
+
     @Getter(AccessLevel.NONE)
     @Column (name = "liked_users")
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "blog_user", 
                 joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> likedUsers = new HashSet<>();
+    private final Set<User> likedUsers = new HashSet<>();
+
     @Transient
     private Boolean isLikedByUser;
 

@@ -3,8 +3,10 @@ import { apiCall } from "./apiCall.js";
 $(document).ready(async function() {
     const url = 'skills/get';
     const result = await apiCall(url, "GET", null, null);
-        if (result.status !== 200)
+        if (result.status !== 200) {
+            alert("Error in loading skills, refresh. If this problem persists, contact me.");
             return;
+        }
         const json = await result.json();
         const skillsByType = json.skills;
         Object.keys(skillsByType).forEach(function(key) {

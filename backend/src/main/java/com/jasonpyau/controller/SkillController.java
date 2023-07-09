@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,6 +22,7 @@ import com.jasonpyau.service.SkillService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(path = "/skills")
@@ -30,9 +31,9 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
-    @PutMapping(path = "/new", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @RequestBody Skill skill) {
+    public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @Valid @RequestBody Skill skill) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
@@ -41,7 +42,7 @@ public class SkillController {
         }
         String errorMessage = skillService.newSkill(skill);
         if (errorMessage != null) {
-            return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
+            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
@@ -57,7 +58,7 @@ public class SkillController {
         }
         String errorMessage = skillService.deleteSkill(skillName);
         if (errorMessage != null) {
-            return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
+            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }

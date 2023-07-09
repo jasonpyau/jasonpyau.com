@@ -28,8 +28,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "address", unique = true)
     private String address;
+    
     @Column(name = "liked_blogs")
     @ManyToMany(mappedBy = "likedUsers", fetch = FetchType.LAZY)
     private Set<Blog> likedBlogs = new HashSet<>();

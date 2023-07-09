@@ -36,6 +36,7 @@ public class StatsServiceTest {
     void testUpdateViews() {
         Stats dummy = new Stats(originalStats.getId(), originalStats.getDate(), originalStats.getViews());
         given(statsRepository.findById(1)).willReturn(Optional.of(dummy));
+        given(statsRepository.save(dummy)).willReturn(dummy);
         Stats stats = statsService.updateViews();
         assertEquals(originalStats.getId(), stats.getId());
         assertEquals(originalStats.getViews()+1, stats.getViews());
@@ -46,6 +47,7 @@ public class StatsServiceTest {
     void testUpdateLastUpdated() {
         Stats dummy = new Stats(originalStats.getId(), originalStats.getDate(), originalStats.getViews());
         given(statsRepository.findById(1)).willReturn(Optional.of(dummy));
+        given(statsRepository.save(dummy)).willReturn(dummy);
         Stats stats = statsService.updateLastUpdated();
         assertEquals(originalStats.getId(), stats.getId());
         assertEquals(originalStats.getViews(), stats.getViews());

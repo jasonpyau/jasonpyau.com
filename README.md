@@ -19,14 +19,17 @@ This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling ser
 
 ## Dependencies
 ```
-1. Spring Web
-2. Spring Data JPA - Database
-3. Thymeleaf - Load webpages through SpringBoot
+1. Spring Boot Web
+2. Spring Boot Data JPA - Database
+3. Spring Boot Thymeleaf - Load webpages through Spring Boot
 4. MariaDB Driver - Database
 5. Java Mail Sender - Send email notifications to myself
 6. Bucket4J - Rate Limitter
 7. Google Guava - Cache to Rate Limit
 8. Lombok - Reduce repetitive code (Getter/Setters)
+9. Spring Boot Validation - Validate user input
+10. Spring Boot Test - Unit testing
+11. Hamcrest - Unit testing
 ```
 
 ## Get Started

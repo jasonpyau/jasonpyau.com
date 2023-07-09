@@ -26,21 +26,6 @@ public class ContactServiceTest {
     private ContactService contactService;
 
     private Message message1 = new Message(1L, "Message1", "test1@gmail.com", "This is a test body of Message1", DateFormat.yyyyMMddHHmmss());
-    
-    @Test
-    void testSendMessage_MessageNameError() {
-        String invalidName = "a".repeat(100);
-        Message message = new Message(2L, invalidName, "test3@gmail.com", "This is a test body of MessageTest", null);
-        String errorMessage = contactService.sendMessage(message);
-        assertEquals(ContactService.MESSAGE_NAME_ERROR, errorMessage);
-    }
-
-    @Test
-    void sendMessage_MessageBodyError() {
-        Message message = new Message(3L, "MessageTest", "test3@gmail.com", null, null);
-        String errorMessage = contactService.sendMessage(message);
-        assertEquals(ContactService.MESSAGE_BODY_ERROR, errorMessage);
-    }
 
     @Test
     void testDeleteMessage() {
@@ -52,7 +37,7 @@ public class ContactServiceTest {
     @Test
     void testDeleteMessage_Message_Id_Error() {
         String errorMessage = contactService.deleteMessage(2L);
-        assertEquals(ContactService.MESSAGE_ID_ERROR, errorMessage);
+        assertEquals(Message.MESSAGE_ID_ERROR, errorMessage);
     }
 
 }

@@ -19,6 +19,7 @@ import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/about_me")
@@ -29,17 +30,14 @@ public class AboutMeController {
 
     @PutMapping(path = "/update", consumes = "application/json", produces = "application/json")
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> setAboutMe(HttpServletRequest request, @RequestBody AboutMe aboutMe) {
+    public ResponseEntity<HashMap<String, Object>> setAboutMe(HttpServletRequest request, @Valid @RequestBody AboutMe aboutMe) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
         }
         if (!AuthorizationService.authorize(request)) {
             return Response.unauthorized();
         }
-        String errorMessage = aboutMeService.setAboutMe(aboutMe);
-        if (errorMessage != null) {
-            return new ResponseEntity<>(Response.createBody("status", errorMessage), HttpStatus.NOT_ACCEPTABLE);
-        }
+        aboutMeService.setAboutMe(aboutMe);
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 

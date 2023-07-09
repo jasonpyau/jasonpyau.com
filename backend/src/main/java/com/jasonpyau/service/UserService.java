@@ -47,10 +47,17 @@ public class UserService {
 
     // Since in production, Cloudflare goes through every connection.
     public static String getUserAddress(HttpServletRequest request) {
-        if (activeProfile == null || activeProfile.equals("dev")) {
+        if (activeProfile == null) {
             return Hash.SHA256(request.getRemoteAddr()+" "+request.getLocalAddr());
         }
-        return Hash.SHA256(request.getHeader("CF-Connecting-IP"));
+        switch (activeProfile) {
+            case "production":
+                return Hash.SHA256(request.getHeader("CF-Connecting-IP"));
+            case "dev":
+            case "default":
+            default:
+                return Hash.SHA256(request.getRemoteAddr()+" "+request.getLocalAddr());
+        }
     }
 
 }
