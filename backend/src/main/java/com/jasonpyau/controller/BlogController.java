@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.entity.Blog;
-import com.jasonpyau.service.AuthorizationService;
 import com.jasonpyau.service.BlogService;
 import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.util.Response;
@@ -41,26 +41,22 @@ public class BlogController {
     private BlogService blogService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
+    @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newBlog(HttpServletRequest request, @Valid @RequestBody NewBlogForm newBlogForm) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
-        }
-        if (!AuthorizationService.authorize(request)) {
-            return Response.unauthorized();
         }
         blogService.newBlog(newBlogForm.getTitle(), newBlogForm.getBody());
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete/{id}", produces = "application/json")
+    @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteBlog(HttpServletRequest request, @PathVariable("id") Long id) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
-        }
-        if (!AuthorizationService.authorize(request)) {
-            return Response.unauthorized();
         }
         String errorMessage = blogService.deleteBlog(id);
         if (errorMessage != null) {

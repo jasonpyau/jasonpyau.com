@@ -19,6 +19,9 @@ public class AuthorizationService {
     private AuthorizationService() {}
 
     public static boolean authorize(HttpServletRequest request) {
+        if (request == null) {
+            return false;
+        }
         String password = request.getHeader("Authorization");
         return (password != null && !password.isBlank() && password.equals(appPassword));
     }

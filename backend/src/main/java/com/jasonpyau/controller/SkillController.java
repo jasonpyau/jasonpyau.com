@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.entity.Skill;
-import com.jasonpyau.service.AuthorizationService;
 import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.service.SkillService;
 import com.jasonpyau.util.Response;
@@ -32,13 +32,11 @@ public class SkillController {
     private SkillService skillService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
+    @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @Valid @RequestBody Skill skill) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
-        }
-        if (!AuthorizationService.authorize(request)) {
-            return Response.unauthorized();
         }
         String errorMessage = skillService.newSkill(skill);
         if (errorMessage != null) {
@@ -48,13 +46,11 @@ public class SkillController {
     }
 
     @DeleteMapping(path = "/delete/{name}", produces = "application/json")
+    @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteSkill(HttpServletRequest request, @PathVariable("name") String skillName) {
         if (RateLimitService.adminRateLimitService.rateLimit(request)) {
             return Response.rateLimit();
-        }
-        if (!AuthorizationService.authorize(request)) {
-            return Response.unauthorized();
         }
         String errorMessage = skillService.deleteSkill(skillName);
         if (errorMessage != null) {
