@@ -26,5 +26,8 @@ async function contactFormSubmit() {
         contactFormSuccessElement.style.display = "none";
         contactFormErrorElement.style.display = "flex";
         contactFormErrorElement.textContent = json.reason;
+        if (result.status !== 406) {
+            alert(`Error in sending message, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
+        }
     }
 }

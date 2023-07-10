@@ -50,11 +50,11 @@ async function loadBlogsPage(deleteFirst) {
     blogsPreviewSpinner.style.display = "block";
     const url = "/blogs/get/page"+((showOnlyLiked) ? "/liked" : "")+`?pageNum=${pageNum}&pageSize=${pageSize}`;
     const result = await apiCall(url, "GET", null, null);
+    const json = await result.json();
     if (result.status !== 200) {
-        alert("Error in loading blogs, refresh. If this problem persists, contact me.");
+        alert(`Error in loading blogs, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
         return;
     }
-    const json = await result.json();
     const blogs = json.blogs;
     const container = document.getElementById("BlogsContainer");
     if (deleteFirst) {

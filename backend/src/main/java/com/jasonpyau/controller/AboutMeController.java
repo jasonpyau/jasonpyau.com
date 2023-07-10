@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
+import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.AboutMe;
 import com.jasonpyau.service.AboutMeService;
-import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,21 +30,17 @@ public class AboutMeController {
 
     @PutMapping(path = "/update", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> setAboutMe(HttpServletRequest request, @Valid @RequestBody AboutMe aboutMe) {
-        if (RateLimitService.adminRateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
         aboutMeService.setAboutMe(aboutMe);
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/get", produces = "application/json")
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getAboutMe(HttpServletRequest request) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
         return new ResponseEntity<>(Response.createBody("text", aboutMeService.getAboutMe()), HttpStatus.OK);
     }
 }

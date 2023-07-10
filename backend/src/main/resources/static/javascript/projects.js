@@ -5,11 +5,11 @@ $(document).ready(function() {
         $("#ProjectRows").append(projectTemplate);
         const url = `/projects/get`;
         const result = await apiCall(url, "GET", null, null);
+        const json = await result.json();
         if (result.status !== 200) {
-            alert("Error in loading projects, refresh. If this problem persists, contact me.");
+            alert(`Error in loading projects, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
             return;
         }
-        const json = await result.json();
         const projects = json.projects;
         for (let i = 0; i < projects.length; i++) {
             const project = projects[i];

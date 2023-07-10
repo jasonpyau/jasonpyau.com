@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Blog;
 import com.jasonpyau.entity.Stats;
 import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
-import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.service.StatsService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +26,8 @@ public class FrontendController {
     private AboutMeService aboutMeService;
     
     @GetMapping("/")
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String home(HttpServletRequest request, Model model) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return "ratelimit";
-        }
         updateStats(model);
         model.addAttribute("aboutMe", aboutMeService.getAboutMe());
         return "index";
@@ -41,10 +39,8 @@ public class FrontendController {
     }
 
     @GetMapping({"/links", "/links/"})
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String links(HttpServletRequest request, Model model) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return "ratelimit";
-        }
         updateStats(model);
         return "links";
     }
@@ -55,19 +51,15 @@ public class FrontendController {
     }
 
     @GetMapping({"/blogs", "/blogs/"})
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String blogs(HttpServletRequest request, Model model) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return "ratelimit";
-        }
         updateStats(model);
         return "blogs";
     }
 
     @GetMapping({"/blogs/{id}", "blogs/{id}/"})
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String blog(@PathVariable("id") Long id, HttpServletRequest request, Model model) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return "ratelimit";
-        }
         updateStats(model);
         Blog blog = blogService.getBlog(request, id);
         if (blog == null) {

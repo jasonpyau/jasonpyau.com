@@ -28,9 +28,9 @@ public class Response {
         return res;
     }
 
-    public static ResponseEntity<HashMap<String, Object>> rateLimit() {
+    public static ResponseEntity<HashMap<String, Object>> rateLimit(Long ms) {
         String[] keys = {"status", "reason"};
-        String[] values = {"error", "Rate Limit, try again later."};
+        String[] values = {"error", "Rate Limit, try again in "+ms+"ms."};
         return new ResponseEntity<>(createBody(keys, values), HttpStatus.TOO_MANY_REQUESTS);
     }
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
+import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Stats;
-import com.jasonpyau.service.RateLimitService;
 import com.jasonpyau.service.StatsService;
 import com.jasonpyau.util.Response;
 
@@ -27,32 +27,26 @@ public class StatsController {
     private StatsService statsService;
 
     @GetMapping(path = "/get", produces = "application/json")
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getStats(HttpServletRequest request) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
         Stats stats = statsService.getStats();
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/update/views", produces = "application/json")
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateViews(HttpServletRequest request) {
-        if (RateLimitService.rateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
         Stats stats = statsService.updateViews();
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/update/last_updated", produces = "application/json")
     @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateLastUpdated(HttpServletRequest request) {
-        if (RateLimitService.adminRateLimitService.rateLimit(request)) {
-            return Response.rateLimit();
-        }
         Stats stats = statsService.updateLastUpdated();
         return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
     }

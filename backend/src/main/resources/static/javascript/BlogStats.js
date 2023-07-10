@@ -47,8 +47,9 @@ export class BlogStats {
                 const method = (this.#isLiked) ? "unlike" : "like";
                 const url = `/blogs/${method}/${this.#id}`;
                 const result = await apiCall(url, "POST", null, null);
+                const json = await result.json();
                 if (result.status !== 200) {
-                    alert("Error in loading stats, refresh. If this problem persists, contact me.");
+                    alert(`Error in liking, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
                     return;
                 }
                 if (this.#isLiked) {

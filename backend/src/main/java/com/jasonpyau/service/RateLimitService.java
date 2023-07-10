@@ -11,51 +11,31 @@ import com.google.common.cache.LoadingCache;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
+import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.Refill;
 import io.github.bucket4j.local.LocalBucketBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class RateLimitService {
-    
-    public static final int DEFAULT_TYPE = 1;
-    public static final int ADMIN_TYPE = 2;
-    public static final int SEND_MESSAGES_TYPE = 3;
 
-    // Singleton-like instances of RateLimitService
-    public static final RateLimitService rateLimitService = new RateLimitService(DEFAULT_TYPE);
-    public static final RateLimitService adminRateLimitService = new RateLimitService(ADMIN_TYPE);
+    // Single instance of RateLimitService
+    public static final RateLimitService RateLimiter = new RateLimitService(150, 60, 20000, 600);
 
+    // Time units in seconds
     private int requestsPerInterval;
-    private int durationInSeconds;
-    private int maximumCacheSize;
+    private int intervalDuration;
+
     private LoadingCache<String, Bucket> cache;
 
-    public RateLimitService() {
-        this(DEFAULT_TYPE);
-    }
+    private RateLimitService() {};
 
-    public RateLimitService(int type) {
-        switch(type) {
-            case ADMIN_TYPE:
-                this.requestsPerInterval = 50;
-                this.durationInSeconds = 20;
-                this.maximumCacheSize = 100;
-                break;
-            case SEND_MESSAGES_TYPE:
-                this.requestsPerInterval = 4;
-                this.durationInSeconds = 30;
-                this.maximumCacheSize = 10000;
-                break;
-            case DEFAULT_TYPE:
-            default:
-                this.requestsPerInterval = 50;
-                this.durationInSeconds = 20;
-                this.maximumCacheSize = 10000;
-        }
+    private RateLimitService(int requestsPerInterval, int intervalDuration, int maximumCacheSize, int cacheDuration) {
+        this.requestsPerInterval = requestsPerInterval;
+        this.intervalDuration = intervalDuration;
         this.cache = CacheBuilder.newBuilder()
             .maximumSize(maximumCacheSize)
-            .expireAfterWrite(durationInSeconds, TimeUnit.SECONDS)
+            .expireAfterWrite(cacheDuration, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Bucket>() {
                 @Override
                 public Bucket load(String key) {
@@ -64,16 +44,8 @@ public class RateLimitService {
             });
     }
 
-    public int getRequestsPerInterval() {
-        return requestsPerInterval;
-    }
-
-    public int getDurationInSeconds() {
-        return durationInSeconds;
-    }
-
     private Bandwidth getBandwidthLimit() {
-        return Bandwidth.classic(requestsPerInterval, Refill.intervally(requestsPerInterval, Duration.ofSeconds(durationInSeconds)));
+        return Bandwidth.classic(requestsPerInterval, Refill.intervally(requestsPerInterval, Duration.ofSeconds(intervalDuration)));
     }
 
     private Bucket newBucket() {
@@ -82,15 +54,10 @@ public class RateLimitService {
         return builder.build();
     }
 
-    // Return true if user is rate limited, false otherwise.
-    public boolean rateLimit(HttpServletRequest request) {
+    public ConsumptionProbe rateLimit(HttpServletRequest request, long token) {
         String key = UserService.getUserAddress(request);
         Bucket bucket = cache.getUnchecked(key);
-        boolean rateLimited = true;
-        if (bucket.tryConsume(1)) {
-            rateLimited = false;
-        }
-        return rateLimited;
+        return bucket.tryConsumeAndReturnRemaining(token);
     }
 }
 

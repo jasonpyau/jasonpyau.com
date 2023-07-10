@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthorizeAdminAspect {
     
     @Around("@annotation(AuthorizeAdmin)")
-    public Object AuthorizeAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object authorizeAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
             if (arg instanceof HttpServletRequest) {

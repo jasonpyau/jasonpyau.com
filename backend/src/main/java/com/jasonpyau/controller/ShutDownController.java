@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
-import com.jasonpyau.service.RateLimitService;
+import com.jasonpyau.annotation.RateLimit;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -14,11 +14,9 @@ public class ShutDownController {
 
     @DeleteMapping(path = "/shut_down")
     @AuthorizeAdmin
+    @RateLimit(RateLimit.EXPENSIVE_TOKEN)
     @CrossOrigin
     public void shutDown(HttpServletRequest request) {
-        if (RateLimitService.adminRateLimitService.rateLimit(request)) {
-            return;
-        }
         System.exit(0);
     }
 }
