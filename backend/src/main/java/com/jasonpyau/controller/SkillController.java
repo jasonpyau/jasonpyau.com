@@ -59,7 +59,7 @@ public class SkillController {
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
-        HashMap<String, List<String>> skills = skillService.getSkills();
+        HashMap<String, List<Skill>> skills = skillService.getSkills();
         return new ResponseEntity<>(Response.createBody("skills", skills), HttpStatus.OK);
     }
 

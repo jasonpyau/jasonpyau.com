@@ -45,11 +45,6 @@ public class FrontendController {
         return "links";
     }
 
-    @GetMapping({"/projects","/projects/"})
-    public String projects() {
-        return "projects";
-    }
-
     @GetMapping({"/blogs", "/blogs/"})
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String blogs(HttpServletRequest request, Model model) {

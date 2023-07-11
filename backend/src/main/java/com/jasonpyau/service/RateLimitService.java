@@ -13,29 +13,36 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.Refill;
-import io.github.bucket4j.local.LocalBucketBuilder;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 @Service
 public class RateLimitService {
 
     // Single instance of RateLimitService
-    public static final RateLimitService RateLimiter = new RateLimitService(150, 60, 20000, 600);
+    public static final RateLimitService RateLimiter = RateLimitService.builder()
+                                                        .tokensPerInterval(150)
+                                                        .intervalDuration(60)
+                                                        .maximumCacheSize(15000)
+                                                        .cacheDuration(600)
+                                                        .build();
 
     // Time units in seconds
-    private int requestsPerInterval;
+    private int tokensPerInterval;
     private int intervalDuration;
 
     private LoadingCache<String, Bucket> cache;
 
     private RateLimitService() {};
 
-    private RateLimitService(int requestsPerInterval, int intervalDuration, int maximumCacheSize, int cacheDuration) {
-        this.requestsPerInterval = requestsPerInterval;
+    @Builder(access = AccessLevel.PRIVATE)
+    private RateLimitService(int tokensPerInterval, int intervalDuration, int maximumCacheSize, int cacheDuration) {
+        this.tokensPerInterval = tokensPerInterval;
         this.intervalDuration = intervalDuration;
         this.cache = CacheBuilder.newBuilder()
             .maximumSize(maximumCacheSize)
-            .expireAfterWrite(cacheDuration, TimeUnit.SECONDS)
+            .expireAfterAccess(cacheDuration, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Bucket>() {
                 @Override
                 public Bucket load(String key) {
@@ -45,13 +52,13 @@ public class RateLimitService {
     }
 
     private Bandwidth getBandwidthLimit() {
-        return Bandwidth.classic(requestsPerInterval, Refill.intervally(requestsPerInterval, Duration.ofSeconds(intervalDuration)));
+        return Bandwidth.classic(tokensPerInterval, Refill.intervally(tokensPerInterval, Duration.ofSeconds(intervalDuration)));
     }
 
     private Bucket newBucket() {
-        LocalBucketBuilder builder = Bucket.builder();
-        builder.addLimit(getBandwidthLimit());
-        return builder.build();
+        return Bucket.builder()
+                    .addLimit(getBandwidthLimit())
+                    .build();
     }
 
     public ConsumptionProbe rateLimit(HttpServletRequest request, long token) {

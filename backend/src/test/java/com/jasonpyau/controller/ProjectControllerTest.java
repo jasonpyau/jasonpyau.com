@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.jasonpyau.entity.Project;
+import com.jasonpyau.entity.Skill;
 import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.service.ProjectService;
 
@@ -32,8 +34,25 @@ public class ProjectControllerTest {
     @MockBean
     private ProjectRepository projectRepository;
 
-    private Project project = new Project(1, "Project1", "Test Description of Project1", "05/2023", "06/2023", 
-                                        "202305202306", new ArrayList<>(Arrays.asList("Java")), "project1.com");
+    private Project project = Project.builder()
+                                .id(1)
+                                .name("Project1")
+                                .description("Test Description of Project1")
+                                .startDate("05/2023")
+                                .endDate("06/2023")
+                                .link("project.com")
+                                .build();
+    
+    private Skill skill = Skill.builder()
+                            .id(1)
+                            .name("Java")
+                            .type("Language")
+                            .simpleIconsIconSlug("spring")
+                            .build();
+    @BeforeEach
+    public void setUp() {
+        project.getSkills().add(skill);
+    }
 
     @Test
     public void testGetProjects() throws Exception {
@@ -49,9 +68,11 @@ public class ProjectControllerTest {
             .andExpect(jsonPath("$.projects[0].description", is(project.getDescription())))
             .andExpect(jsonPath("$.projects[0].startDate", is(project.getStartDate())))
             .andExpect(jsonPath("$.projects[0].endDate", is(project.getEndDate())))
-            .andExpect(jsonPath("$.projects[0].dateOrder", is(project.getDateOrder())))
-            .andExpect(jsonPath("$.projects[0].technologies", hasSize(1)))
-            .andExpect(jsonPath("$.projects[0].technologies[0]", is(project.getTechnologies().get(0))))
+            .andExpect(jsonPath("$.projects[0].skills", hasSize(1)))
+            .andExpect(jsonPath("$.projects[0].skills[0].id", is(skill.getId())))
+            .andExpect(jsonPath("$.projects[0].skills[0].name", is(skill.getName())))
+            .andExpect(jsonPath("$.projects[0].skills[0].type", is(skill.getType())))
+            .andExpect(jsonPath("$.projects[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.projects[0].link", is(project.getLink())));
     }
 }

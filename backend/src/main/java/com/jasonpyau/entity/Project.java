@@ -1,17 +1,23 @@
 package com.jasonpyau.entity;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +25,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="projects")
@@ -29,7 +36,6 @@ public class Project {
     public static final String PROJECT_DESCRIPTION_ERROR = "'description' should be between 10-250 characters.";
     public static final String PROJECT_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     public static final String PROJECT_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
-    public static final String PROJECT_TECHNOLOGIES_ERROR = "'technologies' should have length between 1-10 and each technology between 1-15 characters.";
     public static final String PROJECT_LINK_ERROR = "'link' should be between 4-250 characters.";
 
     @Id
@@ -57,12 +63,15 @@ public class Project {
     @NotBlank(message = PROJECT_END_DATE_ERROR)
     private String endDate;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Column(name = "date_order", nullable = false)
     private String dateOrder;
 
-    @Column(name = "technologies", nullable = false)
-    @Size(min = 1, max = 10, message = PROJECT_TECHNOLOGIES_ERROR)
-    private List<@NotBlank(message = PROJECT_TECHNOLOGIES_ERROR) @Size(min = 1, max = 15, message = PROJECT_TECHNOLOGIES_ERROR) String> technologies;
+    @Column(name = "skills")
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+    @OrderBy("name ASC")
+    private final Set<Skill> skills = new HashSet<>();
 
     @Column(name = "link", nullable = false)
     @Size(min = 4, max = 250, message = PROJECT_LINK_ERROR)
@@ -76,5 +85,15 @@ public class Project {
         sb.append(endDate.substring(3));
         sb.append(endDate.substring(0, 2));
         this.dateOrder = sb.toString();
+    }
+
+    public void addSkill(Skill skill) {
+        skill.getProjects().add(this);
+        this.skills.add(skill);
+    }
+
+    public void deleteSkill(Skill skill) {
+        skill.getProjects().remove(this);
+        this.skills.remove(skill);
     }
 }

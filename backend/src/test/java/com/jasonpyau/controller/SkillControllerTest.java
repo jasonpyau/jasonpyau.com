@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.jasonpyau.entity.Skill;
 import com.jasonpyau.service.SkillService;
 
 @WebMvcTest(SkillController.class)
@@ -26,25 +27,44 @@ public class SkillControllerTest {
     @MockBean
     private SkillService skillService;
 
+    private Skill skill1 = Skill.builder()
+                            .id(1)
+                            .name("Java")
+                            .type("Language")
+                            .simpleIconsIconSlug("spring")
+                            .build();
+
+    private Skill skill2 = Skill.builder()
+                            .id(2)
+                            .name("Git")
+                            .type("Software")
+                            .simpleIconsIconSlug("git")
+                            .build();
+
     @Test
     public void testGetSkills() throws Exception {
-        HashMap<String, List<String>> skills = new HashMap<>();
-        skills.put("Language", Arrays.asList("React Native", "Java"));
+        HashMap<String, List<Skill>> skills = new HashMap<>();
+        skills.put("Language", Arrays.asList(skill1));
         skills.put("Framework/Library", Arrays.asList());
         skills.put("Database", Arrays.asList());
-        skills.put("Software", Arrays.asList("Git"));
+        skills.put("Software", Arrays.asList(skill2));
         given(skillService.getSkills()).willReturn(skills);
         mockMvc.perform(MockMvcRequestBuilders.get("/skills/get")
             .header("X-Forwarded-For", "localhost")
             .header("CF-Connecting-IP", "localhost"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.skills.Language", hasSize(2)))
-            .andExpect(jsonPath("$.skills.Language[0]", is("React Native")))
-            .andExpect(jsonPath("$.skills.Language[1]", is("Java")))
+            .andExpect(jsonPath("$.skills.Language", hasSize(1)))
+            .andExpect(jsonPath("$.skills.Language[0].id", is(skill1.getId())))
+            .andExpect(jsonPath("$.skills.Language[0].name", is(skill1.getName())))
+            .andExpect(jsonPath("$.skills.Language[0].type", is(skill1.getType())))
+            .andExpect(jsonPath("$.skills.Language[0].simpleIconsIconSlug", is(skill1.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.skills.Framework/Library", hasSize(0)))
             .andExpect(jsonPath("$.skills.Database", hasSize(0)))
             .andExpect(jsonPath("$.skills.Software", hasSize(1)))
-            .andExpect(jsonPath("$.skills.Software[0]", is("Git")))
+            .andExpect(jsonPath("$.skills.Software[0].id", is(skill2.getId())))
+            .andExpect(jsonPath("$.skills.Software[0].name", is(skill2.getName())))
+            .andExpect(jsonPath("$.skills.Software[0].type", is(skill2.getType())))
+            .andExpect(jsonPath("$.skills.Software[0].simpleIconsIconSlug", is(skill2.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.status", is("success")));
     }
     

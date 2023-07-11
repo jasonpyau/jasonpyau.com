@@ -1,7 +1,7 @@
 import { apiCall } from "./apiCall.js";
 
 $(document).ready(async function() {
-    const url = 'skills/get';
+    const url = '/skills/get';
     const result = await apiCall(url, "GET", null, null);
     const json = await result.json();
     if (result.status !== 200) {
@@ -15,14 +15,26 @@ $(document).ready(async function() {
         rowHTML.querySelector("#SkillType").innerHTML = key;
         const SkillsRowContainer = rowHTML.querySelector("#SkillsRowContainer");
         const skills = skillsByType[key];
-        for (const skill of skills) {
-            const element = document.createElement('span');
-            element.innerHTML = skill;
-            element.className = "mx-1 my-2 btn btn-dark btn-sm";
-            SkillsRowContainer.appendChild(element);
-        }
+        loadSkills(skills, SkillsRowContainer);
         document.getElementById("SkillsTypeRow").appendChild(rowHTML);
         rowHTML.style.display = "inline";
         document.getElementById("skillSpinner").style.display = "none";
     });
 });
+
+export function loadSkills(skills, container) {
+    for (const skill of skills) {
+        const element = document.createElement('span');
+        element.className = "m-1 btn btn-dark btn-sm";
+        element.innerHTML = 
+        ((skill.simpleIconsIconSlug) ? 
+        `<img height="16" width="16" src="https://cdn.simpleicons.org/${skill.simpleIconsIconSlug}" class="mx-1"/>` : "") +
+        `
+            <span>
+                ${skill.name}
+            </span>
+        `;
+        container.appendChild(element);
+        
+    }
+}

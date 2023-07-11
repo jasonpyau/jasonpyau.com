@@ -1,10 +1,12 @@
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class AdminPanel {
@@ -51,6 +53,22 @@ public class AdminPanel {
         apiCall("/projects/get", "{ }", "GET", false);
     }
 
+    private static void newProjectSkill() {
+        System.out.println("Input id of the project you'd like to add a skill to:");
+        int id = Integer.parseInt(scan.nextLine());
+        System.out.println("Input the name of the skill:");
+        String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        apiCall(String.format("/projects/%d/skills/new?skillName=%s", id, skillName), "{ }", "POST", true);
+    }
+
+    private static void deleteProjectSkill() {
+        System.out.println("Input id of the project you'd like to remove a skill from:");
+        int id = Integer.parseInt(scan.nextLine());
+        System.out.println("Input the name of the skill:");
+        String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        apiCall(String.format("/projects/%d/skills/delete?skillName=%s", id, skillName), "{ }", "DELETE", true);
+    }
+
     private static void newSkill() {
         System.out.println("Input name of the skill:");
         String name = scan.nextLine();
@@ -58,8 +76,11 @@ public class AdminPanel {
         apiCall("/skills/valid_types", "{ }", "GET", false);
         System.out.println("These are the valid types. Input the type of skill:");
         String type = scan.nextLine();
+        System.out.println("Input the Simple Icons slug for the skill (not required). Read more about it here: https://www.npmjs.com/package/simple-icons https://github.com/simple-icons/simple-icons/blob/develop/slugs.md");
+        String simpleIconsIconSlug = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
-                        "\"type\": \""+type+"\"}";
+                        "\"type\": \""+type+"\"," +
+                        "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"}";
         apiCall("/skills/new", body, "POST", true);
         updateLastUpdated(false);
         
@@ -202,7 +223,9 @@ public class AdminPanel {
         System.out.println("2.) Update Project");
         System.out.println("3.) Delete Project");
         System.out.println("4.) View Projects");
-        System.out.println("5.) Back");
+        System.out.println("5.) Add Skill to Project");
+        System.out.println("6.) Delete Skill from Project");
+        System.out.println("7.) Back");
         int input = scan.nextInt();
         scan.nextLine();
         switch (input) {
@@ -219,6 +242,12 @@ public class AdminPanel {
                 getProjects();
                 break;
             case 5:
+                newProjectSkill();
+                break;
+            case 6:
+                deleteProjectSkill();
+                break;
+            case 7:
                 return;
             default:
                 System.out.println("Invalid input.");
@@ -293,26 +322,6 @@ public class AdminPanel {
         System.out.println("Input endDate ('MM/YYYY') of project");
         input = scan.nextLine();
         sb.append("\"endDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input technologies, seperated by the enter key, ending with a blank line.");
-        sb.append("\"technologies\": ");
-        StringBuilder techSb = new StringBuilder();
-        techSb.append("[");
-        boolean hasTech = false;
-        while (true) {
-            input = scan.nextLine();
-            if (input.isBlank())
-                break;
-            techSb.append("\""+input+"\",");
-            hasTech = true;
-            
-        }
-        if (hasTech) {
-            techSb.setLength(techSb.lastIndexOf(","));
-            techSb.append("], ");
-            sb.append(techSb.toString());
-        } else {
-            sb.append("null, ");
-        }
         System.out.println("Input link to the project:");
         input = scan.nextLine();
         sb.append("\"link\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");

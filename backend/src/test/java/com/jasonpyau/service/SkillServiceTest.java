@@ -24,7 +24,12 @@ public class SkillServiceTest {
     @InjectMocks
     private SkillService skillService;
 
-    private Skill skill = new Skill(1, "Java", "Language");
+    private Skill skill = Skill.builder()
+                            .id(1)
+                            .name("Java")
+                            .type("Language")
+                            .simpleIconsIconSlug("spring")
+                            .build();
 
     @Test
     private void newSkill_SkillAlreadyExistsError() {

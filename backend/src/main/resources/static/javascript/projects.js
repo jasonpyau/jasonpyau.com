@@ -1,7 +1,8 @@
 import { apiCall } from "./apiCall.js";
+import { loadSkills } from "./skills.js";
 
 $(document).ready(function() {
-    $.get("projects", async function(projectTemplate) {
+    $.get("/files/projects.html", async function(projectTemplate) {
         $("#ProjectRows").append(projectTemplate);
         const url = `/projects/get`;
         const result = await apiCall(url, "GET", null, null);
@@ -11,73 +12,26 @@ $(document).ready(function() {
             return;
         }
         const projects = json.projects;
-        for (let i = 0; i < projects.length; i++) {
-            const project = projects[i];
-            const projectElement = new Project(i);
-            projectElement.setName(project.name);
-            projectElement.setDescription(project.description);
-            projectElement.setStartDate(project.startDate);
-            projectElement.setEndDate(project.endDate);
-            projectElement.setTechnologies(project.technologies);
-            projectElement.setLink(project.link);
-            projectElement.show();
+        for (const project of projects) {
+            new Project(project);
         }
         document.getElementById("projectSpinner").style.display = "none";
     });
 });
 
 class Project {
-    #element;
-    #name;
-    #description;
-    #startDate;
-    #endDate;
-    #technologies = [];
-    #link;
-    constructor(id) {
+    constructor(project) {
         $("#ProjectTemplate").clone()
-                                .prop('id', "Project"+id)
+                                .prop('id', "Project"+project.id)
                                 .appendTo("#ProjectRows");
-        this.#element = document.querySelector(`#ProjectRows #Project${id}`);
+        const element = document.querySelector(`#ProjectRows #Project${project.id}`);
+        element.querySelector("#Name").textContent = project.name;
+        element.querySelector("#Description").textContent = project.description;
+        element.querySelector("#StartDate").textContent = project.startDate;
+        element.querySelector("#EndDate").textContent = project.endDate;
+        const skillsContainer = element.querySelector("#SkillsContainer");
+        loadSkills(project.skills, skillsContainer);
+        element.href = project.link;
+        element.style.display = "block";
     }
-
-    setName(name) {
-        this.#name = name;
-    }
-
-    setDescription(description) {
-        this.#description = description;
-    }
-
-    setStartDate(startDate) {
-        this.#startDate = startDate;
-    }
-
-    setEndDate(endDate) {
-        this.#endDate = endDate;
-    }
-
-    setTechnologies(technologies) {
-        this.#technologies = technologies;
-    }
-
-    setLink(link) {
-        this.#link = link;
-    }
-
-    show() {
-        this.#element.querySelector("#Name").innerHTML = this.#name;
-        this.#element.querySelector("#Description").innerHTML = this.#description;
-        this.#element.querySelector("#StartDate").innerHTML = this.#startDate;
-        this.#element.querySelector("#EndDate").innerHTML = this.#endDate;
-        this.#element.href = this.#link;
-        const technologiesContainer = this.#element.querySelector("#TechnologiesContainer");
-        for (const technology of this.#technologies) {
-            const element = document.createElement('span');
-            element.innerHTML = technology;
-            element.className = "mx-1 mb-1 btn btn-dark btn-sm";
-            technologiesContainer.appendChild(element);
-        }
-        this.#element.style.display = "block";
-    }
-};
+}

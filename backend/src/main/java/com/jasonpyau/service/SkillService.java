@@ -39,8 +39,8 @@ public class SkillService {
         return null;
     }
 
-    public HashMap<String, List<String>> getSkills() {
-        HashMap<String, List<String>> res = new HashMap<>();
+    public HashMap<String, List<Skill>> getSkills() {
+        HashMap<String, List<Skill>> res = new HashMap<>();
         List<String> types = validTypes();
         for (String type : types) {
             res.put(type, skillRepository.findAllSkillNameByType(type));
@@ -50,6 +50,10 @@ public class SkillService {
 
     public List<String> validTypes() {
         return new ArrayList<String>(Skill.validTypes);
+    }
+
+    public Optional<Skill> getSkillByName(String skillName) {
+        return skillRepository.findSkillByName(skillName);
     }
 
 }

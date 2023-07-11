@@ -3,8 +3,10 @@ package com.jasonpyau.advice;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -54,5 +56,10 @@ public class ValidationExceptionHandler {
         }
         body.put("reason", sb.toString());
         return res;
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<HashMap<String, Object>> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        return Response.errorMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

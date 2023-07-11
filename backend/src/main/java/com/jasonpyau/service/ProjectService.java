@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Project;
+import com.jasonpyau.entity.Skill;
 import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.util.Patch;
 
@@ -21,6 +22,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private SkillService skillService;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -51,12 +55,50 @@ public class ProjectService {
         if (!optional.isPresent()) {
             return Project.PROJECT_ID_ERROR;
         }
-        projectRepository.delete(optional.get());
+        Project project = optional.get();
+        Set<Skill> skills = project.getSkills();
+        for (Skill skill : skills) {
+            skill.getProjects().remove(project);
+        }
+        skills.clear();
+        projectRepository.delete(project);
         return null;
     }
 
     public List<Project> getProjects() {
         return projectRepository.findAllByStartDateEndDate();
+    }
+
+    // Returns error message if applicable, else null.
+    public String newProjectSkill(String skillName, Integer id) {
+        Optional<Project> projectOptional = projectRepository.findById(id);
+        if (!projectOptional.isPresent()) {
+            return Project.PROJECT_ID_ERROR;
+        }
+        Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
+        if (!skillOptional.isPresent()) {
+            return Skill.SKILL_NOT_FOUND_ERROR;
+        }
+        Project project = projectOptional.get();
+        project.addSkill(skillOptional.get());
+        projectRepository.save(project);
+        return null;
+    }
+
+    // Returns error message if applicable, else null.
+    public String deleteProjectSkill(String skillName, Integer id) {
+        Optional<Project> projectOptional = projectRepository.findById(id);
+        if (!projectOptional.isPresent()) {
+            return Project.PROJECT_ID_ERROR;
+        }
+        Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
+        if (!skillOptional.isPresent()) {
+            return Skill.SKILL_NOT_FOUND_ERROR;
+        }
+        Project project = projectOptional.get();
+        project.deleteSkill(skillOptional.get());
+        projectRepository.save(project);
+        return null;
     }
 
 }
