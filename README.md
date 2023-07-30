@@ -37,7 +37,7 @@ This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling ser
 
 **Create application.properties (./backend/src/main/resouces/application.properties)**
 
-https://github.com/jasonpyau/jasonpyau.com/blob/b04584651ed0a0187a32f8f5b591a41b7f692d9d/backend/src/main/resources/application.properties.sample#L1-L28
+https://github.com/jasonpyau/jasonpyau.com/blob/fb316fd5f09d5b62cd46015f1fa1c2d0ffbc3e88/backend/src/main/resources/application.properties.sample#L1-L35
 
 **Create Constants.java (./admin/Constants.java)**
 
