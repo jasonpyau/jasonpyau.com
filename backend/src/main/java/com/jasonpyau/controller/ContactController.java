@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Message;
+import com.jasonpyau.form.PaginationForm;
 import com.jasonpyau.service.ContactService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 
 @Controller
 @Validated
@@ -60,10 +58,8 @@ public class ContactController {
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getMessages(HttpServletRequest request, 
-                                                    @RequestParam(defaultValue = "0") @Min(value = 0, message = Message.MESSAGE_PAGE_NUM_ERROR) Integer pageNum, 
-                                                    @RequestParam(defaultValue = "5") @Min(value = 1, message = Message.MESSAGE_PAGE_SIZE_ERROR) @Max(value = 50, message = Message.MESSAGE_PAGE_SIZE_ERROR) Integer pageSize) {
-        Page<Message> page = contactService.getMessages(pageNum, pageSize);
+    public ResponseEntity<HashMap<String, Object>> getMessages(HttpServletRequest request, @Valid PaginationForm paginationForm) {
+        Page<Message> page = contactService.getMessages(paginationForm);
         String[] keys = {"messages", "totalPages", "hasNext"};
         Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
         return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);

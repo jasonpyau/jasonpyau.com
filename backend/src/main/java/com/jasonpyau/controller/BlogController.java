@@ -15,22 +15,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Blog;
+import com.jasonpyau.form.BlogSearchForm;
+import com.jasonpyau.form.NewBlogForm;
+import com.jasonpyau.form.PaginationForm;
 import com.jasonpyau.service.BlogService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @Controller
 @Validated
@@ -45,7 +41,7 @@ public class BlogController {
     @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newBlog(HttpServletRequest request, @Valid @RequestBody NewBlogForm newBlogForm) {
-        blogService.newBlog(newBlogForm.getTitle(), newBlogForm.getBody());
+        blogService.newBlog(newBlogForm);
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
@@ -62,24 +58,12 @@ public class BlogController {
     }
 
     @GetMapping(path = "/get/page", produces = "application/json")
-    @RateLimit(RateLimit.DEFAULT_TOKEN)
+    @RateLimit(RateLimit.BIG_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getBlog(HttpServletRequest request, 
-                                                    @RequestParam(defaultValue = "0") @Min(value = 0, message = Blog.BLOG_PAGE_NUM_ERROR) Integer pageNum, 
-                                                    @RequestParam(defaultValue = "5") @Min(value = 1, message = Blog.BLOG_PAGE_SIZE_ERROR) @Max(value = 50, message = Blog.BLOG_PAGE_SIZE_ERROR) Integer pageSize) {
-        Page<Blog> page = blogService.getBlogs(request, pageNum, pageSize);
-        String[] keys = {"blogs", "totalPages", "hasNext"};
-        Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
-        return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/get/page/liked", produces = "application/json")
-    @RateLimit(RateLimit.DEFAULT_TOKEN)
-    @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getLikedBlogs(HttpServletRequest request, 
-                                                    @RequestParam(defaultValue = "0") @Min(value = 0, message = Blog.BLOG_PAGE_NUM_ERROR) Integer pageNum, 
-                                                    @RequestParam(defaultValue = "5") @Min(value = 1, message = Blog.BLOG_PAGE_SIZE_ERROR) @Max(value = 50, message = Blog.BLOG_PAGE_SIZE_ERROR) Integer pageSize) {
-        Page<Blog> page = blogService.getLikedBlogs(request, pageNum, pageSize);
+    public ResponseEntity<HashMap<String, Object>> getBlog(HttpServletRequest request,
+                                                    @Valid BlogSearchForm blogSearchForm,
+                                                    @Valid PaginationForm paginationForm) {
+        Page<Blog> page = blogService.getBlogs(request, blogSearchForm, paginationForm);
         String[] keys = {"blogs", "totalPages", "hasNext"};
         Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
         return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);
@@ -107,18 +91,14 @@ public class BlogController {
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/get/prev_next/{id}", produces = "application/json")
+    @RateLimit(RateLimit.BIG_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> getPrevAndNext(HttpServletRequest request, @PathVariable("id") Long id, @Valid BlogSearchForm blogSearchForm) {
+        HashMap<String, Long> res = blogService.getPrevAndNext(request, blogSearchForm, id);
+        if (res == null) {
+            return Response.errorMessage(Blog.BLOG_ID_ERROR, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>(Response.createBody("ids", res), HttpStatus.OK);
+    }
 }
-
-@Getter
-@AllArgsConstructor
-class NewBlogForm {
-
-    @Size(min = 3, max = 250, message = Blog.BLOG_TITLE_ERROR)
-    @NotBlank(message = Blog.BLOG_TITLE_ERROR)
-    private String title;
-    @Size(max = 5000, message = Blog.BLOG_BODY_ERROR)
-    @NotBlank(message = Blog.BLOG_BODY_ERROR)
-    private String body;
-
-}
-

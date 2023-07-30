@@ -51,17 +51,17 @@ public class Skill {
     @Column(name = "name", unique = true, nullable = false)
     @Size(min = 1, max = 15, message = SKILL_NAME_ERROR)
     @NotBlank(message = SKILL_NAME_ERROR)
-    String name;
+    private String name;
 
     @Column(name = "type", nullable = false)
     @NotBlank(message = SKILL_TYPE_ERROR)
-    String type;
+    private String type;
 
     @Column(name = "simple_icons_icon_slug", nullable = true)
     @Size(max = 50, message = SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR)
     // https://www.npmjs.com/package/simple-icons
     // https://github.com/simple-icons/simple-icons/blob/develop/slugs.md
-    String simpleIconsIconSlug;
+    private String simpleIconsIconSlug;
 
     @JsonIgnore
     @Setter(AccessLevel.NONE)

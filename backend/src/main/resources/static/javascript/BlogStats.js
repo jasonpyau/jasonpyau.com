@@ -41,7 +41,7 @@ export class BlogStats {
             this.#likedIcon = container.querySelector("#LikedIcon");
             this.#likeCountElement = container.querySelector("#LikeCountElement");
             this.#likeButton = container.querySelector("#LikeButton");
-            container.querySelector("#ViewCountElement").innerHTML = this.#viewCount;
+            container.querySelector("#ViewCountElement").textContent = numberFormat(this.#viewCount);
             this.updateLikeDisplay();
             this.#likeButton.addEventListener("click", async () => {
                 const method = (this.#isLiked) ? "unlike" : "like";
@@ -71,6 +71,13 @@ export class BlogStats {
             this.#likedIcon.style.display = "none";
             this.#unlikedIcon.style.display = "inline";
         }
-        this.#likeCountElement.innerHTML = this.#likeCount;
+        this.#likeCountElement.textContent = numberFormat(this.#likeCount);
     }
+}
+
+function numberFormat(num) {
+    return Intl.NumberFormat('en-US', {
+        notation: "compact",
+        maximumFractionDigits: 2
+    }).format(num);
 }

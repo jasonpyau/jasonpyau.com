@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.jasonpyau.Application;
@@ -32,6 +33,7 @@ public class BlogRepositoryTest {
     private Blog[] blogs;
     private final String hashedAddress = Hash.SHA256("localhost");
     private final User user = new User();
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "unix_time"));
 
     @BeforeEach
     public void setUp() {
@@ -42,6 +44,7 @@ public class BlogRepositoryTest {
         for (int i = 0; i < n; i++) {
             Blog blog = new Blog();
             blog.setTitle("test"+i);
+            blog.setDescription("Just a test!");
             blog.setBody("this is the body of test"+i);
             blog.setDate("06/25/2023");
             blog.setLikeCount(0);
@@ -62,9 +65,8 @@ public class BlogRepositoryTest {
     }
 
     @Test
-    void testFindAllWithPaginationOrderedByUnixTime() {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Blog> page = blogRepository.findLikedBlogsWithPaginationOrderedByUnixTime(pageable, hashedAddress);
+    void testFindAllLikedWithPagination() {
+        Page<Blog> page = blogRepository.findAllLikedWithPagination(pageable, hashedAddress, "");
         List<Blog> list = page.getContent();
         for (int i = 0; i < list.size(); i++) {
             assertEquals(list.get(i).getTitle(), blogs[i*2].getTitle());
@@ -77,9 +79,8 @@ public class BlogRepositoryTest {
     }
 
     @Test
-    void testFindLikedBlogsWithPaginationOrderedByUnixTime() {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Blog> page = blogRepository.findAllWithPaginationOrderedByUnixTime(pageable);
+    void testFindAllWithPagination() {
+        Page<Blog> page = blogRepository.findAllWithPagination(pageable, "");
         List<Blog> list = page.getContent();
         for (int i = 0; i < list.size(); i++) {
             list.get(i).checkIsLikedByUser(user);

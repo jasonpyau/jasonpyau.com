@@ -1,28 +1,35 @@
 # MariaDB Spring Boot Connection
+
 spring.jpa.hibernate.ddl-auto=update
-spring.datasource.url=jdbc:mariadb://<SERVER_URL>/<DATABASE_NAME>
-spring.datasource.username=YOUR_USERNAME_HERE
-spring.datasource.password=YOUR_PASSWORD_HERE
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+spring.datasource.url=jdbc:mariadb://<SERVER_URL>/<DATABASE_NAME> # EX: jdbc:mariadb://localhost:3306/portfolio
+spring.datasource.username=YOUR_USERNAME_HERE # EX: root
+spring.datasource.password=YOUR_PASSWORD_HERE # EX: password
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver # CHANGE THIS IF YOU USE MYSQL, POSTGRES, ETC.
 # Keep Connection Alive
 spring.datasource.testWhileIdle=true
 spring.datasource.validationQuery=SELECT 1
 # Print for Each SQL Query
-spring.jpa.show-sql=false
+spring.jpa.show-sql=true # FALSE IF IN PRODUCTION
+
 
 # Email Service
+
+# I USE GMAIL'S EMAIL SERVERS.
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username=YOUR_USERNAME_HERE
-spring.mail.password=YOUR_PASSWORD_HERE
+# THIS WILL BE AN EMAIL ADDRESS YOU DON'T REGULARLY USE. YOU WILL USE IT TO EMAIL TO YOURSELF.
+spring.mail.username=YOUR_USERNAME_HERE # EX: jasonyauburner IF YOUR GMAIL IS jasonyauburner@gmail.com
+spring.mail.password=YOUR_PASSWORD_HERE # YOUR GMAIL APP PASSWORD. READ MORE: https://support.google.com/mail/answer/185833?hl=en
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
+
 # Backend Configuration
-server.port=9000
+server.port=9000 # SERVER WILL RUN AT localhost:9000. CHANGE AS NEEDED
 spring.profiles.active=dev
 
+
 # Admin Panel password
-com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE
+com.jasonpyau.appPassword=YOUR_APP_PASSWORD_HERE # USE THE SAME PASSWORD IN /admin/Constants.java SO YOUR API AND ADMIN PANEL CAN COMMUNICATE
 # Email to send contact notifications to
-com.jasonpyau.email=YOUR_EMAIL_HERE
+com.jasonpyau.email=YOUR_EMAIL_HERE # EX: contact@jasonpyau.com

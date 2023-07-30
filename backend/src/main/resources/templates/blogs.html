@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+<html lang="en">
 <link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
 <head th:replace="~{template.html :: head}"></head>
 <head>
     <title>Blogs - Jason Yau</title>
+    <meta name="description" content="Blogs posted by Jason Yau, software engineer and student at the University of Central Florida">
+    <meta name="twitter:description" content="Blogs posted by Jason Yau, software engineer and student at the University of Central Florida"/>
     <link href="/css/blogs.css" rel="stylesheet" type="text/css"/>
 </head>
 
@@ -20,7 +23,7 @@
                     Blogs
                 </u>
             </div>
-            <div class="accordion accordion-flush mx-auto w-75">
+            <div class="accordion accordion-flush mx-auto" style="width: 90%;">
                 <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#Options" aria-expanded="true" aria-controls="Options">
                         Options
@@ -28,28 +31,68 @@
                 </h2>
                 <div id="Options" class="accordion-collapse collapse show">
                     <div class="FormContainer accordion-body mx-auto">
-                        <div class="w-50 form-check-label">
-                            <span>
-                              Page Size:
-                            </span>
-                            <span id="PageSizeText">
-                              5
-                            </span>
-                            <div>
-                                <input type="range" min="1" max="20" value="5" class="NumberInput mt-2 w-75" id="PageSizeRange">
+                        <div class="form-floating my-2 mx-auto w-75 text-dark">
+                            <input type="search" class="form-control" id="SearchInput" placeholder="Search">
+                            <label for="SearchInput">Search</label>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check-label mt-2">
+                                    <span>
+                                        Page Size:
+                                    </span>
+                                    <span id="PageSizeText">
+                                        5
+                                    </span>
+                                    <div>
+                                        <input type="range" min="1" max="20" value="5" class="NumberInput mt-2 w-75" id="PageSizeRange">
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch my-4">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="ShowLikedSwitch">
+                                    <label class="form-check-label" for="ShowLikedSwitch">Show Liked Only</label>
+                                </div>
+                            </div>
+                            <div class="col d-flex align-items-center flex-column px-3">
+                                <u class="fs-5 fw-semibold text-center">
+                                    Order By
+                                </u>
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="OrderByRadio" id="order-by-date" api_value="unix_time">
+                                        <label class="form-check-label" for="order-by-date">
+                                            Date
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="OrderByRadio" id="order-by-likes" api_value="like_count">
+                                        <label class="form-check-label" for="order-by-likes">
+                                            Likes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="OrderByRadio" id="order-by-title" api_value="title">
+                                        <label class="form-check-label" for="order-by-title">
+                                            Title
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="OrderByRadio" id="order-by-views" api_value="view_count">
+                                        <label class="form-check-label" for="order-by-views">
+                                            Views
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch my-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="AscendingSwitch">
+                                    <label class="form-check-label" for="AscendingSwitch">Ascending Order</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-check form-switch my-4">
-                            <input class="form-check-input" type="checkbox" role="switch" id="ShowLikedSwitch">
-                            <label class="form-check-label" for="ShowLikedSwitch">Show Liked Only</label>
-                        </div>
                         <button type="button" class="btn btn-light" id="ApplyButton">Apply</button>
+                        <button type="button" class="btn btn-light mx-1" id="ResetButton">Reset</button>
                     </div>
                 </div>
-            </div>
-            <div class="form-floating mt-5 mb-3 mx-auto w-50 text-dark">
-                <input type="search" class="form-control" id="SearchInput" placeholder="Search">
-                <label for="SearchInput">Search</label>
             </div>
             <div class="mb-5" id="BlogsContainer">
 
@@ -71,5 +114,8 @@
     <th:block th:replace="~{template.html :: scripts}"></th:block>
     <script src="/javascript/BlogStats.js"  type="module"></script>
     <script src="/javascript/BlogPreview.js" type="module"></script>
+    <script>
+        document.getElementById("nav-link-blog").classList.add("active");
+    </script>
 </body>
 </html>

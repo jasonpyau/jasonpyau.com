@@ -5,11 +5,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Project;
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.repository.ProjectRepository;
+import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.Patch;
 
 import jakarta.validation.ConstraintViolation;
@@ -28,12 +31,14 @@ public class ProjectService {
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+    @CacheEvict(cacheNames = CacheUtil.PROJECT_CACHE, allEntries = true)
     public void newProject(Project project) {
         project.createOrder();
         projectRepository.save(project);
     }
 
     // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public String updateProject(Project updateProject, Integer id) {
         Optional<Project> optional = projectRepository.findById(id);
         if (!optional.isPresent()) {
@@ -50,6 +55,7 @@ public class ProjectService {
     }
 
     // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public String deleteProject(Integer id) {
         Optional<Project> optional = projectRepository.findById(id);
         if (!optional.isPresent()) {
@@ -65,11 +71,13 @@ public class ProjectService {
         return null;
     }
 
+    @Cacheable(cacheNames = CacheUtil.PROJECT_CACHE)
     public List<Project> getProjects() {
         return projectRepository.findAllByStartDateEndDate();
     }
 
     // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public String newProjectSkill(String skillName, Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         if (!projectOptional.isPresent()) {
@@ -86,6 +94,7 @@ public class ProjectService {
     }
 
     // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public String deleteProjectSkill(String skillName, Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         if (!projectOptional.isPresent()) {

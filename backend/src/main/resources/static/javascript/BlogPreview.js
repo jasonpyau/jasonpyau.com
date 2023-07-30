@@ -1,10 +1,14 @@
 import { BlogStats } from "./BlogStats.js";
 import { apiCall } from "./apiCall.js";
+import { DefaultBlogSearchForm } from "./DefaultBlogSearchForm.js";
 
 let blogPreviews = [];
 let pageNum = 0;
 let pageSize = localStorage.blogPageSize || 5;
-let showOnlyLiked = (localStorage.blogShowOnlyLiked === 'true');
+
+let {orderBy, ascending} = DefaultBlogSearchForm;
+let showOnlyLiked = DefaultBlogSearchForm.liked;
+let searchInput = DefaultBlogSearchForm.search;
 
 $(document).ready(async function() {
     document.getElementById("PageSizeRange").value = pageSize;
@@ -13,42 +17,83 @@ $(document).ready(async function() {
 
     document.getElementById("PageSizeRange").addEventListener("input", updatePageSizeText);
 
-    document.getElementById("LoadMoreButton").addEventListener("click", async() => {
-        document.getElementById("SearchInput").value = "";
-        for (const blogPreview of blogPreviews) {
-            blogPreview.updateVisibility(true);
+    document.getElementById("SearchInput").value = searchInput;
+
+    for (const orderByRadio of document.getElementsByName("OrderByRadio")) {
+        if (orderByRadio.getAttribute("api_value") === orderBy) {
+            orderByRadio.checked = true;
         }
+    }
+
+    document.getElementById("AscendingSwitch").checked = ascending;
+
+
+    document.getElementById("LoadMoreButton").addEventListener("click", async() => {
         loadBlogsPage(false);
     });
 
-    document.getElementById("SearchInput").addEventListener("input", () => {
-        const val = document.getElementById("SearchInput").value.toLowerCase();
-        for (const blogPreview of blogPreviews) {
-            blogPreview.updateVisibility(blogPreview.toString().includes(val));
-        }
+    document.getElementById("ApplyButton").addEventListener("click", async() => {
+        await apply();
     });
 
-    document.getElementById("ApplyButton").addEventListener("click", async () => {
-        pageSize = document.getElementById("PageSizeRange").value;
-        showOnlyLiked = document.getElementById("ShowLikedSwitch").checked;
-        localStorage.blogPageSize = pageSize;
-        localStorage.blogShowOnlyLiked = showOnlyLiked;
+    document.getElementById("ResetButton").addEventListener("click", async() => {
+        document.getElementById("PageSizeRange").value = 5;
+        updatePageSizeText();
+        document.getElementById("ShowLikedSwitch").checked = false;
         document.getElementById("SearchInput").value = "";
-        pageNum = 0;
-        await loadBlogsPage(true);
+        for (const orderByRadio of document.getElementsByName("OrderByRadio")) {
+          if (orderByRadio.getAttribute("api_value") === "unix_time") {
+                orderByRadio.checked = true;
+            } else {
+                orderByRadio.checked = false;
+            }
+        }
+        document.getElementById("AscendingSwitch").checked = false;
+        await apply();
     });
 
     await loadBlogsPage(false);
     function updatePageSizeText() {
-        document.getElementById("PageSizeText").innerHTML = document.getElementById("PageSizeRange").value;
+        document.getElementById("PageSizeText").textContent = document.getElementById("PageSizeRange").value;
+    }
+
+    async function apply() {
+        pageSize = document.getElementById("PageSizeRange").value;
+        showOnlyLiked = document.getElementById("ShowLikedSwitch").checked;
+        searchInput = document.getElementById("SearchInput").value;
+        for (const orderByRadio of document.getElementsByName("OrderByRadio")) {
+            if (orderByRadio.checked) {
+                orderBy = orderByRadio.getAttribute("api_value");
+                break;
+            }
+        }
+        ascending = document.getElementById("AscendingSwitch").checked;
+        localStorage.blogPageSize = pageSize;
+        localStorage.blogShowOnlyLiked = showOnlyLiked;
+        localStorage.blogSearchInput = searchInput;
+        localStorage.blogOrderBy = orderBy;
+        localStorage.blogAscending = ascending;
+        pageNum = 0;
+        await loadBlogsPage(true);
     }
     
 });
 
 async function loadBlogsPage(deleteFirst) {
+    if (deleteFirst) {
+        deleteBlogPreviews();
+    }
     const blogsPreviewSpinner = document.getElementById("BlogsPreviewSpinner");
     blogsPreviewSpinner.style.display = "block";
-    const url = "/blogs/get/page"+((showOnlyLiked) ? "/liked" : "")+`?pageNum=${pageNum}&pageSize=${pageSize}`;
+    const params = {
+        pageNum: pageNum,
+        pageSize: pageSize,
+        search: searchInput,
+        orderBy: orderBy,
+        ascending: ascending,
+        liked: showOnlyLiked
+    };
+    const url = "/blogs/get/page?"+new URLSearchParams(params);
     const result = await apiCall(url, "GET", null, null);
     const json = await result.json();
     if (result.status !== 200) {
@@ -93,7 +138,11 @@ class BlogPreview {
                     <u class="fs-4 fw-bold" id="Title">
                         Title
                     </u>
-                    <div class="fs-5" id="Date">
+                    <br>
+                    <i class="fs-5" id="Description">
+                        Description
+                    </i>
+                    <div class="fs-5 mt-2" id="Date">
                         Date
                     </div>
                 </a>
@@ -102,8 +151,9 @@ class BlogPreview {
                 </span>
             </div>
         `;
-        this.#element.querySelector("#Title").innerHTML = blog.title;
-        this.#element.querySelector("#Date").innerHTML = blog.date;
+        this.#element.querySelector("#Title").textContent = blog.title;
+        this.#element.querySelector("#Description").textContent = blog.description;
+        this.#element.querySelector("#Date").textContent = blog.date;
         const BlogStatsContainer = this.#element.querySelector("#BlogStatsContainer");
         this.#blogStats = new BlogStats(blog.id, blog.viewCount, blog.likeCount, blog.isLikedByUser, BlogStatsContainer);
         this.#container.append(this.#element);

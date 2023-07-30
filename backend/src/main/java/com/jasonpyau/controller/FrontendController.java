@@ -12,6 +12,7 @@ import com.jasonpyau.entity.Stats;
 import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
 import com.jasonpyau.service.StatsService;
+import com.jasonpyau.util.NumberFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -62,7 +63,11 @@ public class FrontendController {
         }
         model.addAttribute("id", blog.getId());
         model.addAttribute("title", blog.getTitle());
-        model.addAttribute("body", blog.getBody());
+        model.addAttribute("description", blog.getDescription());
+        String descriptionBody = String.format("<div class=\"fs-3 fw-bold fst-italic text-decoration-underline text-center\">%s</div>" +
+                                                "<br><br> "+
+                                                "<div class=\"fs-4 fw-semibold text-left\">%s</div>", blog.getDescription(), blog.getBody());
+        model.addAttribute("descriptionBody", descriptionBody);
         model.addAttribute("date", blog.getDate());
         model.addAttribute("blogViewCount", blog.getViewCount());
         model.addAttribute("blogLikeCount", blog.getLikeCount());
@@ -80,7 +85,7 @@ public class FrontendController {
         if (stats == null) {
             return;
         }
-        model.addAttribute("views", stats.getViews());
+        model.addAttribute("views", NumberFormat.shorten(stats.getViews()));
         model.addAttribute("lastUpdated", stats.getDate());
     }
 }

@@ -47,8 +47,6 @@ https://github.com/jasonpyau/jasonpyau.com/blob/ac427271c88fe2a8cbfa2917f3cfd3e3
 ```
 sudo apt update
 
-sudo apt upgrade
-
 sudo apt install openjdk-17-jdk
 
 sudo apt install maven

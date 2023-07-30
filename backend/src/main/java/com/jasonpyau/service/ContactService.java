@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Message;
+import com.jasonpyau.form.PaginationForm;
 import com.jasonpyau.repository.ContactRepository;
 import com.jasonpyau.util.DateFormat;
 
@@ -33,8 +34,8 @@ public class ContactService {
         emailService.sendEmail(EmailService.toEmail(), emailSubject, emailBody);
     }
 
-    public Page<Message> getMessages(int pageNum, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
+    public Page<Message> getMessages(PaginationForm paginationForm) {
+        Pageable pageable = PageRequest.of(paginationForm.getPageNum(), paginationForm.getPageSize());
         Page<Message> page = contactRepository.findAllWithPaginationOrderedByDate(pageable);
         return page;
     }

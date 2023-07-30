@@ -31,14 +31,15 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "blogs", indexes = @Index(name = "unix_time_ind", columnList = "unix_time"))
+@Table(name = "blogs", indexes = {@Index(name = "unix_time_ind", columnList = "unix_time"), 
+                                @Index(name = "title_ind", columnList = "title"),
+                                @Index(name = "like_count_ind", columnList = "like_count")})
 public class Blog {
 
     public static final String BLOG_ID_ERROR = "Invalid 'id', blog not found.";
     public static final String BLOG_TITLE_ERROR = "'title' should be between 3-250 characters.";
+    public static final String BLOG_DESCRIPTION_ERROR = "'title' should be between 3-500 characters.";
     public static final String BLOG_BODY_ERROR = "'body' should be between 1-5000 characters.";
-    public static final String BLOG_PAGE_NUM_ERROR = "'pageNum' should be a positive integer.";
-    public static final String BLOG_PAGE_SIZE_ERROR = "'pageSize' should be between 1-50.";
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,6 +50,11 @@ public class Blog {
     @Size(min = 3, max = 250, message = BLOG_TITLE_ERROR)
     @NotBlank(message = BLOG_TITLE_ERROR)
     private String title;
+
+    @Column(name = "description")
+    @Size(min = 3, max = 500, message = BLOG_DESCRIPTION_ERROR)
+    @NotBlank(message = BLOG_DESCRIPTION_ERROR)
+    private String description;
 
     @Column(name = "body", columnDefinition = "varchar(5000)")
     @Size(max = 5000, message = BLOG_BODY_ERROR)

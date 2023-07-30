@@ -32,14 +32,14 @@ jobs:
             cd backend
             sudo mvn test
       - name: Shut Down Old Version
-        env:
-          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         run: |
-            curl -s -X 'DELETE' \
-            'https://jasonpyau.com/shut_down' \
-            -H 'Authorization: "$APP_PASSWORD"' \
-            > /dev/null
-            sleep 6
+            cd admin
+            bash runAdmin.sh << EOF > /dev/null
+            8
+            y
+
+            9
+            EOF
       - name: Run Spring Boot
         run: |
             cd backend

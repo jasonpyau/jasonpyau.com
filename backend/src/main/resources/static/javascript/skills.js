@@ -12,7 +12,7 @@ $(document).ready(async function() {
     Object.keys(skillsByType).forEach(function(key) {
         const rowHTML = document.getElementById("SkillsTypeRowTemplate").cloneNode(true);
         rowHTML.id = "";
-        rowHTML.querySelector("#SkillType").innerHTML = key;
+        rowHTML.querySelector("#SkillType").textContent = key;
         const SkillsRowContainer = rowHTML.querySelector("#SkillsRowContainer");
         const skills = skillsByType[key];
         loadSkills(skills, SkillsRowContainer);

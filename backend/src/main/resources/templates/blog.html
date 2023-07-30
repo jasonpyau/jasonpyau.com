@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+<html lang="en">
 <link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
 <head th:replace="~{template.html :: head}"></head>
 <head>
     <title th:text="${title}+' - Jason Yau'"></title>
+    <meta name="description" th:content="${description}">
+    <meta name="twitter:description" th:content="${description}"/>
     <link href="/css/blog.css" rel="stylesheet" type="text/css"/>
 </head>
 
@@ -15,9 +18,18 @@
     <div class="bg-dark bg-gradient" id="BodyContainer">
 
         <div class="container-xxl ThemeToSecondaryGradient" id="BlogContainer">
-            <div class="text-center mt-4">
+            <div class="text-center">
                 <!-- Title -->
-                <u class="display-4 fw-bold HeaderTextColor mx-auto" th:text="${title}" id="BlogTitle"></u>
+                <u class="display-4 fw-bold HeaderTextColor mx-auto pt-4" th:text="${title}" id="BlogTitle"></u>
+                <div class="d-flex justify-content-around mt-3">
+                    <a type="button" class="btn btn-primary" title="Go to Previous Blog" id="PreviousButton">
+                        Previous Blog
+                    </a>
+                    <a type="button" class="btn btn-primary" title="Go to Next Blog" id="NextButton">
+                        Next Blog
+                    </a>
+                </div>
+                <hr>
                 <!-- Stats -->
                 <div id="BlogDateStatsContainer" class="d-flex justify-content-around">
                     <span th:text="${date}" class="mx-3 my-auto fs-5 fw-semibold"></span>
@@ -26,7 +38,7 @@
             </div>
             <hr>
             <!-- Body -->
-            <div class="Rounded p-4 fs-4 fw-semibold mx-auto text-left border border-white" th:utext="${body}" id="BlogBodyContainer">
+            <div class="Rounded p-4 mx-auto border border-white" th:utext="${descriptionBody}" id="BlogBodyContainer">
 
             </div>
             
@@ -58,13 +70,37 @@
     <script src="/javascript/BlogStats.js"  type="module"></script>
     <script type="module" th:inline="javascript">
         import { BlogStats } from "/javascript/BlogStats.js";
+        import { apiCall } from "/javascript/apiCall.js";
+        import { DefaultBlogSearchForm } from "/javascript/DefaultBlogSearchForm.js"
         const id = /*[[${id}]]*/ 0;
         const viewCount = /*[[${blogViewCount}]]*/ 0;
         const likeCount = /*[[${blogLikeCount}]]*/ 0;
         const isInitallyLiked = /*[[${isLikedByUser}]]*/ false;
-        $(document).ready(function() {
+        $(document).ready(async function() {
             const blogStats = new BlogStats(id, viewCount, likeCount, isInitallyLiked, document.getElementById("BlogStatsContainer"));
+            const url = `/blogs/get/prev_next/${id}?`+new URLSearchParams(DefaultBlogSearchForm);
+            const result = await apiCall(url, "GET", null, null);
+            const json = await result.json();
+            if (result.status !== 200) {
+                alert(`Error in loading prev and next blogs, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
+                return;
+            }
+            const prevId = json.ids.prev;
+            const nextId = json.ids.next;
+            if (prevId) {
+                document.getElementById("PreviousButton").href = `/blogs/${prevId}`;
+            } else {
+                document.getElementById("PreviousButton").classList.add("invisible");
+            }
+            if (nextId) {
+                document.getElementById("NextButton").href = `/blogs/${nextId}`;
+            } else {
+                document.getElementById("NextButton").classList.add("invisible");
+            }
         });
+    </script>
+    <script>
+        document.getElementById("nav-link-blog").classList.add("active");
     </script>
 </body>
 </html>

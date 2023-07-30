@@ -88,8 +88,8 @@ public class AdminPanel {
 
     private static void deleteSkill() {
         System.out.println("Input name of the skill:");
-        String name = scan.nextLine();
-        apiCall("/skills/delete/"+name, "{ }", "DELETE", true);
+        String name = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8).replace("+", "%20");
+        apiCall(String.format("/skills/delete/%s", name), "{ }", "DELETE", true);
         updateLastUpdated(false);
     }
 
@@ -112,9 +112,12 @@ public class AdminPanel {
     private static void newBlog() {
         System.out.println("Input title of blog:");
         String title = scan.nextLine();
+        System.out.println("Input description of blog:");
+        String description = scan.nextLine();
         System.out.println("Input body of blog:");
         String body = scan.nextLine();
         String apiBody = "{\"title\": \""+title+"\"," +
+                        "\"description\": \""+description+"\"," +
                         "\"body\": \""+body+"\"}";
         apiCall("/blogs/new", apiBody, "POST", true);
     }
@@ -126,20 +129,38 @@ public class AdminPanel {
     }
 
     private static void getBlogs() {
-        System.out.print("Input a page size: ");
-        String pageSize = scan.nextLine();
-        System.out.println();
-        System.out.print("Input a page number: ");
-        int pageNum = Integer.parseInt(scan.nextLine());
-        System.out.println();
+        System.out.println("You may leave blank any field for the default value.");
+        StringBuilder sb = new StringBuilder();
+        String in;
+        System.out.println("Input a page size: ");
+        in = scan.nextLine();
+        sb.append("pageSize="+Integer.parseInt((in.isBlank()) ? "5" : in));
+        System.out.println("Input a page number: ");
+        in = scan.nextLine();
+        Integer pageNum = Integer.parseInt((in.isBlank()) ? "0" : in);
+        System.out.println("Order by: [unix_time, title, like_count, view_count]");
+        in = scan.nextLine();
+        sb.append("&orderBy="+((in.isBlank()) ? "unix_time" : in));
+        System.out.println("Ascending? [true/false]");
+        in = scan.nextLine();
+        sb.append("&ascending="+((in.isBlank()) ? "false" : in));
+        System.out.println("Show liked only? [true/false]");
+        in = scan.nextLine();
+        sb.append("&liked="+((in.isBlank()) ? "false" : in));
+        System.out.println("Search for substring:");
+        in = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        sb.append("&search="+in);
+        sb.append("&pageNum="+pageNum);
         while (true) {
-            apiCall("/blogs/get/page?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
+            apiCall("/blogs/get/page?"+sb.toString(), "{ }", "GET", false);
             System.out.println("0.) Return");
             System.out.println("1.) Next page");
             int input = scan.nextInt();
             scan.nextLine();
             if (input == 1) {
                 pageNum++;
+                sb.setLength(sb.lastIndexOf("&pageNum="));
+                sb.append("&pageNum="+pageNum);
             } else {
                 break;
             }
@@ -180,7 +201,8 @@ public class AdminPanel {
             if (response.statusCode() != 200) {
                 throw new HttpStatusException(response.toString(), response.body());
             } else {
-                System.out.println("Success: \n" + response.body());
+                String json = JsonFormat.prettyPrintJSON(response.body());
+                System.out.println("Success: \n" + json);
             }
         } catch (Exception e) {
             System.out.println("Error in sending HTTP Request:\n" + e);
@@ -435,6 +457,63 @@ public class AdminPanel {
 
 class HttpStatusException extends Exception {
     public HttpStatusException(String response, String body) {
-        super("\n" + response + "\n" + body);
+        super("\n" + response + "\n" + JsonFormat.prettyPrintJSON(body));
+    }
+}
+
+// All credit to https://stackoverflow.com/a/49564514, with small modifications and improvements.
+class JsonFormat {
+    
+    private static final String indent = "  ";
+
+    private JsonFormat() {};
+
+    public static String prettyPrintJSON(String unformattedJsonString) {
+        StringBuilder sb = new StringBuilder();
+        int indentLevel = 0;
+        boolean inQuote = false;
+        for (char ch : unformattedJsonString.toCharArray()) {
+            switch (ch) {
+                case '"':
+                    // switch the quoting status
+                    inQuote = !inQuote;
+                    sb.append(ch);
+                    break;
+                case ' ':
+                    // For space: ignore the space if it is not being quoted.
+                    if (inQuote) {
+                        sb.append(ch);
+                    }
+                    break;
+                case '{':
+                case '[':
+                    sb.append(ch);
+                    // Starting a new block: increase the indent level
+                    if (!inQuote) {
+                        indentLevel++;
+                        sb.append("\n"+indent.repeat(indentLevel));
+                    }
+                    break;
+                case '}':
+                case ']':
+                    // Ending a new block; decrese the indent level
+                    if (!inQuote) {
+                        indentLevel--;
+                        sb.append("\n"+indent.repeat(indentLevel));
+                    }
+                    sb.append(ch);
+                    break;
+                case ',':
+                    // Ending a json item; create a new line after
+                    sb.append(ch);
+                    if (!inQuote) {
+                        sb.append("\n"+indent.repeat(indentLevel));
+                    }
+                    break;
+                default:
+                    sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 }

@@ -25,8 +25,6 @@ public class Message {
     public static final String MESSAGE_NAME_ERROR = "'name' should be between 3-50 characters.";
     public static final String MESSAGE_CONTACT_INFO_ERROR = "'contactInfo' should be between 6-100 characters.";
     public static final String MESSAGE_BODY_ERROR = "'body' should be between 15-1000 characters.";
-    public static final String MESSAGE_PAGE_NUM_ERROR = "'pageNum' should be a positive integer.";
-    public static final String MESSAGE_PAGE_SIZE_ERROR = "'pageSize' should be between 1-50.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

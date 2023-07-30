@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<html lang="en">
 <link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
 <head th:replace="~{template.html :: head}"></head>
+<head th:replace="~{template.html :: default-title-description}"></head>
 <head>
-    <title>Jason Yau</title>
     <link href="/css/index.css" rel="stylesheet" type="text/css"/>
 </head>
 
@@ -93,5 +94,8 @@
     <script src="/javascript/ContactForm.js"  type="module"></script>
     <script src="/javascript/projects.js"  type="module"></script>
     <script src="/javascript/skills.js"  type="module"></script>
+    <script>
+        document.getElementById("nav-link-home").classList.add("active");
+    </script>
 </body>
 </html>
