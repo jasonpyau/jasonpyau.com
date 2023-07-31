@@ -35,29 +35,12 @@
                             <input type="search" class="form-control" id="SearchInput" placeholder="Search">
                             <label for="SearchInput">Search</label>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-check-label mt-2">
-                                    <span>
-                                        Page Size:
-                                    </span>
-                                    <span id="PageSizeText">
-                                        5
-                                    </span>
-                                    <div>
-                                        <input type="range" min="1" max="20" value="5" class="NumberInput mt-2 w-75" id="PageSizeRange">
-                                    </div>
-                                </div>
-                                <div class="form-check form-switch my-4">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="ShowLikedSwitch">
-                                    <label class="form-check-label" for="ShowLikedSwitch">Show Liked Only</label>
-                                </div>
-                            </div>
-                            <div class="col d-flex align-items-center flex-column px-3">
+                        <div class="row justify-content-evenly">
+                            <div class="col-4 py-2 px-4 border border-secondary-subtle rounded-4 my-1" style="width: 275px">
                                 <u class="fs-5 fw-semibold text-center">
                                     Order By
                                 </u>
-                                <div>
+                                <div class="mt-1">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="OrderByRadio" id="order-by-date" api_value="unix_time">
                                         <label class="form-check-label" for="order-by-date">
@@ -85,12 +68,31 @@
                                 </div>
                                 <div class="form-check form-switch my-2">
                                     <input class="form-check-input" type="checkbox" role="switch" id="AscendingSwitch">
-                                    <label class="form-check-label" for="AscendingSwitch">Ascending Order</label>
+                                    <label class="form-check-label" for="AscendingSwitch">Ascending</label>
+                                </div>
+                            </div>
+                            <div class="col-4 py-2 px-4 border border-secondary-subtle rounded-4 my-1" style="width: 275px">
+                                <div class="form-check-label mt-2">
+                                    <span>
+                                        Page Size:
+                                    </span>
+                                    <span id="PageSizeText">
+                                        5
+                                    </span>
+                                    <div>
+                                        <input type="range" min="1" max="20" value="5" class="NumberInput mt-2" id="PageSizeRange">
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch my-4">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="ShowLikedSwitch">
+                                    <label class="form-check-label" for="ShowLikedSwitch">Show Liked Only</label>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-light" id="ApplyButton">Apply</button>
-                        <button type="button" class="btn btn-light mx-1" id="ResetButton">Reset</button>
+                        <div class="w-75 mx-auto mt-2">
+                            <button type="button" class="btn btn-light my-1" id="ApplyButton">Apply</button>
+                            <button type="button" class="btn btn-light my-1" id="ResetButton">Reset</button>
+                        </div>
                     </div>
                 </div>
             </div>

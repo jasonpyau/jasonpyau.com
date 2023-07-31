@@ -14,6 +14,7 @@
 .NumberInput {
     outline: none;
     height: 30px;
+    width: 200px;
     background: whitesmoke;
     appearance: none;
     -webkit-appearance: none;
@@ -51,4 +52,9 @@
 #PageSizeRange {
     min-width: 140px;
 }
- 
+
+@media (max-width: 350px) {
+    .NumberInput {
+        width: 140px;
+    }
+}

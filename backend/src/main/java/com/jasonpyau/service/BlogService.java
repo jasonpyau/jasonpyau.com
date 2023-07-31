@@ -128,6 +128,9 @@ public class BlogService {
         }
         Blog blog = optional.get();
         int lower = search(blogs, blog, blogSearchForm.getAscending(), blogSearchForm.getOrderBy(), true);
+        if (lower == -1) {
+            return null;
+        }
         int higher = search(blogs, blog, blogSearchForm.getAscending(), blogSearchForm.getOrderBy(), false);
         int index;
         for (index = lower; index <= higher; index++) {
