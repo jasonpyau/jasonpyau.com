@@ -125,12 +125,10 @@ class BlogPreview {
     #container;
     #element;
     #blogStats
-    #blogString;
 
     constructor(blog, container) {
         this.#container = container;
         this.#element = document.createElement("div");
-        this.#blogString = `${blog.title}, ${blog.body}, ${blog.date}`.toLowerCase();
         this.#element.innerHTML =
         `
             <div class="my-2 SecondaryColor border border-white Rounded container-xxl d-flex py-3 BlogPreview">
@@ -157,10 +155,6 @@ class BlogPreview {
         const BlogStatsContainer = this.#element.querySelector("#BlogStatsContainer");
         this.#blogStats = new BlogStats(blog.id, blog.viewCount, blog.likeCount, blog.isLikedByUser, BlogStatsContainer);
         this.#container.append(this.#element);
-    }
-
-    toString() {
-        return this.#blogString;
     }
 
     updateVisibility(isVisible) {

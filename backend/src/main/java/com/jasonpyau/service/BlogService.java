@@ -117,7 +117,6 @@ public class BlogService {
         Direction direction = (blogSearchForm.getAscending()) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, blogSearchForm.getOrderBy());
         Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
-        blogRepository.findAllWithPagination(pageable, blogSearchForm.getSearch());
         Page<Blog> page = (blogSearchForm.getLiked()) ? 
                             blogRepository.findAllLikedWithPagination(pageable, UserService.getUserAddress(request), blogSearchForm.getSearch()) :
                             blogRepository.findAllWithPagination(pageable, blogSearchForm.getSearch());

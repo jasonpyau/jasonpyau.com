@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
@@ -28,7 +29,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="projects")
+@Table(name="projects", indexes = @Index(name = "date_order_ind", columnList = "date_order"))
 public class Project {
     
     public static final String PROJECT_ID_ERROR = "Invalid 'id', project not found.";

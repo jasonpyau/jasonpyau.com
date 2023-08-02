@@ -4,6 +4,7 @@
 <head th:replace="~{template.html :: head}"></head>
 <head>
     <title th:text="${title}+' - Jason Yau'"></title>
+    <meta name="twitter:title" th:content="${title}+' - Jason Yau'"/>
     <meta name="description" th:content="${description}">
     <meta name="twitter:description" th:content="${description}"/>
     <link href="/css/blog.css" rel="stylesheet" type="text/css"/>
