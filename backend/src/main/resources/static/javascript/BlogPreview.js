@@ -1,14 +1,13 @@
 import { BlogStats } from "./BlogStats.js";
 import { apiCall } from "./apiCall.js";
-import { DefaultBlogSearchForm } from "./DefaultBlogSearchForm.js";
 
 let blogPreviews = [];
 let pageNum = 0;
 let pageSize = localStorage.blogPageSize || 5;
-
-let {orderBy, ascending} = DefaultBlogSearchForm;
-let showOnlyLiked = DefaultBlogSearchForm.liked;
-let searchInput = DefaultBlogSearchForm.search;
+let orderBy = (localStorage.blogOrderBy) || "unix_time";
+let ascending = (localStorage.blogAscending === 'true') || false;
+let showOnlyLiked = (localStorage.blogShowOnlyLiked === 'true') || false;
+let searchInput = (localStorage.blogSearchInput) || "";
 
 $(document).ready(async function() {
     document.getElementById("PageSizeRange").value = pageSize;
@@ -26,7 +25,6 @@ $(document).ready(async function() {
     }
 
     document.getElementById("AscendingSwitch").checked = ascending;
-
 
     document.getElementById("LoadMoreButton").addEventListener("click", async() => {
         loadBlogsPage(false);
@@ -85,15 +83,7 @@ async function loadBlogsPage(deleteFirst) {
     }
     const blogsPreviewSpinner = document.getElementById("BlogsPreviewSpinner");
     blogsPreviewSpinner.style.display = "block";
-    const params = {
-        pageNum: pageNum,
-        pageSize: pageSize,
-        search: searchInput,
-        orderBy: orderBy,
-        ascending: ascending,
-        liked: showOnlyLiked
-    };
-    const url = "/blogs/get/page?"+new URLSearchParams(params);
+    const url = `/blogs/get/page?${createParams(true)}`;
     const result = await apiCall(url, "GET", null, null);
     const json = await result.json();
     if (result.status !== 200) {
@@ -105,8 +95,9 @@ async function loadBlogsPage(deleteFirst) {
     if (deleteFirst) {
         deleteBlogPreviews();
     }
+    const params = createParams(false);
     for (const blog of blogs) {
-        const blogPreview = new BlogPreview(blog, container);
+        const blogPreview = new BlogPreview(blog, container, params);
         blogPreviews.push(blogPreview);
     }
     pageNum++;
@@ -121,18 +112,37 @@ function deleteBlogPreviews() {
     blogPreviews = [];
 }
 
+function createParams(withPaginationForm) {
+    const params = {};
+    addParamIfNotDefault("search", searchInput, "");
+    addParamIfNotDefault("orderBy", orderBy, "unix_time");
+    addParamIfNotDefault("ascending", ascending, false);
+    addParamIfNotDefault("liked", showOnlyLiked, false);
+    if (withPaginationForm) {
+        params.pageNum = pageNum;
+        params.pageSize = pageSize;
+    }
+
+    function addParamIfNotDefault(key, value, defaultValue) {
+        if (value != defaultValue) {
+            params[key] = value;
+        }
+    }
+    return new URLSearchParams(params);
+}
+
 class BlogPreview {
     #container;
     #element;
     #blogStats
 
-    constructor(blog, container) {
+    constructor(blog, container, params) {
         this.#container = container;
         this.#element = document.createElement("div");
         this.#element.innerHTML =
         `
             <div class="my-2 SecondaryColor border border-white Rounded container-xxl d-flex py-3 BlogPreview">
-                <a class="NoDecoration flex-grow-1 mx-2" href="/blogs/${blog.id}" title="${blog.title}">
+                <a class="NoDecoration flex-grow-1 mx-2" href="/blogs/${blog.id}${(params.size == 0) ? "" : `?${params}`}" title="${blog.title}">
                     <u class="fs-4 fw-bold" id="Title">
                         Title
                     </u>

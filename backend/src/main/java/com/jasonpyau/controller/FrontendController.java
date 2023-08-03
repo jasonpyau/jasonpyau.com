@@ -1,5 +1,7 @@
 package com.jasonpyau.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,12 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Blog;
 import com.jasonpyau.entity.Stats;
+import com.jasonpyau.form.BlogSearchForm;
 import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
 import com.jasonpyau.service.StatsService;
 import com.jasonpyau.util.NumberFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 public class FrontendController {
@@ -54,24 +58,22 @@ public class FrontendController {
     }
 
     @GetMapping({"/blogs/{id}", "blogs/{id}/"})
-    @RateLimit(RateLimit.DEFAULT_TOKEN)
-    public String blog(@PathVariable("id") Long id, HttpServletRequest request, Model model) {
+    @RateLimit(RateLimit.BIG_TOKEN)
+    public String blog(@PathVariable("id") Long id, HttpServletRequest request, Model model, @Valid BlogSearchForm blogSearchForm) {
         updateStats(model);
-        Blog blog = blogService.getBlog(request, id);
-        if (blog == null) {
+        HashMap<String, Blog> res = blogService.getBlog(request, id, blogSearchForm);
+        if (res == null) {
             return "error";
         }
-        model.addAttribute("id", blog.getId());
-        model.addAttribute("title", blog.getTitle());
-        model.addAttribute("description", blog.getDescription());
-        String descriptionBody = String.format("<div class=\"fs-3 fw-bold fst-italic text-decoration-underline text-center\">%s</div>" +
+        Blog blog = res.get("blog");
+        model.addAttribute("blog", blog);
+        model.addAttribute("prev", res.get("prev"));
+        model.addAttribute("next", res.get("next"));
+        model.addAttribute("queryString", (request.getQueryString() == null) ? "" : "?"+request.getQueryString());
+        String bodyHTML = String.format("<div class=\"fs-3 fw-bold fst-italic text-decoration-underline text-center\">%s</div>" +
                                                 "<br><br> "+
                                                 "<div class=\"fs-4 fw-semibold text-left\">%s</div>", blog.getDescription(), blog.getBody());
-        model.addAttribute("descriptionBody", descriptionBody);
-        model.addAttribute("date", blog.getDate());
-        model.addAttribute("blogViewCount", blog.getViewCount());
-        model.addAttribute("blogLikeCount", blog.getLikeCount());
-        model.addAttribute("isLikedByUser", blog.getIsLikedByUser());
+        model.addAttribute("bodyHTML", bodyHTML);
         return "blog";
     }
 

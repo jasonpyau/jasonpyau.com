@@ -53,26 +53,27 @@ public class BlogService {
         return null;
     }
 
-    // Returns requested Blog if found, else null.
-    public Blog getBlog(HttpServletRequest request, Long id) {
+    // Returns requested Blog, else null. Also returns previous and next blogs
+    public HashMap<String, Blog> getBlog(HttpServletRequest request, Long id, BlogSearchForm blogSearchForm) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
             return null;
         }
         Blog blog = optional.get();
+        HashMap<String, Blog> res = getPrevAndNext(request, blogSearchForm, blog);
+        if (res == null) {
+            return null;
+        }
         blog.view();
         User dummyUser = userService.getDummyUser(request);
         blog.checkIsLikedByUser(dummyUser);
-        return blogRepository.save(blog);
+        res.put("blog", blog);
+        blogRepository.save(blog);
+        return res;
     }
 
     public Page<Blog> getBlogs(HttpServletRequest request, BlogSearchForm blogSearchForm, PaginationForm paginationForm) {
-        Direction direction = (blogSearchForm.getAscending()) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, blogSearchForm.getOrderBy());
-        Pageable pageable = PageRequest.of(paginationForm.getPageNum(), paginationForm.getPageSize(), sort);
-        Page<Blog> page = (blogSearchForm.getLiked()) ? 
-                            blogRepository.findAllLikedWithPagination(pageable, UserService.getUserAddress(request), blogSearchForm.getSearch()) :
-                            blogRepository.findAllWithPagination(pageable, blogSearchForm.getSearch());
+        Page<Blog> page = this.findAllWithPagination(request, blogSearchForm, paginationForm);
         List<Blog> blogs = page.getContent();
         if (blogSearchForm.getLiked()) {
             for (Blog blog : blogs) {
@@ -113,19 +114,12 @@ public class BlogService {
         return null;
     }
 
-    public HashMap<String, Long> getPrevAndNext(HttpServletRequest request, BlogSearchForm blogSearchForm, Long id) {
-        Direction direction = (blogSearchForm.getAscending()) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, blogSearchForm.getOrderBy());
-        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
-        Page<Blog> page = (blogSearchForm.getLiked()) ? 
-                            blogRepository.findAllLikedWithPagination(pageable, UserService.getUserAddress(request), blogSearchForm.getSearch()) :
-                            blogRepository.findAllWithPagination(pageable, blogSearchForm.getSearch());
-        List<Blog> blogs = page.getContent();
-        Optional<Blog> optional = blogRepository.findById(id);
-        if (!optional.isPresent()) {
-            return null;
-        }
-        Blog blog = optional.get();
+    // Returns null if error (current blog cannot be found with the given blogSearchForm).
+    private HashMap<String, Blog> getPrevAndNext(HttpServletRequest request, BlogSearchForm blogSearchForm, Blog blog) {
+        PaginationForm paginationForm = new PaginationForm();
+        paginationForm.setPageNum(0);
+        paginationForm.setPageSize(Integer.MAX_VALUE);
+        List<Blog> blogs = this.findAllWithPagination(request, blogSearchForm, paginationForm).getContent();
         int lower = search(blogs, blog, blogSearchForm.getAscending(), blogSearchForm.getOrderBy(), true);
         if (lower == -1) {
             return null;
@@ -137,14 +131,14 @@ public class BlogService {
                 break;
             }
         }
-        Long prev = null, next = null;
-        if (index >= 1 && index <= blogs.size()-1) {
-            prev = blogs.get(index-1).getId();
+        Blog prev = null, next = null;
+        if (index > 0) {
+            prev = blogs.get(index-1);
         }
-        if (index >= 0 && index <= blogs.size()-2) {
-            next = blogs.get(index+1).getId();
+        if (index < blogs.size()-1) {
+            next = blogs.get(index+1);
         }
-        HashMap<String, Long> res = new HashMap<>();
+        HashMap<String, Blog> res = new HashMap<>();
         res.put("prev", prev);
         res.put("next", next);
         return res;
@@ -160,7 +154,7 @@ public class BlogService {
             Blog lhs = blogs.get(mid);
             switch (orderBy) {
                 case "title":
-                    compare = asc*lhs.getTitle().compareTo(rhs.getTitle());
+                    compare = asc*lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
                     break;
                 case "like_count":
                     compare = asc*lhs.getLikeCount().compareTo(rhs.getLikeCount());
@@ -186,6 +180,15 @@ public class BlogService {
             }            
         }
         return ans;
+    }
+
+    private Page<Blog> findAllWithPagination(HttpServletRequest request, BlogSearchForm blogSearchForm, PaginationForm paginationForm) {
+        Direction direction = (blogSearchForm.getAscending()) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, blogSearchForm.getOrderBy());
+        Pageable pageable = PageRequest.of(paginationForm.getPageNum(), paginationForm.getPageSize(), sort);
+        return (blogSearchForm.getLiked()) ? 
+                    blogRepository.findAllLikedWithPagination(pageable, UserService.getUserAddress(request), blogSearchForm.getSearch()) :
+                    blogRepository.findAllWithPagination(pageable, blogSearchForm.getSearch());
     }
 
 }

@@ -90,15 +90,5 @@ public class BlogController {
         }
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
-
-    @GetMapping(path = "/get/prev_next/{id}", produces = "application/json")
-    @RateLimit(RateLimit.BIG_TOKEN)
-    @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getPrevAndNext(HttpServletRequest request, @PathVariable("id") Long id, @Valid BlogSearchForm blogSearchForm) {
-        HashMap<String, Long> res = blogService.getPrevAndNext(request, blogSearchForm, id);
-        if (res == null) {
-            return Response.errorMessage(Blog.BLOG_ID_ERROR, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody("ids", res), HttpStatus.OK);
-    }
+    
 }
