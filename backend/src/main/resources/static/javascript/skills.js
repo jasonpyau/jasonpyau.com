@@ -1,6 +1,6 @@
 import { apiCall } from "./apiCall.js";
 
-$(document).ready(async function() {
+addEventListener('DOMContentLoaded', async(e) => {
     const url = '/skills/get';
     const result = await apiCall(url, "GET", null, null);
     const json = await result.json();
@@ -9,15 +9,17 @@ $(document).ready(async function() {
         return;
     }
     const skillsByType = json.skills;
-    Object.keys(skillsByType).forEach(function(key) {
-        const rowHTML = document.getElementById("SkillsTypeRowTemplate").cloneNode(true);
-        rowHTML.id = "";
-        rowHTML.querySelector("#SkillType").textContent = key;
-        const SkillsRowContainer = rowHTML.querySelector("#SkillsRowContainer");
-        const skills = skillsByType[key];
-        loadSkills(skills, SkillsRowContainer);
-        document.getElementById("SkillsTypeRow").appendChild(rowHTML);
-        rowHTML.style.display = "inline";
+    Object.keys(skillsByType).forEach((key) => {
+        const skillsRow = document.createElement('div');
+        skillsRow.innerHTML = `
+            <u class="fs-3 HeaderTextColor fw-bold" id="SkillType">${key}</u>
+            <div class="Rounded my-3 py-2 SkillsRowContainer" id="SkillsRowContainer">
+
+            </div>
+        `;
+        const skillsRowContainer = skillsRow.querySelector("#SkillsRowContainer");
+        loadSkills(skillsByType[key], skillsRowContainer);
+        document.getElementById("SkillsTypeRow").appendChild(skillsRow);
         document.getElementById("skillSpinner").style.display = "none";
     });
 });
@@ -35,6 +37,5 @@ export function loadSkills(skills, container) {
             </span>
         `;
         container.appendChild(element);
-        
     }
 }

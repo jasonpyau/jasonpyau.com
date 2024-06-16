@@ -86,7 +86,8 @@
         const viewCount = /*[[${blog.viewCount}]]*/ 0;
         const likeCount = /*[[${blog.likeCount}]]*/ 0;
         const isInitallyLiked = /*[[${blog.isLikedByUser}]]*/ false;
-        $(document).ready(async function() {
+
+        addEventListener('DOMContentLoaded', async(e) => {
             const blogStats = new BlogStats(id, viewCount, likeCount, isInitallyLiked, document.getElementById("BlogStatsContainer"));
         });
     </script>

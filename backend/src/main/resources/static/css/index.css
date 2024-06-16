@@ -1,7 +1,7 @@
 .Project {
     height: auto;
     width: 300px;
-    display: none;
+    display: block;
     background: rgb(25,25,112);
     background: linear-gradient(135deg, rgba(25,25,112,1) 25%, rgba(65,65,223,1) 100%);
     margin: 5px;
@@ -24,8 +24,4 @@
     width: 80%;
     background: rgb(25,25,112);
     background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgba(45,45,200,1) 100%);
-}
-
-#SkillsTypeRowTemplate {
-    display: none;
 }

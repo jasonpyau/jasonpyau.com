@@ -9,7 +9,7 @@ let ascending = (localStorage.blogAscending === 'true') || false;
 let showOnlyLiked = (localStorage.blogShowOnlyLiked === 'true') || false;
 let searchInput = (localStorage.blogSearchInput) || "";
 
-$(document).ready(async function() {
+addEventListener('DOMContentLoaded', async(e) => {
     document.getElementById("PageSizeRange").value = pageSize;
     updatePageSizeText();
     document.getElementById("ShowLikedSwitch").checked = showOnlyLiked;
