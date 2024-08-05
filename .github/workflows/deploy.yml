@@ -1,4 +1,4 @@
-name: Build and Deploy Spring Boot Application on Git push
+name: Deploy jasonpyau.com on Git push
 
 on:
   push:
@@ -7,16 +7,16 @@ on:
   workflow_dispatch:
           
 jobs:
-  build:
+  deploy:
   
     runs-on: self-hosted
     
     steps:
       - name: File Permissions
         run: |
-            sudo chown -R jasonpyau:jasonpyau .
+            sudo chown -R $USER:$USER .
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Create Constants.java on Admin Panel
         env:
           CONSTANTS: ${{ secrets.ADMIN_PANEL_CONSTANTS_JAVA }}
@@ -40,7 +40,13 @@ jobs:
 
             9
             EOF
-      - name: Run Spring Boot
+      - name: Copy files to desired directory and run Spring Boot
+        env:
+          TARGET: ${{ secrets.TARGET_FOLDER }}
         run: |
+            sudo find "$TARGET" &> /dev/null && sudo rm -r "$TARGET"
+            sudo mkdir "$TARGET"
+            sudo mv -v ./* "$TARGET" &> /dev/null
+            cd "$TARGET"
             cd backend
             sudo nohup mvn spring-boot:run > spring-log.txt 2>&1 &
