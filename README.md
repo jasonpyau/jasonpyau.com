@@ -3,7 +3,6 @@
 ## Table of Contents
 <ol>
   <li><a href="#about">About</a></li>
-  <li><a href="#dependencies">Dependencies</a></li>
   <li><a href="#get-started">Get Started</a></li>
 </ol>
 
@@ -17,31 +16,41 @@ This is a personal portfolio site made by me using Java Spring Boot. It utilizes
 
 This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git push.
 
-## Dependencies
-```
-1. Spring Boot Web
-2. Spring Boot Data JPA - Database
-3. Spring Boot Thymeleaf - Load webpages through Spring Boot
-4. MariaDB Driver - Database
-5. Java Mail Sender - Send email notifications to myself
-6. Bucket4J - Rate Limitter
-7. Google Guava - Cache to Rate Limit
-8. Lombok - Reduce repetitive code (Getter/Setters)
-9. Spring Boot Validation - Validate user input
-10. Spring Boot Test - Unit testing
-11. Hamcrest - Unit testing
-```
 
 ## Get Started
 **(Ubuntu)**
 
-**Create application.properties (./backend/src/main/resouces/application.properties)**
+**Create secrets.properties (./backend/src/main/resouces/secrets.properties)** -
+<a href="https://github.com/jasonpyau/jasonpyau.com/blob/main/backend/src/main/resources/secrets.properties.sample">secrets.properties.sample</a>
 
-https://github.com/jasonpyau/jasonpyau.com/blob/fb316fd5f09d5b62cd46015f1fa1c2d0ffbc3e88/backend/src/main/resources/application.properties.sample#L1-L35
+```
+SPRING_ACTIVE_PROFILE=default
 
-**Create Constants.java (./admin/Constants.java)**
+MARIADB_SERVER_URL=YOUR_MARIADB_SERVER_URL_HERE
+MARIADB_DATABASE_NAME=YOUR_MARIADB_DATABASE_NAME_HERE
+MARIADB_USERNAME=YOUR_MARIADB_USERNAME_HERE
+MARIADB_PASSWORD=YOUR_MARIADB_PASSWORD_HERE
 
-https://github.com/jasonpyau/jasonpyau.com/blob/ac427271c88fe2a8cbfa2917f3cfd3e36ceeebf4/admin/ConstantsSample.java#L1-L8
+EMAIL_NOTIFICATION_SENDER_ADDRESS=YOUR_EMAIL_NOTIFICATION_SENDER_ADDRESS_HERE
+EMAIL_NOTIFICATION_SENDER_PASSWORD=YOUR_EMAIL_NOTIFICATION_SENDER_PASSWORD_HERE
+EMAIL_NOTIFICATION_RECEIVER_ADDRESS=YOUR_EMAIL_NOTIFICATION_RECEIVER_ADDRESS_HERE
+
+ADMIN_PANEL_PASSWORD=YOUR_ADMIN_PANEL_PASSWORD_HERE
+RESUME_LINK=/files/Resume_Template.pdf
+```
+
+**Create Constants.java (./admin/Constants.java)** -
+<a href="https://github.com/jasonpyau/jasonpyau.com/blob/main/admin/ConstantsSample.java">ConstantsSample.java</a>
+```
+// Rename file & class to "Constants"
+public class ConstantsSample {
+    
+    private ConstantsSample () {};
+
+    public static final String SERVER_URL = "YOUR_SERVER_URL_HERE";
+    public static final String APP_PASSWORD = "YOUR_APP_PASSWORD_HERE";
+}
+```
 
 **Run Spring Boot Project**
 ```
@@ -49,7 +58,7 @@ sudo apt update
 
 sudo apt install openjdk-17-jdk
 
-sudo apt install maven
+cd ./backend
 
-sudo mvn spring-boot:run
+sudo bash ./mvnw spring-boot:run
 ```
