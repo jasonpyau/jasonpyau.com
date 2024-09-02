@@ -20,7 +20,7 @@ public class UserService {
 
     private static String activeProfile;
 
-    @Value("${spring.profiles.active}")
+    @Value("${spring.profiles.active:#{null}}")
     @SuppressWarnings("static-access")
     public void setActiveProfile(String activeProfile) {
         this.activeProfile = activeProfile;

@@ -1,5 +1,5 @@
-application.properties
-application-dev.properties
+secrets.properties
+secrets.production.properties
 Constants.java
 *.class
 runAdmin.bat

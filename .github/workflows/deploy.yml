@@ -22,11 +22,11 @@ jobs:
           CONSTANTS: ${{ secrets.ADMIN_PANEL_CONSTANTS_JAVA }}
         run: |
             echo "$CONSTANTS" > admin/Constants.java
-      - name: Create application.properties on Spring Boot
+      - name: Create secrets.properties on Spring Boot
         env:
-          PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
+          PROPERTIES: ${{ secrets.SECRETS_PROPERTIES  }}
         run: |
-            echo "$PROPERTIES" > backend/src/main/resources/application.properties
+            echo "$PROPERTIES" > backend/src/main/resources/secrets.properties
       - name: Run Unit Tests
         run: |
             cd backend
