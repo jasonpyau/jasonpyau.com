@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "com.jasonpyau.appPassword",
+    "type": "java.lang.String",
+    "description": "Admin Panel password used for the Admin Panel CLI and Spring Boot server to authenticate."
+  },
+  {
+    "name": "com.jasonpyau.email",
+    "type": "java.lang.String",
+    "description": "Used to send email notifications after someone sends a message via the 'Contact Me' section."
+  },
+  {
+    "name": "com.jasonpyau.resumeLink",
+    "type": "java.lang.String",
+    "description": "jasonpyau.com/resume will redirect to this link."
+  }
+]}

@@ -1,10 +1,15 @@
 package com.jasonpyau.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -29,6 +34,8 @@ public class FrontendController {
     private BlogService blogService;
     @Autowired
     private AboutMeService aboutMeService;
+    @Autowired
+    private Environment env;
     
     @GetMapping("/")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
@@ -78,8 +85,18 @@ public class FrontendController {
     }
 
     @GetMapping({"/resume", "/resume/"})
-    public String resume() {
-        return "redirect:/files/Jason_Yau_Resume.pdf";
+    public String resume() throws IOException {
+        String resumeLink = env.getProperty("com.jasonpyau.resumeLink");
+        if (resumeLink != null && !resumeLink.isBlank()) {
+            return "redirect:"+resumeLink;
+        }
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        ((AntPathMatcher)resolver.getPathMatcher()).setCaseSensitive(false);
+        Resource[] resources = resolver.getResources("classpath*:/static/files/*RESUME*.pdf");
+        if (resources.length > 0) {
+            return "redirect:/files/"+resources[0].getFilename();
+        }
+        return "error";
     }
 
     private void updateStats(Model model) {
