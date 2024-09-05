@@ -25,6 +25,12 @@ public class DateFormat {
         return dateTime;
     }
 
+    public static String MMyyyy() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/yyyy");
+        String dateTime = simpleDateFormat.format(new Date());
+        return dateTime;
+    }
+
     public static Long getUnixTime() {
         return System.currentTimeMillis()/1000L;
     }

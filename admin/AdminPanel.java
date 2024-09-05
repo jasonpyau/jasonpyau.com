@@ -354,8 +354,17 @@ public class AdminPanel {
         System.out.println("Input startDate ('MM/YYYY') of project");
         input = scan.nextLine();
         sb.append("\"startDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input endDate ('MM/YYYY') of project");
+        System.out.println("Is the project currently being worked on? [true/false]");
         input = scan.nextLine();
+        sb.append("\"present\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        if (input.equals("true")) {
+            // Currently, endDate is a required field even if present = true. 
+            // The server has logic to always update the endDate to the current month. 
+            input = "12/2099";
+        } else {
+            System.out.println("Input endDate ('MM/YYYY') of project");
+            input = scan.nextLine();
+        }
         sb.append("\"endDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input link to the project:");
         input = scan.nextLine();

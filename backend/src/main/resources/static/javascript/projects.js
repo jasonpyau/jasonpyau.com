@@ -23,7 +23,7 @@ addEventListener('DOMContentLoaded', async(e) => {
                 <div class="fs-6 fw-semibold fst-italic" id="DateContainer">
                     <span id="StartDate">${project.startDate}</span>
                     <span>-</span>
-                    <span id="EndDate">${project.endDate}</span>
+                    <span id="EndDate">${project.present ? "Present" : project.endDate}</span>
                 </div>
                 <div class="my-3" id="SkillsContainer">
             

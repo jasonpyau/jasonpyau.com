@@ -3,16 +3,19 @@ package com.jasonpyau.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Project;
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.util.CacheUtil;
+import com.jasonpyau.util.DateFormat;
 import com.jasonpyau.util.Patch;
 
 import jakarta.validation.ConstraintViolation;
@@ -33,7 +36,11 @@ public class ProjectService {
 
     @CacheEvict(cacheNames = CacheUtil.PROJECT_CACHE, allEntries = true)
     public void newProject(Project project) {
-        project.createOrder();
+        if (project.getPresent()) {
+            project.syncEndDate();
+        } else {
+            project.createOrder();
+        }
         projectRepository.save(project);
     }
 
@@ -110,4 +117,16 @@ public class ProjectService {
         return null;
     }
 
+    @Scheduled(fixedRate = 8, timeUnit = TimeUnit.HOURS)
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public void syncAllEndDates() {
+        List<Project> projects = projectRepository.findAll();
+        for (Project project : projects) {
+            if (project.syncEndDate()) {
+                System.out.printf("%s: Synced endDate for: '%s'\n", DateFormat.MMddyyyyhhmmss(), project.getName());
+                projectRepository.save(project);
+            }
+        }
+    }
+    
 }

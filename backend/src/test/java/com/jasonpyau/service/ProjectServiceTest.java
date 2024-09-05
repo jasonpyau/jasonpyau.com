@@ -36,6 +36,7 @@ public class ProjectServiceTest {
                                 .description("Test Description of Project1")
                                 .startDate("05/2023")
                                 .endDate("06/2023")
+                                .present(false)
                                 .dateOrder("202305202306")
                                 .link("project.com")
                                 .build();

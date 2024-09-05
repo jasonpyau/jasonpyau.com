@@ -3,6 +3,8 @@ package com.jasonpyau.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jasonpyau.util.DateFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -38,6 +41,7 @@ public class Project {
     public static final String PROJECT_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     public static final String PROJECT_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
     public static final String PROJECT_LINK_ERROR = "'link' should be between 4-250 characters.";
+    public static final String PROJECT_PRESENT_ERROR = "'present' should be true or false.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,6 +68,10 @@ public class Project {
     @NotBlank(message = PROJECT_END_DATE_ERROR)
     private String endDate;
 
+    @Column(name = "present", nullable = false)
+    @NotNull(message = PROJECT_PRESENT_ERROR)
+    private Boolean present;
+
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Column(name = "date_order", nullable = false)
@@ -80,12 +88,25 @@ public class Project {
     private String link;
 
     public void createOrder() {
-        StringBuilder sb = new StringBuilder(14);
-        sb.append(startDate.substring(3));
-        sb.append(startDate.substring(0, 2));
-        sb.append(endDate.substring(3));
-        sb.append(endDate.substring(0, 2));
-        this.dateOrder = sb.toString();
+        String[] startSplit = this.startDate.split("/", 2);
+        String[] endSplit = this.endDate.split("/", 2);
+        // EndYYYY+EndMM+present+StartYYYY+StartMM
+        this.dateOrder = endSplit[1]
+                        + endSplit[0]
+                        + ((this.present) ? "1" : "0")
+                        + startSplit[1]
+                        + startSplit[0];
+    }
+
+    // Returns true if there was a change to the project's endDate.
+    public boolean syncEndDate() {
+        boolean changed = false;
+        if (this.present) {
+            changed = !this.endDate.equals(DateFormat.MMyyyy());
+            this.endDate = DateFormat.MMyyyy();
+            createOrder();
+        }
+        return changed;
     }
 
     public void addSkill(Skill skill) {

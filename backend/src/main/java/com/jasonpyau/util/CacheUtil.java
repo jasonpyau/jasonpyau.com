@@ -16,6 +16,6 @@ public class CacheUtil {
     @Scheduled(fixedRate = 4, timeUnit = TimeUnit.HOURS)
     @CacheEvict(cacheNames = {SKILL_CACHE, PROJECT_CACHE, ABOUT_ME_CACHE}, allEntries = true)
     public void clearCache() {
-        System.out.println("Cleared Cache at "+DateFormat.MMddyyyyhhmmss());
+        System.out.printf("%s: Cleared Cache\n", DateFormat.MMddyyyyhhmmss());
     }
 }
