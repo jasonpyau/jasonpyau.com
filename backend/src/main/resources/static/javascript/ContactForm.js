@@ -15,8 +15,12 @@ async function contactFormSubmit() {
         contactInfo: contactInfo,
         body: message
     };
+    document.getElementById("ContactMeSendButton").classList.add("disabled");
+    document.getElementById("ContactMeSpinner").style.display = "block";
     const result = await apiCall(url, "POST", headers, body);
     const json = await result.json();
+    document.getElementById("ContactMeSendButton").classList.remove("disabled");
+    document.getElementById("ContactMeSpinner").style.display = "none";
     const contactFormSuccessElement = document.getElementById("ContactFormSuccess");
     const contactFormErrorElement = document.getElementById("ContactFormError");
     if (result.status === 200) {
