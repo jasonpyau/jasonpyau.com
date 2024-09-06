@@ -12,7 +12,7 @@ This is a personal portfolio site made by me using Java Spring Boot. It utilizes
 
 **Link:** <a href="https://jasonpyau.com">jasonpyau.com/</a>
 <br>
-**API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/">swaggerhub.com/apis-docs/JASONYAU/jasonpyau.com/1.0.0#/</a>
+**API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/jasonpyau-com/jasonpyau.com/1.0.0">https://app.swaggerhub.com/apis-docs/jasonpyau-com/jasonpyau.com/1.0.0</a>
 
 This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git push.
 
