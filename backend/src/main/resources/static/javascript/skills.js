@@ -24,18 +24,57 @@ addEventListener('DOMContentLoaded', async(e) => {
     });
 });
 
-export function loadSkills(skills, container) {
+const iconJsonData = {};
+
+addEventListener('DOMContentLoaded', async(e) => {
+    const url = "https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json";
+    const result = await apiCall(url, "GET", null, null);
+    const json = await result.json();
+    Object.assign(iconJsonData, json);
+});
+
+export async function loadSkills(skills, container) {
     for (const skill of skills) {
-        const element = document.createElement('span');
-        element.className = "m-1 btn btn-dark btn-sm";
-        element.innerHTML = 
-        ((skill.simpleIconsIconSlug) ? 
-        `<img height="16" width="16" src="https://cdn.simpleicons.org/${skill.simpleIconsIconSlug}" class="mx-1"/>` : "") +
-        `
-            <span>
-                ${skill.name}
-            </span>
-        `;
-        container.appendChild(element);
+        loadSkill(skill, container);
     }
+}
+
+async function loadSkill(skill, container) {
+    const element = document.createElement('span');
+    container.appendChild(element);
+    let iconElement = "";
+    if (skill.simpleIconsIconSlug) {
+        iconElement = await getIconElement(`https://cdn.simpleicons.org/${skill.simpleIconsIconSlug}`);
+        iconElement = iconElement || await getIconElement(`https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/icons/${skill.simpleIconsIconSlug}.svg`);
+        if (iconElement) {
+            iconElement = new DOMParser().parseFromString(iconElement, "text/xml").firstChild;
+            iconElement.classList.add("mx-1");
+            iconElement.style.height = 16;
+            iconElement.style.width = 16;
+            // If this is true, we used simple-icons/6.23.0.
+            if (!iconElement.getAttribute("fill")) {
+                const svgTitle = iconElement.querySelector("title").textContent;
+                iconElement.setAttribute("fill", getHexColor(svgTitle));
+            }
+        }
+    }
+    element.className = "m-1 btn btn-dark btn-sm";
+    element.innerHTML = `
+        ${(iconElement) ? iconElement.outerHTML : ""}
+        <span>
+            ${skill.name}
+        </span>
+    `;
+}
+
+async function getIconElement(path) {
+    const result = await apiCall(path, "GET", null, null);
+    if (result.status === 200) {
+        return await result.text();
+    }
+    return "";
+}
+
+function getHexColor(svgTitle) {
+    return `#${iconJsonData.icons.find((icon) => icon.title === svgTitle).hex}`;
 }

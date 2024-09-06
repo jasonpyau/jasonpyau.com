@@ -60,7 +60,8 @@ public class Skill {
     @Column(name = "simple_icons_icon_slug", nullable = true)
     @Size(max = 50, message = SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR)
     // https://www.npmjs.com/package/simple-icons
-    // https://github.com/simple-icons/simple-icons/blob/develop/slugs.md
+    // https://github.com/simple-icons/simple-icons/blob/master/slugs.md
+    // https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md
     private String simpleIconsIconSlug;
 
     @JsonIgnore
