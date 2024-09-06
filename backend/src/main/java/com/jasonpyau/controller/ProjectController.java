@@ -76,7 +76,7 @@ public class ProjectController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newProjectSkill(HttpServletRequest request, 
                                                                     @PathVariable("id") Integer id, 
-                                                                    @RequestParam(required = true) @Size(min = 1, max = 15, message = Skill.SKILL_NAME_ERROR) String skillName) {
+                                                                    @RequestParam(required = true) @Size(min = 1, max = 25, message = Skill.SKILL_NAME_ERROR) String skillName) {
         String errorMessage = projectService.newProjectSkill(skillName, id);
         if (errorMessage != null) {
             return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
@@ -90,7 +90,7 @@ public class ProjectController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteProjectSkill(HttpServletRequest request, 
                                                                     @PathVariable("id") Integer id, 
-                                                                    @RequestParam(required = true) @Size(min = 1, max = 15, message = Skill.SKILL_NAME_ERROR) String skillName) {
+                                                                    @RequestParam(required = true) @Size(min = 1, max = 25, message = Skill.SKILL_NAME_ERROR) String skillName) {
         String errorMessage = projectService.deleteProjectSkill(skillName, id);
         if (errorMessage != null) {
             return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);

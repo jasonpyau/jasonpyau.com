@@ -36,7 +36,7 @@ import lombok.Setter;
 @Table(name = "skills", indexes = @Index(name = "type_name_ind", columnList = "type, name"))
 public class Skill {
 
-    public static final String SKILL_NAME_ERROR = "'name' should be between 1-15 characters.";
+    public static final String SKILL_NAME_ERROR = "'name' should be between 1-25 characters.";
     public static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
     public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
@@ -49,7 +49,7 @@ public class Skill {
     private Integer id;
 
     @Column(name = "name", unique = true, nullable = false)
-    @Size(min = 1, max = 15, message = SKILL_NAME_ERROR)
+    @Size(min = 1, max = 25, message = SKILL_NAME_ERROR)
     @NotBlank(message = SKILL_NAME_ERROR)
     private String name;
 
