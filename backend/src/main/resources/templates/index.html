@@ -64,9 +64,12 @@
                     <label for="MessageInput">Message</label>
                 </div>
                 <div id="SubmitContainer" class="d-flex align-items-center flex-column">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border m-2" id="ContactMeSpinner" role="status"></div>
+                    </div>
                     <div class="SuccessMessage" id="ContactFormSuccess">Success</div>
                     <div class="ErrorMessage" id="ContactFormError">Error</div>
-                    <button class="btn btn-primary border-0" onclick="contactFormSubmit()" type="submit" title="Send Message">Send</button>
+                    <button class="btn btn-primary border-0" onclick="contactFormSubmit()" type="submit" title="Send Message" id="ContactMeSendButton">Send</button>
                     <div>
                         Note: This sends an email notification to me.
                     </div>

@@ -27,8 +27,10 @@ public class AdminPanel {
 
     private static void newProject() {
         String body = getProjectBody();
-        apiCall("/projects/new", body, "POST", true);
-        updateLastUpdated(false);
+        boolean success = apiCall("/projects/new", body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void updateProject() {
@@ -37,16 +39,20 @@ public class AdminPanel {
         scan.nextLine();
         System.out.println("You may leave blank any fields you don't want to update.");
         String body = getProjectBody();
-        apiCall("/projects/update/"+id, body, "PATCH", true);
-        updateLastUpdated(false);
+        boolean success = apiCall("/projects/update/"+id, body, "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void deleteProject() {
         System.out.println("Input the id of the project you'd like to delete:");
         int id = scan.nextInt();
         scan.nextLine();
-        apiCall("/projects/delete/"+id, "{ }", "DELETE", true);
-        updateLastUpdated(false);
+        boolean success = apiCall("/projects/delete/"+id, "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void getProjects() {
@@ -76,21 +82,27 @@ public class AdminPanel {
         apiCall("/skills/valid_types", "{ }", "GET", false);
         System.out.println("These are the valid types. Input the type of skill:");
         String type = scan.nextLine();
-        System.out.println("Input the Simple Icons slug for the skill (not required). Read more about it here: https://www.npmjs.com/package/simple-icons https://github.com/simple-icons/simple-icons/blob/develop/slugs.md");
+        System.out.println("Input the Simple Icons slug for the skill (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
         String simpleIconsIconSlug = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
                         "\"type\": \""+type+"\"," +
                         "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"}";
-        apiCall("/skills/new", body, "POST", true);
-        updateLastUpdated(false);
-        
+        boolean success = apiCall("/skills/new", body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void deleteSkill() {
         System.out.println("Input name of the skill:");
         String name = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8).replace("+", "%20");
-        apiCall(String.format("/skills/delete/%s", name), "{ }", "DELETE", true);
-        updateLastUpdated(false);
+        boolean success = apiCall(String.format("/skills/delete/%s", name), "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void viewSkills() {
@@ -101,8 +113,10 @@ public class AdminPanel {
         System.out.println("Input text:");
         String text = scan.nextLine();
         String body = "{\"text\": \""+text+"\"}";
-        apiCall("/about_me/update", body, "PUT", true);
-        updateLastUpdated(false);
+        boolean success = apiCall("/about_me/update", body, "PUT", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void getAboutMe() {
@@ -171,7 +185,7 @@ public class AdminPanel {
         apiCall("/shut_down", "{ }", "DELETE", true);
     }
 
-    private static void apiCall(String endpoint, String body, String method, boolean showConfirmation) {
+    private static boolean apiCall(String endpoint, String body, String method, boolean showConfirmation) {
         if (showConfirmation) {
             System.out.println("This will send a "+method+" request with the body: \n");
             System.out.println(body);
@@ -186,7 +200,7 @@ public class AdminPanel {
                 case "n":
                 default:
                     System.out.println("Exited.");
-                    return;
+                    return false;
             }
         }
         try {
@@ -206,7 +220,9 @@ public class AdminPanel {
             }
         } catch (Exception e) {
             System.out.println("Error in sending HTTP Request:\n" + e);
+            return false;
         }
+        return true;
     }
 
     private static void printBlogsMenu() {
@@ -341,8 +357,17 @@ public class AdminPanel {
         System.out.println("Input startDate ('MM/YYYY') of project");
         input = scan.nextLine();
         sb.append("\"startDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input endDate ('MM/YYYY') of project");
+        System.out.println("Is the project currently being worked on? [true/false]");
         input = scan.nextLine();
+        sb.append("\"present\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        if (input.equals("true")) {
+            // Currently, endDate is a required field even if present = true. 
+            // The server has logic to always update the endDate to the current month. 
+            input = "12/2099";
+        } else {
+            System.out.println("Input endDate ('MM/YYYY') of project");
+            input = scan.nextLine();
+        }
         sb.append("\"endDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input link to the project:");
         input = scan.nextLine();

@@ -25,3 +25,7 @@
     background: rgb(25,25,112);
     background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgba(45,45,200,1) 100%);
 }
+
+#ContactMeSpinner {
+    display: none;
+}
