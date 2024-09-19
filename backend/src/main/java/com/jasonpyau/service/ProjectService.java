@@ -80,7 +80,7 @@ public class ProjectService {
 
     @Cacheable(cacheNames = CacheUtil.PROJECT_CACHE)
     public List<Project> getProjects() {
-        return projectRepository.findAllByStartDateEndDate();
+        return projectRepository.findAllByDate();
     }
 
     // Returns error message if applicable, else null.
