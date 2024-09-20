@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,28 @@ public class ExperienceService {
         experience.addSkill(skillOptional.get());
         experienceRepository.save(experience);
         return null;
+    }
+
+    // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public String deleteExperienceSkill(String skillName, Integer id) {
+        Optional<Experience> experienceOptional = experienceRepository.findById(id);
+        if (!experienceOptional.isPresent()) {
+            return Experience.EXPERIENCE_ID_ERROR;
+        }
+        Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
+        if (!skillOptional.isPresent()) {
+            return Skill.SKILL_NOT_FOUND_ERROR;
+        }
+        Experience experience = experienceOptional.get();
+        experience.deleteSkill(skillOptional.get());
+        experienceRepository.save(experience);
+        return null;
+    }
+
+    @Cacheable(cacheNames = CacheUtil.EXPERIENCE_CACHE)
+    public List<Experience> getExperiences() {
+        return experienceRepository.findAllByDate();
     }
 
     @Scheduled(fixedRate = 8, timeUnit = TimeUnit.HOURS)
