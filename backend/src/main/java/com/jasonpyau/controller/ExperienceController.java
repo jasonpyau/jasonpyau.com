@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,18 @@ public class ExperienceController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newExperience(HttpServletRequest request, @Valid @RequestBody Experience experience) {
         experienceService.newExperience(experience);
+        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> updateExperience(HttpServletRequest request, @RequestBody Experience updateExperience, @PathVariable("id") Integer id) {
+        String errorMessage = experienceService.updateExperience(updateExperience, id);
+        if (errorMessage != null) {
+            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 

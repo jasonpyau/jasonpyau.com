@@ -16,6 +16,12 @@ import com.jasonpyau.entity.Skill;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.DateFormat;
+import com.jasonpyau.util.Patch;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 @Service
 public class ExperienceService {
@@ -26,6 +32,8 @@ public class ExperienceService {
     @Autowired
     private SkillService skillService;
 
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     @CacheEvict(cacheNames = CacheUtil.EXPERIENCE_CACHE, allEntries = true)
     public void newExperience(Experience experience) {
         if (experience.getPresent()) {
@@ -34,6 +42,23 @@ public class ExperienceService {
             experience.createOrder();
         }
         experienceRepository.save(experience);
+    }
+
+    // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public String updateExperience(Experience updateExperience, Integer id) {
+        Optional<Experience> optional = experienceRepository.findById(id);
+        if (!optional.isPresent()) {
+            return Experience.EXPERIENCE_ID_ERROR;
+        }
+        Experience experience = optional.get();
+        Patch.merge(updateExperience, experience, "id", "dateOrder");
+        Set<ConstraintViolation<Experience>> violations = validator.validate(experience);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+        newExperience(experience);
+        return null;
     }
 
     // Returns error message if applicable, else null.
