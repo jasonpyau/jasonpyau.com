@@ -2,6 +2,7 @@ package com.jasonpyau.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,23 @@ public class ExperienceService {
             experience.createOrder();
         }
         experienceRepository.save(experience);
+    }
+
+    // Returns error message if applicable, else null.
+    @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public String deleteExperience(Integer id) {
+        Optional<Experience> optional = experienceRepository.findById(id);
+        if (!optional.isPresent()) {
+            return Experience.EXPERIENCE_ID_ERROR;
+        }
+        Experience experience = optional.get();
+        Set<Skill> skills = experience.getSkills();
+        for (Skill skill : skills) {
+            skill.getExperiences().remove(experience);
+        }
+        skills.clear();
+        experienceRepository.delete(experience);
+        return null;
     }
 
     // Returns error message if applicable, else null.

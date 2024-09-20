@@ -45,6 +45,18 @@ public class ExperienceController {
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/delete/{id}", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> deleteExperience(HttpServletRequest request, @PathVariable("id") Integer id) {
+        String errorMessage = experienceService.deleteExperience(id);
+        if (errorMessage != null) {
+            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+    }
+
     @PostMapping(path = "{id}/skills/new", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
