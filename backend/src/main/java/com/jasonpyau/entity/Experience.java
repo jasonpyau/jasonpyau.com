@@ -3,6 +3,8 @@ package com.jasonpyau.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jasonpyau.util.DateFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,6 +35,7 @@ import lombok.Setter;
 @Table(name="experiences", indexes = @Index(name = "date_order_ind", columnList = "date_order"))
 public class Experience {
 
+    public static final String EXPERIENCE_ID_ERROR = "Invalid 'id', experience not found.";
     public static final String EXPERIENCE_POSITION_ERROR = "'position' should be between 1-30 characters.";
     public static final String EXPERIENCE_COMPANY_ERROR = "'company' should be between 1-30 characters.";
     public static final String EXPERIENCE_LOCATION_ERROR = "'location' should be between 1-30 characters.";
@@ -100,4 +103,36 @@ public class Experience {
     @Column(name = "company_link", nullable = true)
     @Size(max = 250, message = EXPERIENCE_COMPANY_LINK_ERROR)
     private String companyLink;
+
+    public void createOrder() {
+        String[] startSplit = this.startDate.split("/", 2);
+        String[] endSplit = this.endDate.split("/", 2);
+        // EndYYYY+EndMM+present+StartYYYY+StartMM
+        this.dateOrder = endSplit[1]
+                        + endSplit[0]
+                        + ((this.present) ? "1" : "0")
+                        + startSplit[1]
+                        + startSplit[0];
+    }
+
+    // Returns true if there was a change to the experience's endDate.
+    public boolean syncEndDate() {
+        boolean changed = false;
+        if (this.present) {
+            changed = !this.endDate.equals(DateFormat.MMyyyy());
+            this.endDate = DateFormat.MMyyyy();
+            createOrder();
+        }
+        return changed;
+    }
+
+    public void addSkill(Skill skill) {
+        skill.getExperiences().add(this);
+        this.skills.add(skill);
+    }
+
+    public void deleteSkill(Skill skill) {
+        skill.getExperiences().remove(this);
+        this.skills.remove(skill);
+    }
 }
