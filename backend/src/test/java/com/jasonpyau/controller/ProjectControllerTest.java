@@ -40,6 +40,7 @@ public class ProjectControllerTest {
                                 .description("Test Description of Project1")
                                 .startDate("05/2023")
                                 .endDate("06/2023")
+                                .present(false)
                                 .link("project.com")
                                 .build();
     
@@ -68,6 +69,7 @@ public class ProjectControllerTest {
             .andExpect(jsonPath("$.projects[0].description", is(project.getDescription())))
             .andExpect(jsonPath("$.projects[0].startDate", is(project.getStartDate())))
             .andExpect(jsonPath("$.projects[0].endDate", is(project.getEndDate())))
+            .andExpect(jsonPath("$.projects[0].present", is(project.getPresent())))
             .andExpect(jsonPath("$.projects[0].skills", hasSize(1)))
             .andExpect(jsonPath("$.projects[0].skills[0].id", is(skill.getId())))
             .andExpect(jsonPath("$.projects[0].skills[0].name", is(skill.getName())))
