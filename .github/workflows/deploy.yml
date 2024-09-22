@@ -21,7 +21,7 @@ jobs:
         env:
           PROPERTIES: ${{ secrets.ADMIN_PANEL_PROPERTIES }}
         run: |
-            echo "$PROPERTIES" > admin/Constants.java
+            echo "$PROPERTIES" > admin/AdminPanel.properties
       - name: Create secrets.properties on Spring Boot
         env:
           PROPERTIES: ${{ secrets.SECRETS_PROPERTIES  }}
