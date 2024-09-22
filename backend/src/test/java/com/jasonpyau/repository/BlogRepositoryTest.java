@@ -7,14 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.jasonpyau.Application;
 import com.jasonpyau.entity.Blog;
@@ -23,7 +21,6 @@ import com.jasonpyau.util.Hash;
 
 import jakarta.transaction.Transactional;
 
-@ExtendWith(SpringExtension.class)
 @Transactional
 @SpringBootTest(classes=Application.class)
 public class BlogRepositoryTest {

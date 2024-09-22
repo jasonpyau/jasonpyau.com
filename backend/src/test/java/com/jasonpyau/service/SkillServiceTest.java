@@ -32,7 +32,7 @@ public class SkillServiceTest {
                             .build();
 
     @Test
-    private void newSkill_SkillAlreadyExistsError() {
+    public void newSkill_SkillAlreadyExistsError() {
         given(skillRepository.findSkillByName("Java")).willReturn(Optional.of(skill));
         String errorMessage = skillService.newSkill(skill);
         assertEquals(Skill.SKILL_ALREADY_EXISTS_ERROR, errorMessage);

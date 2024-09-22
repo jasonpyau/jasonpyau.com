@@ -17,7 +17,7 @@
         <div class="vh-100 d-flex flex-column justify-content-center align-items-center px-3 ThemeToSecondaryGradient">
             <div class="fs-3 HeaderTextColor move_when_hovered">Hi, my name is</div>
             <div class="display-1 HeaderTextColor fw-bold move_when_hovered">Jason Yau.</div>
-            <div class="fs-3 my-2 HeaderTextColor move_when_hovered">I'm a student studying Computer Science at the University of Central Florida. </div>
+            <br>
             <div>
                 <a href="#AboutMe" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;" title="About Me">About Me</a>
                 <a href="/resume" target="_blank" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;" title="Resume">Resume</a>
@@ -28,6 +28,15 @@
             <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">About Me</u>
             <div class="container-xxl Rounded p-5 fs-4 fw-semibold text-left my-3 border border-white" id="AboutMeContainer" th:text="${aboutMe}">
 
+            </div>
+
+            <br id="Experiences"><br><br>
+            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Experiences</u>
+            <div class="container-xxl ThemeToSecondaryGradient Rounded my-3 py-3" id="ExperienceContainer">
+                <div class="text-center">
+                    <div class="spinner-border" id="experienceSpinner" role="status"></div>
+                </div>
+                
             </div>
 
             <br id="Projects"><br><br>
@@ -90,6 +99,7 @@
     <!-- Scripts -->
     <th:block th:replace="~{template.html :: scripts}"></th:block>
     <script src="/javascript/ContactForm.js"  type="module"></script>
+    <script src="/javascript/experiences.js"  type="module"></script>
     <script src="/javascript/projects.js"  type="module"></script>
     <script src="/javascript/skills.js"  type="module"></script>
     <script>

@@ -73,6 +73,15 @@ public class Skill {
                 inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private final Set<Project> projects = new HashSet<>();
 
+    @JsonIgnore
+    @Setter(AccessLevel.NONE)
+    @Column(name = "experiences")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "skill_experience",
+                joinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "experience_id", referencedColumnName = "id"))
+    private final Set<Experience> experiences = new HashSet<>();
+
     public boolean checkValidType() {
         return validTypes.contains(type);
     }

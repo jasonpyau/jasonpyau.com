@@ -3,7 +3,7 @@
 # Use to easily run admin panel
 
 function compile() {
-    javac AdminPanel.java & javac Constants.java &
+    javac AdminPanel.java &
     wait
 
     if [ $? -ne 0 ]; then 
