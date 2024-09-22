@@ -18,7 +18,7 @@
     background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgba(45,45,200,1) 100%);
 }
 
-.SkillsRowContainer {
+.SkillsRowContainer, .Experience {
     margin: auto;
     height: auto;
     width: 80%;
@@ -28,4 +28,23 @@
 
 #ContactMeSpinner {
     display: none;
+}
+
+@media (max-width: 1000px) {
+    .Experience {
+        width: 90%;
+    }
+}
+
+@media (max-width: 720px) {
+    .ExperienceLogo {
+        display: none;
+    }
+}
+
+.VerticalLine {
+    border-left: 2px solid white;
+    height: 30px;
+    width: 2px;
+    left: 50%;
 }

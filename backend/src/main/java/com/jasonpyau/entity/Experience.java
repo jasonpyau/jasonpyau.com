@@ -43,7 +43,7 @@ public class Experience {
     public static final String EXPERIENCE_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
     public static final String EXPERIENCE_PRESENT_ERROR = "'present' should be true or false.";
     public static final String EXPERIENCE_BODY_ERROR = "'body' should be between 1-1000 characters.";
-    public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 4-250 characters.";
+    public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 4-500 characters.";
     public static final String EXPERIENCE_COMPANY_LINK_ERROR = "'companyLink' should be between 0-250 characters.";
 
     @Id
@@ -96,7 +96,7 @@ public class Experience {
     private final Set<Skill> skills = new HashSet<>();
 
     @Column(name = "logo_link", nullable = false)
-    @Size(min = 4, max = 250, message = EXPERIENCE_LOGO_LINK_ERROR)
+    @Size(min = 4, max = 500, message = EXPERIENCE_LOGO_LINK_ERROR)
     @NotBlank(message = EXPERIENCE_LOGO_LINK_ERROR)
     private String logoLink;
 
