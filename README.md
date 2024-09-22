@@ -39,17 +39,11 @@ ADMIN_PANEL_PASSWORD=YOUR_ADMIN_PANEL_PASSWORD_HERE
 RESUME_LINK=/files/Resume_Template.pdf
 ```
 
-**Create Constants.java (./admin/Constants.java)** -
-<a href="https://github.com/jasonpyau/jasonpyau.com/blob/main/admin/ConstantsSample.java">ConstantsSample.java</a>
+**Create AdminPanel.properties (./admin/AdminPanel.properties)** -
+<a href="https://github.com/jasonpyau/jasonpyau.com/blob/main/admin/AdminPanel.properties.sample">AdminPanel.properties.sample</a>
 ```
-// Rename file & class to "Constants"
-public class ConstantsSample {
-    
-    private ConstantsSample () {};
-
-    public static final String SERVER_URL = "YOUR_SERVER_URL_HERE";
-    public static final String APP_PASSWORD = "YOUR_APP_PASSWORD_HERE";
-}
+SERVER_URL=YOUR_SERVER_URL_HERE
+ADMIN_PANEL_PASSWORD=YOUR_ADMIN_PANEL_PASSWORD_HERE
 ```
 
 **Run Spring Boot Project**

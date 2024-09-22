@@ -17,11 +17,11 @@ jobs:
             sudo chown -R $USER:$USER .
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create Constants.java on Admin Panel
+      - name: Create AdminPanel.properties on Admin Panel
         env:
-          CONSTANTS: ${{ secrets.ADMIN_PANEL_CONSTANTS_JAVA }}
+          PROPERTIES: ${{ secrets.ADMIN_PANEL_PROPERTIES }}
         run: |
-            echo "$CONSTANTS" > admin/Constants.java
+            echo "$PROPERTIES" > admin/Constants.java
       - name: Create secrets.properties on Spring Boot
         env:
           PROPERTIES: ${{ secrets.SECRETS_PROPERTIES  }}
@@ -35,10 +35,10 @@ jobs:
         run: |
             cd admin
             bash runAdmin.sh << EOF > /dev/null
-            8
+            9
             y
 
-            9
+            10
             EOF
       - name: Copy files to desired directory and run Spring Boot
         env:

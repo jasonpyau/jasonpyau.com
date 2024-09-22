@@ -1,6 +1,6 @@
 secrets.properties
 secrets.production.properties
-Constants.java
+AdminPanel.properties
 *.class
 runAdmin.bat
 svc.sh
