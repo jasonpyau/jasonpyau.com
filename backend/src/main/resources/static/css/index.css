@@ -13,12 +13,7 @@
     border-radius: 15px;
 }
 
-#AboutMeContainer {
-    background: rgb(25,25,112);
-    background: linear-gradient(135deg, rgba(25,25,112,1) 0%, rgba(45,45,200,1) 100%);
-}
-
-.SkillsRowContainer, .Experience {
+.SkillsRowContainer, .Experience, #AboutMeContainer {
     margin: auto;
     height: auto;
     width: 80%;
@@ -31,7 +26,7 @@
 }
 
 @media (max-width: 1000px) {
-    .Experience {
+    .Experience, #AboutMeContainer {
         width: 90%;
     }
 }

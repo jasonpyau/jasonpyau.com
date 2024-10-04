@@ -30,6 +30,9 @@
 
 #BodyContainer {
     margin-top: 70px;
+    /* Bootstrap bg-dark-subtle bg-gradient with dark theme */
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    background-color: #1a1d20 !important;
 }
 
 .HeaderTextColor {
