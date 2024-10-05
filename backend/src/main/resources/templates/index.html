@@ -13,7 +13,7 @@
     <header th:replace="~{template.html :: header}"></header>
 
     <!-- Body Container -->
-    <div class="bg-dark bg-gradient" id="BodyContainer" style="margin-top: 0px!important;">
+    <div id="BodyContainer" style="margin-top: 0px!important;">
         <div class="vh-100 d-flex flex-column justify-content-center align-items-center px-3 ThemeToSecondaryGradient">
             <div class="fs-3 HeaderTextColor move_when_hovered">Hi, my name is</div>
             <div class="display-1 HeaderTextColor fw-bold move_when_hovered">Jason Yau.</div>
@@ -25,13 +25,15 @@
         </div>
         <div> 
             <br id="AboutMe"><br><br>
-            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">About Me</u>
-            <div class="container-xxl Rounded p-5 fs-4 fw-semibold text-left my-3 border border-white" id="AboutMeContainer" th:text="${aboutMe}">
+            <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">About Me</u>
+            <div class="container-xxl">
+                <div class="Rounded p-5 fs-4 fw-semibold text-left my-3 border border-white" id="AboutMeContainer" th:text="${aboutMe}">
 
+                </div>
             </div>
 
             <br id="Experiences"><br><br>
-            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Experiences</u>
+            <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">Experiences</u>
             <div class="container-xxl ThemeToSecondaryGradient Rounded my-3 py-3" id="ExperienceContainer">
                 <div class="text-center">
                     <div class="spinner-border" id="experienceSpinner" role="status"></div>
@@ -40,7 +42,7 @@
             </div>
 
             <br id="Projects"><br><br>
-            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Projects</u>
+            <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">Projects</u>
             <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-3 py-3" id="ProjectsContainer">
                 <div class="spinner-border" id="projectSpinner" role="status"></div>
                 <div class="row row-cols-auto justify-content-center" id="ProjectRows">
@@ -49,7 +51,7 @@
             </div>
 
             <br id="Skills"><br><br>
-            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Skills</u>
+            <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">Skills</u>
             <div class="container-xxl ThemeToSecondaryGradient Rounded text-center my-3 py-3" id="SkillsContainer">
                 <div class="spinner-border" id="skillSpinner" role="status"></div>
                 <div id="SkillsTypeRow">
@@ -58,7 +60,7 @@
             </div>
 
             <br id="Contact"><br><br>
-            <u class="fs-1 d-flex justify-content-center HeaderTextColor fw-bold">Contact Me</u>
+            <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">Contact Me</u>
             <div class="container-xxl ThemeToSecondaryGradient Rounded d-flex align-items-center my-3 flex-column">
                 <div class="form-floating mb-3 w-75 mt-3">
                     <input class="form-control SecondaryColor text-white" id="NameInput" placeholder="John Doe">
