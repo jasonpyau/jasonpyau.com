@@ -3,24 +3,30 @@
 ## Table of Contents
 <ol>
   <li><a href="#about">About</a></li>
+  <li><a href="#demo">Demo</a></li>
   <li><a href="#get-started">Get Started</a></li>
 </ol>
 
 
 ## About
-This is a personal portfolio site made by me using Java Spring Boot. It utilizes the backend so that the site dynamically loads blog posts, projects, skills, etc. stored in the database that can be changed without the need to modify any code. This project is open source so you may use any of the code, credit appreciated. 
+This is a personal portfolio site made by me using Java Spring Boot. It utilizes the backend so that the site dynamically loads blog posts, experiences, projects, and skills stored in the database that can be changed without the need to modify any code. 
 
-**Link:** <a href="https://jasonpyau.com">jasonpyau.com/</a>
+**Link:** <a href="https://jasonpyau.com">jasonpyau.com</a>
 <br>
 **API Documentation:** <a href="https://app.swaggerhub.com/apis-docs/jasonpyau-com/jasonpyau.com/1.0.0">https://app.swaggerhub.com/apis-docs/jasonpyau-com/jasonpyau.com/1.0.0</a>
 
-This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment after each Git push.
+This website is hosted on my Raspberry Pi, using Cloudflare's free tunneling services for SSL certificate and DDoS protection and GitHub Actions for continuous deployment on Git push.
+
+## Demo
+
+https://github.com/user-attachments/assets/9a5ac48d-69b7-4716-8486-bb61766c8925
+
 
 
 ## Get Started
 **(Ubuntu)**
 
-**Create secrets.properties (./backend/src/main/resouces/secrets.properties)** -
+**Create secrets.properties (./backend/src/main/resources/secrets.properties)** -
 <a href="https://github.com/jasonpyau/jasonpyau.com/blob/main/backend/src/main/resources/secrets.properties.sample">secrets.properties.sample</a>
 
 ```
