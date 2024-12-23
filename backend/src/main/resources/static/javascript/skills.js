@@ -69,10 +69,12 @@ async function loadSkill(skill, container) {
     }
     element.className = "m-1 btn btn-dark btn-sm";
     element.innerHTML = `
-        ${(iconElement) ? iconElement.outerHTML : ""}
-        <span>
-            ${skill.name}
-        </span>
+        <a class="text-decoration-none text-white" ${(skill.link) ? `href="${skill.link}" target="_blank"` : `href="javascript:void(0);"`}>
+            ${(iconElement) ? iconElement.outerHTML : ""}
+            <span>
+                ${skill.name}
+            </span>
+        </a>
     `;
     element.classList.remove("d-none");
 }

@@ -131,6 +131,8 @@ public class AdminPanel {
         apiCall("/skills/valid_types", "{ }", "GET", false);
         System.out.println("These are the valid types. Input the type of skill:");
         String type = scan.nextLine();
+        System.out.println("Input a link that provides more info on this skill (optional):");
+        String link = scan.nextLine();
         System.out.println("Input the Simple Icons slug for the skill (optional). See here:\n" +
                             "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
                             "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
@@ -138,6 +140,7 @@ public class AdminPanel {
         String simpleIconsIconSlug = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
                         "\"type\": \""+type+"\"," +
+                        "\"link\": \""+link+"\"," +
                         "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"}";
         boolean success = apiCall("/skills/new", body, "POST", true);
         if (success) {
