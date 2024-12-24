@@ -2,8 +2,10 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -75,6 +77,15 @@ public class SkillController {
     public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
         HashMap<String, List<Skill>> skills = skillService.getSkills();
         return new ResponseEntity<>(Response.createBody("skills", skills), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/svg/{name}", produces = "image/svg+xml")
+    @RateLimit(RateLimit.CHEAP_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<String> getSkillIconSvg(HttpServletRequest request, @PathVariable("name") String skillName) {
+        return ResponseEntity.ok()
+                            .cacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
+                            .body(skillService.getSkillIconSvg(skillName));
     }
 
     @GetMapping(path = "/valid_types", produces = "application/json")

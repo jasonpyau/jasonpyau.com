@@ -40,8 +40,9 @@ public class Skill {
     public static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
     public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
-    private static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters.";
+    public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters.";
     public static final String SKILL_TYPE_ERROR = "Invalid 'type'.";
+    public static final String SKILL_ICON_EMPTY_SVG = "";
     public static final HashSet<String> validTypes = new HashSet<>(Arrays.asList("Language", "Framework/Library", "Database", "Software"));
 
     @Id
