@@ -9,7 +9,7 @@ addEventListener('DOMContentLoaded', async(e) => {
         return;
     }
     const skillsByType = json.skills;
-    Object.keys(skillsByType).forEach((key) => {
+    const promises = Object.keys(skillsByType).map(async (key) => {
         const skillsRow = document.createElement('div');
         skillsRow.innerHTML = `
             <u class="fs-3 HeaderTextColor fw-bold" id="SkillType">${key}</u>
@@ -18,10 +18,17 @@ addEventListener('DOMContentLoaded', async(e) => {
             </div>
         `;
         const skillsRowContainer = skillsRow.querySelector("#SkillsRowContainer");
-        loadSkills(skillsByType[key], skillsRowContainer);
         document.getElementById("SkillsTypeRow").appendChild(skillsRow);
-        document.getElementById("skillSpinner").style.display = "none";
+        await loadSkills(skillsByType[key], skillsRowContainer);
     });
+    await Promise.all(promises);
+    document.getElementById("skillSpinner").style.display = "none";
+    if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+            element.scrollIntoView({behavior: "smooth"});
+        }
+    }
 });
 
 async function getSimpleIconsJson() {
