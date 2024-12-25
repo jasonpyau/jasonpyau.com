@@ -15,7 +15,7 @@ addEventListener('DOMContentLoaded', async(e) => {
         return;
     }
     const lastExperience = experiences[experiences.length-1];
-    for (const experience of experiences) {
+    experiences.map((experience) => {
         let experienceElement = document.createElement('div');
         experienceElement.innerHTML = `
             <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
@@ -62,6 +62,12 @@ addEventListener('DOMContentLoaded', async(e) => {
             verticalLine = verticalLine.firstElementChild;
             document.getElementById("ExperienceContainer").appendChild(verticalLine);
         }
-    }
+    });
     document.getElementById("experienceSpinner").style.display = "none";
+    if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+            element.scrollIntoView({behavior: "smooth"});
+        }
+    }
 });

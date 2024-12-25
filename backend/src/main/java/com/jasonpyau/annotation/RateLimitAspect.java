@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jasonpyau.exception.RateLimitException;
@@ -17,6 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 public class RateLimitAspect {
+
+    @Autowired
+    private RateLimitService rateLimitService;
     
     @Around("@annotation(RateLimit)")
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -26,7 +30,7 @@ public class RateLimitAspect {
         for (Object arg : args) {
             if (arg instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest)arg;
-                ConsumptionProbe consumptionProbe = RateLimitService.RateLimiter.rateLimit(request, rateLimitAnnotation.value());
+                ConsumptionProbe consumptionProbe = rateLimitService.rateLimit(request, rateLimitAnnotation.value());
                 if (!consumptionProbe.isConsumed()) {
                     throw new RateLimitException(TimeUnit.NANOSECONDS.toMillis(consumptionProbe.getNanosToWaitForRefill()));
                 }

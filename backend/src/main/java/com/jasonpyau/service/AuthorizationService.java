@@ -10,7 +10,7 @@ public class AuthorizationService {
 
     private static String appPassword;
 
-    @Value("${com.jasonpyau.appPassword}")
+    @Value("${com.jasonpyau.app-password}")
     @SuppressWarnings("static-access")
     public void setAppPassword(String appPassword) {
         this.appPassword = appPassword;

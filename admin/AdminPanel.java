@@ -40,6 +40,7 @@ public class AdminPanel {
         System.out.println("Input the id of the experience you'd like to update:");
         String id = scan.nextLine();
         System.out.println("You may leave blank any fields you don't want to update.");
+        System.out.println("You may input \"ERASE!!!\" to erase the current value for any optional fields.");
         String body = getExperienceBody();
         boolean success = apiCall("/experiences/update/"+id, body, "PATCH", true);
         if (success) {
@@ -131,6 +132,8 @@ public class AdminPanel {
         apiCall("/skills/valid_types", "{ }", "GET", false);
         System.out.println("These are the valid types. Input the type of skill:");
         String type = scan.nextLine();
+        System.out.println("Input a link that provides more info on this skill (optional):");
+        String link = scan.nextLine();
         System.out.println("Input the Simple Icons slug for the skill (optional). See here:\n" +
                             "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
                             "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
@@ -138,8 +141,37 @@ public class AdminPanel {
         String simpleIconsIconSlug = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
                         "\"type\": \""+type+"\"," +
+                        "\"link\": \""+link+"\"," +
                         "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"}";
         boolean success = apiCall("/skills/new", body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void updateSkill() {
+        StringBuilder sb = new StringBuilder();
+        String input;
+        System.out.println("Input name of the skill you'd like to update:");
+        input = scan.nextLine();
+        sb.append("{\"name\": "+"\""+input+"\", ");
+        System.out.println("You may leave blank any fields you don't want to update.");
+        System.out.println("You may input \"ERASE!!!\" to erase the current value for any optional fields.");
+        System.out.println("Loading valid types for a skill...");
+        apiCall("/skills/valid_types", "{ }", "GET", false);
+        System.out.println("These are the valid types. Input the type of skill:");
+        input = scan.nextLine();
+        sb.append("\"type\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input a link that provides more info on this skill (optional):");
+        input = scan.nextLine();
+        sb.append("\"link\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the Simple Icons slug for the skill (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
+        input = scan.nextLine();
+        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
+        boolean success = apiCall("/skills/update", sb.toString(), "PATCH", true);
         if (success) {
             updateLastUpdated(false);
         }
@@ -390,21 +422,25 @@ public class AdminPanel {
             System.out.println("      SKILLS MENU      ");
             System.out.println("=======================");
             System.out.println("1.) New Skill");
-            System.out.println("2.) Delete Skill");
-            System.out.println("3.) View Skills");
-            System.out.println("4.) Back");
+            System.out.println("2.) Update Skill");
+            System.out.println("3.) Delete Skill");
+            System.out.println("4.) View Skills");
+            System.out.println("5.) Back");
             String input = scan.nextLine();
             switch (input) {
                 case "1":
                     newSkill();
                     break;
                 case "2":
-                    deleteSkill();
+                    updateSkill();
                     break;
                 case "3":
-                    viewSkills();
+                    deleteSkill();
                     break;
                 case "4":
+                    viewSkills();
+                    break;
+                case "5":
                     return;
                 default:
                     System.out.println("Invalid input.");
@@ -473,7 +509,7 @@ public class AdminPanel {
         sb.append("\"logoLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience company link (optional):");
         input = scan.nextLine();
-        sb.append("\"companyLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");
+        sb.append("\"companyLink\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
         return sb.toString();
     }
 

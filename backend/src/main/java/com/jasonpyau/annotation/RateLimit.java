@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 public @interface RateLimit {
 
     public static final long CHEAP_TOKEN = 1;
-    public static final long DEFAULT_TOKEN = 2;
-    public static final long ADMIN_TOKEN = 5;
-    public static final long BIG_TOKEN = 5;
-    public static final long LARGE_TOKEN = 10;
-    public static final long EXPENSIVE_TOKEN = 25;
+    public static final long DEFAULT_TOKEN = 4;
+    public static final long ADMIN_TOKEN = 10;
+    public static final long BIG_TOKEN = 10;
+    public static final long LARGE_TOKEN = 20;
+    public static final long EXPENSIVE_TOKEN = 50;
 
     public long value() default DEFAULT_TOKEN;
 }

@@ -10,7 +10,7 @@ addEventListener('DOMContentLoaded', async(e) => {
         return;
     }
     const projects = json.projects;
-    for (const project of projects) {
+    projects.map((project) => {
         let projectElement = document.createElement('span');
         projectElement.innerHTML = `
             <a class="Project move_when_hovered" id="Project${project.id}" href="${project.link}" target="_blank">
@@ -34,6 +34,12 @@ addEventListener('DOMContentLoaded', async(e) => {
         projectElement = projectElement.firstElementChild;
         loadSkills(project.skills, projectElement.querySelector("#SkillsContainer"));
         document.getElementById("ProjectRows").appendChild(projectElement);
-    }
+    });
     document.getElementById("projectSpinner").style.display = "none";
+    if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+            element.scrollIntoView({behavior: "smooth"});
+        }
+    }
 });

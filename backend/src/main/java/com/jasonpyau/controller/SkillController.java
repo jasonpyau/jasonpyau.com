@@ -2,14 +2,17 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +46,19 @@ public class SkillController {
         return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
     }
 
+    @PatchMapping(path = "/update", consumes = "application/json", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> updateSkill(HttpServletRequest request, @RequestBody Skill skill) {
+        String errorMessage = skillService.updateSkill(skill);
+        if (errorMessage != null) {
+            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+    }
+
+
     @DeleteMapping(path = "/delete/{name}", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
@@ -61,6 +77,15 @@ public class SkillController {
     public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
         HashMap<String, List<Skill>> skills = skillService.getSkills();
         return new ResponseEntity<>(Response.createBody("skills", skills), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/svg/{name}", produces = "image/svg+xml")
+    @RateLimit(RateLimit.CHEAP_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<String> getSkillIconSvg(HttpServletRequest request, @PathVariable("name") String skillName) {
+        return ResponseEntity.ok()
+                            .cacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
+                            .body(skillService.getSkillIconSvg(skillName));
     }
 
     @GetMapping(path = "/valid_types", produces = "application/json")
