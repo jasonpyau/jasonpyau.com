@@ -3,6 +3,9 @@ package com.jasonpyau.service;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.CacheBuilder;
@@ -14,34 +17,25 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AccessLevel;
-import lombok.Builder;
+
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class RateLimitService {
 
-    // Single instance of RateLimitService
-    public static final RateLimitService RateLimiter = RateLimitService.builder()
-                                                        .tokensPerInterval(150)
-                                                        .intervalDuration(60)
-                                                        .maximumCacheSize(15000)
-                                                        .cacheDuration(600)
-                                                        .build();
-
     // Time units in seconds
-    private int tokensPerInterval;
-    private int intervalDuration;
+    private Integer tokensPerInterval;
+    private Integer intervalDuration;
+    private final Integer cacheDuration = 600;
 
+    // https://github.com/google/guava/wiki/cachesexplained
     private LoadingCache<String, Bucket> cache;
 
-    private RateLimitService() {};
-
-    @Builder(access = AccessLevel.PRIVATE)
-    private RateLimitService(int tokensPerInterval, int intervalDuration, int maximumCacheSize, int cacheDuration) {
+    private RateLimitService(@Value("${com.jasonpyau.rate-limit.tokens-per-interval:#{600}}") Integer tokensPerInterval,
+                            @Value("${com.jasonpyau.rate-limit.interval-duration:#{30}}") Integer intervalDuration) {
         this.tokensPerInterval = tokensPerInterval;
         this.intervalDuration = intervalDuration;
         this.cache = CacheBuilder.newBuilder()
-            .maximumSize(maximumCacheSize)
             .expireAfterAccess(cacheDuration, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Bucket>() {
                 @Override
@@ -65,6 +59,12 @@ public class RateLimitService {
         String key = UserService.getUserAddress(request);
         Bucket bucket = cache.getUnchecked(key);
         return bucket.tryConsumeAndReturnRemaining(token);
+    }
+
+    // Cleans up expired cache entries (Users that have not accessed a token in 10 minutes), returning the new cache size.
+    public long cleanCache() {
+        cache.cleanUp();
+        return cache.size();
     }
 }
 

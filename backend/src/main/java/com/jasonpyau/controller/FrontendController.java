@@ -86,7 +86,7 @@ public class FrontendController {
 
     @GetMapping({"/resume", "/resume/"})
     public String resume() throws IOException {
-        String resumeLink = env.getProperty("com.jasonpyau.resumeLink");
+        String resumeLink = env.getProperty("com.jasonpyau.resume-link");
         if (resumeLink != null && !resumeLink.isBlank()) {
             return "redirect:"+resumeLink;
         }
