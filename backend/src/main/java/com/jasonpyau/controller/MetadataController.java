@@ -13,33 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
-import com.jasonpyau.entity.Stats;
-import com.jasonpyau.service.StatsService;
+import com.jasonpyau.entity.Metadata;
+import com.jasonpyau.service.MetadataService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(path="/stats")
-public class StatsController {
+@RequestMapping(path="/metadata")
+public class MetadataController {
 
     @Autowired
-    private StatsService statsService;
+    private MetadataService metadataService;
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getStats(HttpServletRequest request) {
-        Stats stats = statsService.getStats();
-        return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
+    public ResponseEntity<HashMap<String, Object>> getMetadata(HttpServletRequest request) {
+        Metadata metadata = metadataService.getMetadata();
+        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/update/views", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateViews(HttpServletRequest request) {
-        Stats stats = statsService.updateViews();
-        return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
+        Metadata metadata = metadataService.updateViews();
+        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/update/last_updated", produces = "application/json")
@@ -47,7 +47,7 @@ public class StatsController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateLastUpdated(HttpServletRequest request) {
-        Stats stats = statsService.updateLastUpdated();
-        return new ResponseEntity<>(Response.createBody("stats", stats), HttpStatus.OK);
+        Metadata metadata = metadataService.updateLastUpdated();
+        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 }

@@ -14,8 +14,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "stats")
-public class Stats {
+@Table(name = "metadata")
+public class Metadata {
 
     @Id
     @Column(name = "id")

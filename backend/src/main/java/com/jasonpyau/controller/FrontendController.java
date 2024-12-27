@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Blog;
-import com.jasonpyau.entity.Stats;
+import com.jasonpyau.entity.Metadata;
 import com.jasonpyau.form.BlogSearchForm;
 import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
-import com.jasonpyau.service.StatsService;
+import com.jasonpyau.service.MetadataService;
 import com.jasonpyau.util.NumberFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
 public class FrontendController {
 
     @Autowired
-    private StatsService statsService;
+    private MetadataService metadataService;
     @Autowired
     private BlogService blogService;
     @Autowired
@@ -40,7 +40,7 @@ public class FrontendController {
     @GetMapping("/")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String home(HttpServletRequest request, Model model) {
-        updateStats(model);
+        addMetadata(model);
         model.addAttribute("aboutMe", aboutMeService.getAboutMe());
         return "index";
     }
@@ -53,21 +53,21 @@ public class FrontendController {
     @GetMapping({"/links", "/links/"})
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String links(HttpServletRequest request, Model model) {
-        updateStats(model);
+        addMetadata(model);
         return "links";
     }
 
     @GetMapping({"/blogs", "/blogs/"})
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String blogs(HttpServletRequest request, Model model) {
-        updateStats(model);
+        addMetadata(model);
         return "blogs";
     }
 
     @GetMapping({"/blogs/{id}", "blogs/{id}/"})
     @RateLimit(RateLimit.BIG_TOKEN)
     public String blog(@PathVariable("id") Long id, HttpServletRequest request, Model model, @Valid BlogSearchForm blogSearchForm) {
-        updateStats(model);
+        addMetadata(model);
         HashMap<String, Blog> res = blogService.getBlog(request, id, blogSearchForm);
         if (res == null) {
             return "error";
@@ -99,12 +99,12 @@ public class FrontendController {
         return "error";
     }
 
-    private void updateStats(Model model) {
-        Stats stats = statsService.updateViews();
-        if (stats == null) {
+    private void addMetadata(Model model) {
+        Metadata metadata = metadataService.updateViews();
+        if (metadata == null) {
             return;
         }
-        model.addAttribute("views", NumberFormat.shorten(stats.getViews()));
-        model.addAttribute("lastUpdated", stats.getDate());
+        model.addAttribute("views", NumberFormat.shorten(metadata.getViews()));
+        model.addAttribute("lastUpdated", metadata.getDate());
     }
 }

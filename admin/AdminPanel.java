@@ -25,7 +25,7 @@ public class AdminPanel {
     }
 
     private static void updateLastUpdated(boolean showConfirmation) {
-        apiCall("/stats/update/last_updated", "{ }", "PATCH", showConfirmation);
+        apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
 
     private static void newExperience() {

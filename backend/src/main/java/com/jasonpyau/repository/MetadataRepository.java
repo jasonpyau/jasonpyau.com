@@ -3,9 +3,9 @@ package com.jasonpyau.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jasonpyau.entity.Stats;
+import com.jasonpyau.entity.Metadata;
 
 @Repository
-public interface StatsRepository extends CrudRepository<Stats, Integer> {
+public interface MetadataRepository extends CrudRepository<Metadata, Integer> {
     
 }
