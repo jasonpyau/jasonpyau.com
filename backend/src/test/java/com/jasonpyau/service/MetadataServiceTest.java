@@ -33,6 +33,7 @@ public class MetadataServiceTest {
                                     .lastUpdated("06/25/2023")
                                     .views(999L)
                                     .name("Jason Yau")
+                                    .iconLink("https://avatars.githubusercontent.com/u/113565962?v=4")
                                     .build();
     }
 
@@ -42,6 +43,7 @@ public class MetadataServiceTest {
                                     .lastUpdated(originalMetadata.getLastUpdated())
                                     .views(originalMetadata.getViews())
                                     .name(originalMetadata.getName())
+                                    .iconLink(originalMetadata.getIconLink())
                                     .build();
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
@@ -50,6 +52,7 @@ public class MetadataServiceTest {
         assertEquals(originalMetadata.getViews()+1, metadata.getViews());
         assertEquals(originalMetadata.getLastUpdated(), metadata.getLastUpdated());
         assertEquals(originalMetadata.getName(), metadata.getName());
+        assertEquals(originalMetadata.getIconLink(), metadata.getIconLink());
     }
 
     @Test
@@ -58,6 +61,7 @@ public class MetadataServiceTest {
                                     .lastUpdated(originalMetadata.getLastUpdated())
                                     .views(originalMetadata.getViews())
                                     .name(originalMetadata.getName())
+                                    .iconLink(originalMetadata.getIconLink())
                                     .build();
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
@@ -65,6 +69,6 @@ public class MetadataServiceTest {
         assertEquals(originalMetadata.getId(), metadata.getId());
         assertEquals(originalMetadata.getViews(), metadata.getViews());
         assertEquals(DateFormat.MMddyyyy(), metadata.getLastUpdated());
-        assertEquals(originalMetadata.getName(), metadata.getName());
+        assertEquals(originalMetadata.getIconLink(), metadata.getIconLink());
     }
 }

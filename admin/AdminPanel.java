@@ -24,6 +24,10 @@ public class AdminPanel {
         apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
+    private static void getMetadata() {
+        apiCall("/metadata/get", "{ }", "GET", false);
+    }
+
     private static void updateLastUpdated(boolean showConfirmation) {
         apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
@@ -32,6 +36,12 @@ public class AdminPanel {
         System.out.println("Input your name:");
         String name = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
         apiCall("/metadata/update/name?name="+name, "{ }", "PATCH", true);
+    }
+
+    private static void updateMetadataIconLink() {
+        System.out.println("Input a link to an square image that will be used as the website icon:");
+        String iconLink = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        apiCall("/metadata/update/icon_link?iconLink="+iconLink, "{ }", "PATCH", true);
     }
 
     private static void newExperience() {
@@ -485,18 +495,26 @@ public class AdminPanel {
             System.out.println("=======================");
             System.out.println("     METADATA MENU     ");
             System.out.println("=======================");
-            System.out.println("1.) Update Last Updated");
-            System.out.println("2.) Update Name");
-            System.out.println("3.) Back");
+            System.out.println("1.) Get Metadata");
+            System.out.println("2.) Update Last Updated");
+            System.out.println("3.) Update Name");
+            System.out.println("4.) Update Icon Link");
+            System.out.println("5.) Back");
             String input = scan.nextLine();
             switch (input) {
                 case "1":
-                    updateLastUpdated(true);
+                    getMetadata();
                     break;
                 case "2":
-                    updateMetadataName();
+                    updateLastUpdated(true);
                     break;
                 case "3":
+                    updateMetadataName();
+                    break;
+                case "4":
+                    updateMetadataIconLink();
+                    break;
+                case "5":
                     return;
                 default:
                     System.out.println("Invalid input.");

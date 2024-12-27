@@ -22,6 +22,7 @@ import lombok.Setter;
 public class Metadata {
 
     public static final String METADATA_NAME_ERROR = "'name' should be between 1-50 characters.";
+    public static final String METADATA_ICON_LINK_ERROR = "'iconLink' should be between 4-500 characters.";
 
     @Id
     @Column(name = "id")
@@ -37,5 +38,10 @@ public class Metadata {
     @Size(min = 1, max = 50, message = METADATA_NAME_ERROR)
     @NotBlank(message = METADATA_NAME_ERROR)
     private String name;
+
+    @Column(name = "icon_link", nullable = false)
+    @Size(min = 4, max = 500, message = METADATA_ICON_LINK_ERROR)
+    @NotBlank(message = METADATA_ICON_LINK_ERROR)
+    private String iconLink;
 
 }

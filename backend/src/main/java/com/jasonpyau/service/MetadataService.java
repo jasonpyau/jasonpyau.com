@@ -30,6 +30,7 @@ public class MetadataService {
                                         .lastUpdated(DateFormat.MMddyyyy())
                                         .views(1L)
                                         .name("Jason Yau")
+                                        .iconLink("https://avatars.githubusercontent.com/u/113565962?v=4")
                                         .build();
             metadataRepository.save(metadata);
             return metadata;
@@ -60,6 +61,13 @@ public class MetadataService {
     public Metadata updateName(String name) {
         Metadata metadata = getMetadata();
         metadata.setName(name);
+        validateMetadata(metadata);
+        return metadataRepository.save(metadata);
+    }
+
+    public Metadata updateIconLink(String iconLink) {
+        Metadata metadata = getMetadata();
+        metadata.setIconLink(iconLink);
         validateMetadata(metadata);
         return metadataRepository.save(metadata);
     }

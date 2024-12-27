@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
@@ -55,8 +56,17 @@ public class MetadataController {
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> updateName(HttpServletRequest request, String name) {
+    public ResponseEntity<HashMap<String, Object>> updateName(HttpServletRequest request, @RequestParam(required = true) String name) {
         Metadata metadata = metadataService.updateName(name);
+        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/update/icon_link", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> updateIconLink(HttpServletRequest request, @RequestParam(required = true) String iconLink) {
+        Metadata metadata = metadataService.updateIconLink(iconLink);
         return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 }
