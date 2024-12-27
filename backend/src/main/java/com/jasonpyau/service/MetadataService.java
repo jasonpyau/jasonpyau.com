@@ -1,6 +1,7 @@
 package com.jasonpyau.service;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,16 +10,27 @@ import com.jasonpyau.entity.Metadata;
 import com.jasonpyau.repository.MetadataRepository;
 import com.jasonpyau.util.DateFormat;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+
 @Service
 public class MetadataService {
 
     @Autowired
     private MetadataRepository metadataRepository;
+
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     public Metadata getMetadata() {
         Optional<Metadata> optional = metadataRepository.findById(1);
         if (!optional.isPresent()) {
-            Metadata metadata = new Metadata(1, DateFormat.MMddyyyy(), 0L);
+            Metadata metadata = Metadata.builder()
+                                        .lastUpdated(DateFormat.MMddyyyy())
+                                        .views(1L)
+                                        .name("Jason Yau")
+                                        .build();
             metadataRepository.save(metadata);
             return metadata;
         }
@@ -35,6 +47,20 @@ public class MetadataService {
     public Metadata updateViews() {
         Metadata metadata = getMetadata();
         metadata.setViews(metadata.getViews()+1);
+        return metadataRepository.save(metadata);
+    }
+
+    private void validateMetadata(Metadata metadata) {
+        Set<ConstraintViolation<Metadata>> violations = validator.validate(metadata);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    public Metadata updateName(String name) {
+        Metadata metadata = getMetadata();
+        metadata.setName(name);
+        validateMetadata(metadata);
         return metadataRepository.save(metadata);
     }
 }

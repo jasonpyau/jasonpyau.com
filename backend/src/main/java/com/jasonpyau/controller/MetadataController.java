@@ -50,4 +50,13 @@ public class MetadataController {
         Metadata metadata = metadataService.updateLastUpdated();
         return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
+
+    @PatchMapping(path = "/update/name", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> updateName(HttpServletRequest request, String name) {
+        Metadata metadata = metadataService.updateName(name);
+        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
+    }
 }

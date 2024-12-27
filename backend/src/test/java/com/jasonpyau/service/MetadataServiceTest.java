@@ -29,28 +29,42 @@ public class MetadataServiceTest {
     
     @BeforeEach
     public void setUp() {
-        originalMetadata = new Metadata(1, "06/25/2023", 999L);
+        originalMetadata = Metadata.builder()
+                                    .lastUpdated("06/25/2023")
+                                    .views(999L)
+                                    .name("Jason Yau")
+                                    .build();
     }
 
     @Test
     void testUpdateViews() {
-        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getLastUpdated(), originalMetadata.getViews());
+        Metadata dummy = Metadata.builder()
+                                    .lastUpdated(originalMetadata.getLastUpdated())
+                                    .views(originalMetadata.getViews())
+                                    .name(originalMetadata.getName())
+                                    .build();
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
         Metadata metadata = metadataService.updateViews();
         assertEquals(originalMetadata.getId(), metadata.getId());
         assertEquals(originalMetadata.getViews()+1, metadata.getViews());
         assertEquals(originalMetadata.getLastUpdated(), metadata.getLastUpdated());
+        assertEquals(originalMetadata.getName(), metadata.getName());
     }
 
     @Test
     void testUpdateLastUpdated() {
-        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getLastUpdated(), originalMetadata.getViews());
+        Metadata dummy = Metadata.builder()
+                                    .lastUpdated(originalMetadata.getLastUpdated())
+                                    .views(originalMetadata.getViews())
+                                    .name(originalMetadata.getName())
+                                    .build();
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
         Metadata metadata = metadataService.updateLastUpdated();
         assertEquals(originalMetadata.getId(), metadata.getId());
         assertEquals(originalMetadata.getViews(), metadata.getViews());
         assertEquals(DateFormat.MMddyyyy(), metadata.getLastUpdated());
+        assertEquals(originalMetadata.getName(), metadata.getName());
     }
 }

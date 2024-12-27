@@ -28,6 +28,12 @@ public class AdminPanel {
         apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
 
+    private static void updateMetadataName() {
+        System.out.println("Input your name:");
+        String name = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        apiCall("/metadata/update/name?name="+name, "{ }", "PATCH", true);
+    }
+
     private static void newExperience() {
         String body = getExperienceBody();
         boolean success = apiCall("/experiences/new", body, "POST", true);
@@ -474,6 +480,31 @@ public class AdminPanel {
         }
     }
 
+    private static void printMetadataMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("     METADATA MENU     ");
+            System.out.println("=======================");
+            System.out.println("1.) Update Last Updated");
+            System.out.println("2.) Update Name");
+            System.out.println("3.) Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    updateLastUpdated(true);
+                    break;
+                case "2":
+                    updateMetadataName();
+                    break;
+                case "3":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
     private static String getExperienceBody() {
         StringBuilder sb = new StringBuilder();
         String input;
@@ -595,7 +626,7 @@ public class AdminPanel {
         System.out.println("5.)  About Me Menu");
         System.out.println("6.)  Get Messages");
         System.out.println("7.)  Delete Message");
-        System.out.println("8.)  Update Last Updated");
+        System.out.println("8.)  Metadata Menu");
         System.out.println("9.)  Shut down Server");
         System.out.println("10.) Exit");
         String input = scan.nextLine();
@@ -624,7 +655,7 @@ public class AdminPanel {
                 printContinue();
                 break;
             case "8":
-                updateLastUpdated(true);
+                printMetadataMenu();
                 printContinue();
                 break;
             case "9":
