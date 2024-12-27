@@ -104,7 +104,7 @@ public class FrontendController {
         if (metadata == null) {
             return;
         }
-        model.addAttribute("views", NumberFormat.shorten(metadata.getViews()));
-        model.addAttribute("lastUpdated", metadata.getLastUpdated());
+        model.addAttribute(metadata);
+        model.addAttribute("formattedViews", NumberFormat.shorten(metadata.getViews()));
     }
 }

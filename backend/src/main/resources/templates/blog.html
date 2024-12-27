@@ -3,8 +3,8 @@
 <link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
 <head th:replace="~{template.html :: head}"></head>
 <head>
-    <title th:text="${blog.title}+' - Jason Yau'"></title>
-    <meta name="twitter:title" th:content="${blog.title}+' - Jason Yau'"/>
+    <title th:text="${blog.title}+' - '+${metadata.name}"></title>
+    <meta name="twitter:title" th:content="${blog.title}+' - '+${metadata.name}"/>
     <meta name="description" th:content="${blog.description}">
     <meta name="twitter:description" th:content="${blog.description}"/>
     <link href="/css/blog.css" rel="stylesheet" type="text/css"/>
