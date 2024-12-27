@@ -21,8 +21,8 @@ public class Metadata {
     @Column(name = "id")
     private Integer id = 1;
 
-    @Column(name = "date")
-    private String date;
+    @Column(name = "last_updated")
+    private String lastUpdated;
     
     @Column(name = "views")
     private Long views;

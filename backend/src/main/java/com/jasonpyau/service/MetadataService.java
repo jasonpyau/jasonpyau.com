@@ -28,7 +28,7 @@ public class MetadataService {
     public Metadata updateLastUpdated() {
         String date = DateFormat.MMddyyyy();
         Metadata metadata = getMetadata();
-        metadata.setDate(date);
+        metadata.setLastUpdated(date);
         return metadataRepository.save(metadata);
     }
 

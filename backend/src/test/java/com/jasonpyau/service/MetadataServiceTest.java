@@ -34,23 +34,23 @@ public class MetadataServiceTest {
 
     @Test
     void testUpdateViews() {
-        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getDate(), originalMetadata.getViews());
+        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getLastUpdated(), originalMetadata.getViews());
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
         Metadata metadata = metadataService.updateViews();
         assertEquals(originalMetadata.getId(), metadata.getId());
         assertEquals(originalMetadata.getViews()+1, metadata.getViews());
-        assertEquals(originalMetadata.getDate(), metadata.getDate());
+        assertEquals(originalMetadata.getLastUpdated(), metadata.getLastUpdated());
     }
 
     @Test
     void testUpdateLastUpdated() {
-        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getDate(), originalMetadata.getViews());
+        Metadata dummy = new Metadata(originalMetadata.getId(), originalMetadata.getLastUpdated(), originalMetadata.getViews());
         given(metadataRepository.findById(1)).willReturn(Optional.of(dummy));
         given(metadataRepository.save(dummy)).willReturn(dummy);
         Metadata metadata = metadataService.updateLastUpdated();
         assertEquals(originalMetadata.getId(), metadata.getId());
         assertEquals(originalMetadata.getViews(), metadata.getViews());
-        assertEquals(DateFormat.MMddyyyy(), metadata.getDate());
+        assertEquals(DateFormat.MMddyyyy(), metadata.getLastUpdated());
     }
 }
