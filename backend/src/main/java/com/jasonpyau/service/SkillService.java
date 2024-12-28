@@ -52,7 +52,7 @@ public class SkillService {
     }
 
     // Returns error message if applicable, else null.
-    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
     public String updateSkill(Skill updateSkill) {
         Optional<Skill> optional = skillRepository.findSkillByName(updateSkill.getName());
         if (!optional.isPresent()) {
@@ -72,7 +72,7 @@ public class SkillService {
     }
 
     // Returns error message if applicable, else null.
-    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
     public String deleteSkill(String skillName) {
         Optional<Skill> optional = skillRepository.findSkillByName(skillName);
         if (!optional.isPresent()) {

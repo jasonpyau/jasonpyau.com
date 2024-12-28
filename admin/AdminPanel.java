@@ -24,8 +24,37 @@ public class AdminPanel {
         apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
+    private static void getMetadata() {
+        apiCall("/metadata/get", "{ }", "GET", false);
+    }
+
     private static void updateLastUpdated(boolean showConfirmation) {
-        apiCall("/stats/update/last_updated", "{ }", "PATCH", showConfirmation);
+        if (!showConfirmation) {
+            System.out.println("Updating lastUpdated in the metadata...");
+        }
+        apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
+    }
+
+    private static void updateMetadata() {
+        StringBuilder sb = new StringBuilder();
+        String input;
+        System.out.println("You may leave blank any fields you don't want to update.");
+        System.out.println("Input your name:");
+        input = scan.nextLine();
+        sb.append("{\"name\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input a link to an square image that will be used as the website icon:");
+        input = scan.nextLine();
+        sb.append("\"iconLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input a description for the website that will be used for SEO (shown in Google/Bing search results):");
+        input = scan.nextLine();
+        sb.append("\"description\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input keywords for the website that will be used for SEO (a comma-separated list of phrases):");
+        input = scan.nextLine();
+        sb.append("\"keywords\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");
+        boolean success = apiCall("/metadata/update", sb.toString(), "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void newExperience() {
@@ -474,6 +503,35 @@ public class AdminPanel {
         }
     }
 
+    private static void printMetadataMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("     METADATA MENU     ");
+            System.out.println("=======================");
+            System.out.println("1.) Get Metadata");
+            System.out.println("2.) Update Metadata");
+            System.out.println("3.) Update Last Updated");
+            System.out.println("4.) Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    getMetadata();
+                    break;
+                case "2":
+                    updateMetadata();
+                    break;
+                case "3":
+                    updateLastUpdated(true);
+                    break;
+                case "4":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
     private static String getExperienceBody() {
         StringBuilder sb = new StringBuilder();
         String input;
@@ -595,7 +653,7 @@ public class AdminPanel {
         System.out.println("5.)  About Me Menu");
         System.out.println("6.)  Get Messages");
         System.out.println("7.)  Delete Message");
-        System.out.println("8.)  Update Last Updated");
+        System.out.println("8.)  Metadata Menu");
         System.out.println("9.)  Shut down Server");
         System.out.println("10.) Exit");
         String input = scan.nextLine();
@@ -624,7 +682,7 @@ public class AdminPanel {
                 printContinue();
                 break;
             case "8":
-                updateLastUpdated(true);
+                printMetadataMenu();
                 printContinue();
                 break;
             case "9":

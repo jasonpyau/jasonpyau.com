@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/113565962?v=4">
+<link rel="icon" type="image/x-icon" th:href="${metadata.iconLink}">
 <head th:replace="~{template.html :: head}"></head>
 <head th:replace="~{template.html :: default-title-description}"></head>
 <head>
@@ -16,7 +16,7 @@
     <div id="BodyContainer" style="margin-top: 0px!important;">
         <div class="vh-100 d-flex flex-column justify-content-center align-items-center px-3 ThemeToSecondaryGradient">
             <div class="fs-4 HeaderTextColor move_when_hovered">Hi, my name is</div>
-            <div class="display-3 HeaderTextColor fw-bold move_when_hovered">Jason Yau.</div>
+            <div class="display-4 text-center HeaderTextColor fw-bold move_when_hovered" th:text="${metadata.name}+'.'">Jason Yau.</div>
             <br>
             <div>
                 <a href="#AboutMe" class="my-3 btn btn-dark btn-lg border border-white mx-1" style="width: 150px!important;" title="About Me">About Me</a>
