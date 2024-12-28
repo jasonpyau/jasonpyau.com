@@ -43,8 +43,8 @@ public class Experience {
     public static final String EXPERIENCE_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
     public static final String EXPERIENCE_PRESENT_ERROR = "'present' should be true or false.";
     public static final String EXPERIENCE_BODY_ERROR = "'body' should be between 1-1000 characters.";
-    public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 4-500 characters.";
-    public static final String EXPERIENCE_COMPANY_LINK_ERROR = "'companyLink' should be between 0-250 characters.";
+    public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 7-500 characters and start with 'http://' or 'https://'.";
+    public static final String EXPERIENCE_COMPANY_LINK_ERROR = "'companyLink' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -96,12 +96,14 @@ public class Experience {
     private final Set<Skill> skills = new HashSet<>();
 
     @Column(name = "logo_link", nullable = false)
-    @Size(min = 4, max = 500, message = EXPERIENCE_LOGO_LINK_ERROR)
+    @Size(min = 7, max = 500, message = EXPERIENCE_LOGO_LINK_ERROR)
+    @Pattern(regexp = "^(http|https):\\/\\/(.*)$", message = EXPERIENCE_LOGO_LINK_ERROR)
     @NotBlank(message = EXPERIENCE_LOGO_LINK_ERROR)
     private String logoLink;
 
     @Column(name = "company_link", nullable = true)
     @Size(max = 250, message = EXPERIENCE_COMPANY_LINK_ERROR)
+    @Pattern(regexp = "^([\\s]*|(http|https):\\/\\/(.*))$", message = EXPERIENCE_COMPANY_LINK_ERROR)
     private String companyLink;
 
     public void createOrder() {

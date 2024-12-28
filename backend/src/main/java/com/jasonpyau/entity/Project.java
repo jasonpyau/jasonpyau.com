@@ -40,7 +40,7 @@ public class Project {
     public static final String PROJECT_DESCRIPTION_ERROR = "'description' should be between 10-250 characters.";
     public static final String PROJECT_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     public static final String PROJECT_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
-    public static final String PROJECT_LINK_ERROR = "'link' should be between 4-250 characters.";
+    public static final String PROJECT_LINK_ERROR = "'link' should be between 7-250 characters and start with 'http://' or 'https://'.";
     public static final String PROJECT_PRESENT_ERROR = "'present' should be true or false.";
 
     @Id
@@ -83,7 +83,8 @@ public class Project {
     private final Set<Skill> skills = new HashSet<>();
 
     @Column(name = "link", nullable = false)
-    @Size(min = 4, max = 250, message = PROJECT_LINK_ERROR)
+    @Size(min = 7, max = 250, message = PROJECT_LINK_ERROR)
+    @Pattern(regexp = "^(http|https):\\/\\/(.*)$", message = PROJECT_LINK_ERROR)
     @NotBlank(message = PROJECT_LINK_ERROR)
     private String link;
 

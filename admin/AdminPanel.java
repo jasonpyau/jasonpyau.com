@@ -10,6 +10,8 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class AdminPanel {
 
@@ -700,16 +702,26 @@ public class AdminPanel {
         try {
             properties.load(new FileInputStream("AdminPanel.properties"));
             if (properties.getProperty("SERVER_URL") == null) {
-                System.out.println("WARNING: SERVER_URL is null");
+                System.out.println("ERROR: 'SERVER_URL' is null. Add the property 'SERVER_URL' to AdminPanel.properties.");
                 printContinue();
+                System.exit(1);
+            } else {
+                Matcher matcher = Pattern.compile("^(http|https):\\/\\/(.*)$").matcher(properties.getProperty("SERVER_URL"));
+                if (!matcher.find()) {
+                    System.out.println("ERROR: 'SERVER_URL' does not start with start with 'http://' or 'https://'.");
+                    printContinue();
+                    System.exit(1);
+                }
             }
             if (properties.getProperty("ADMIN_PANEL_PASSWORD") == null) {
-                System.out.println("WARNING: ADMIN_PANEL_PASSWORD is null");
+                System.out.println("ERROR: 'ADMIN_PANEL_PASSWORD' is null. Add the property 'ADMIN_PANEL_PASSWORD' to AdminPanel.properties.");
                 printContinue();
+                System.exit(1);
             }
         } catch (Exception e) {
-            System.out.println("Error in loading configuration file:\n"+e.getMessage());
+            System.out.println("ERROR: "+e.getMessage());
             printContinue();
+            System.exit(1);
         }
         while (true) {
             printMainMenu();

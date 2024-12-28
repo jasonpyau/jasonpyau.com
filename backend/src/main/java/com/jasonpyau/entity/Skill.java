@@ -19,6 +19,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class Skill {
     public static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
     public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
-    public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters.";
+    public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
     public static final String SKILL_TYPE_ERROR = "Invalid 'type'.";
     public static final String SKILL_ICON_EMPTY_SVG = "";
     public static final HashSet<String> validTypes = new HashSet<>(Arrays.asList("Language", "Framework/Library", "Database", "Software"));
@@ -61,6 +62,7 @@ public class Skill {
 
     @Column(name = "link", nullable = true)
     @Size(max = 250, message = SKILL_LINK_ERROR)
+    @Pattern(regexp = "^([\\s]*|(http|https):\\/\\/(.*))$", message = SKILL_LINK_ERROR)
     private String link;
 
     @Column(name = "simple_icons_icon_slug", nullable = true)
