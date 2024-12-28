@@ -1,10 +1,13 @@
 package com.jasonpyau.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +24,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "links")
+@Table(name = "links", indexes = @Index(name = "last_updated_unix_time_ind", columnList = "last_updated_unix_time"))
 public class Link {
 
     public static final String LINK_NAME_ERROR = "'name' should be between 1-30 characters.";
@@ -56,4 +59,8 @@ public class Link {
     @Size(max = 7, message = LINK_HEX_FILL_ERROR)
     @Pattern(regexp = "^([\\s]*|#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))$", message = LINK_HEX_FILL_ERROR)
     private String hexFill;
+
+    @Column(name = "last_updated_unix_time", nullable = false)
+    @JsonIgnore
+    private Long lastUpdatedUnixTime;
 }
