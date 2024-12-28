@@ -29,7 +29,9 @@ public class AdminPanel {
     }
 
     private static void updateLastUpdated(boolean showConfirmation) {
-        System.out.println("Updating lastUpdated in the metadata...");
+        if (!showConfirmation) {
+            System.out.println("Updating lastUpdated in the metadata...");
+        }
         apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
 
