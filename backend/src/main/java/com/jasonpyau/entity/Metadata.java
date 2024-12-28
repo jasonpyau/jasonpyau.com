@@ -23,6 +23,8 @@ public class Metadata {
 
     public static final String METADATA_NAME_ERROR = "'name' should be between 1-50 characters.";
     public static final String METADATA_ICON_LINK_ERROR = "'iconLink' should be between 4-500 characters.";
+    public static final String METADATA_DESCRIPTION_ERROR = "'description' should be between 1-500 characters.";
+    public static final String METADATA_KEYWORDS_ERROR = "'keywords' should be between 2-500 characters.";
 
     @Id
     @Column(name = "id")
@@ -43,5 +45,15 @@ public class Metadata {
     @Size(min = 4, max = 500, message = METADATA_ICON_LINK_ERROR)
     @NotBlank(message = METADATA_ICON_LINK_ERROR)
     private String iconLink;
+
+    @Column(name = "description", nullable = false)
+    @Size(min = 1, max = 500, message = METADATA_DESCRIPTION_ERROR)
+    @NotBlank(message = METADATA_DESCRIPTION_ERROR)
+    private String description;
+
+    @Column(name = "keywords", nullable = false)
+    @Size(min = 2, max = 500, message = METADATA_KEYWORDS_ERROR)
+    @NotBlank(message = METADATA_KEYWORDS_ERROR)
+    private String keywords;
 
 }

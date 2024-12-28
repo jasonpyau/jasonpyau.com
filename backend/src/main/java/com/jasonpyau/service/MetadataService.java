@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Metadata;
+import com.jasonpyau.form.MetadataUpdateForm;
 import com.jasonpyau.repository.MetadataRepository;
 import com.jasonpyau.util.DateFormat;
+import com.jasonpyau.util.Patch;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -31,6 +33,8 @@ public class MetadataService {
                                         .views(1L)
                                         .name("Jason Yau")
                                         .iconLink("https://avatars.githubusercontent.com/u/113565962?v=4")
+                                        .description("Jason Yau is a software engineer and a student studying Computer Science.")
+                                        .keywords("software engineer, Computer Science, Java, developer")
                                         .build();
             metadataRepository.save(metadata);
             return metadata;
@@ -58,17 +62,11 @@ public class MetadataService {
         }
     }
 
-    public Metadata updateName(String name) {
+    public Metadata updateWithForm(MetadataUpdateForm metadataUpdateForm) {
         Metadata metadata = getMetadata();
-        metadata.setName(name);
+        Patch.merge(metadataUpdateForm, metadata, "id", "lastUpdated", "views");
         validateMetadata(metadata);
         return metadataRepository.save(metadata);
     }
 
-    public Metadata updateIconLink(String iconLink) {
-        Metadata metadata = getMetadata();
-        metadata.setIconLink(iconLink);
-        validateMetadata(metadata);
-        return metadataRepository.save(metadata);
-    }
 }

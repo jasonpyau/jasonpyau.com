@@ -29,19 +29,30 @@ public class AdminPanel {
     }
 
     private static void updateLastUpdated(boolean showConfirmation) {
+        System.out.println("Updating lastUpdated in the metadata...");
         apiCall("/metadata/update/last_updated", "{ }", "PATCH", showConfirmation);
     }
 
-    private static void updateMetadataName() {
+    private static void updateMetadata() {
+        StringBuilder sb = new StringBuilder();
+        String input;
+        System.out.println("You may leave blank any fields you don't want to update.");
         System.out.println("Input your name:");
-        String name = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall("/metadata/update/name?name="+name, "{ }", "PATCH", true);
-    }
-
-    private static void updateMetadataIconLink() {
+        input = scan.nextLine();
+        sb.append("{\"name\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input a link to an square image that will be used as the website icon:");
-        String iconLink = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall("/metadata/update/icon_link?iconLink="+iconLink, "{ }", "PATCH", true);
+        input = scan.nextLine();
+        sb.append("\"iconLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input a description for the website that will be used for SEO (shown in Google/Bing search results):");
+        input = scan.nextLine();
+        sb.append("\"description\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input keywords for the website that will be used for SEO (a comma-separated list of phrases):");
+        input = scan.nextLine();
+        sb.append("\"keywords\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");
+        boolean success = apiCall("/metadata/update", sb.toString(), "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void newExperience() {
@@ -496,25 +507,21 @@ public class AdminPanel {
             System.out.println("     METADATA MENU     ");
             System.out.println("=======================");
             System.out.println("1.) Get Metadata");
-            System.out.println("2.) Update Last Updated");
-            System.out.println("3.) Update Name");
-            System.out.println("4.) Update Icon Link");
-            System.out.println("5.) Back");
+            System.out.println("2.) Update Metadata");
+            System.out.println("3.) Update Last Updated");
+            System.out.println("4.) Back");
             String input = scan.nextLine();
             switch (input) {
                 case "1":
                     getMetadata();
                     break;
                 case "2":
-                    updateLastUpdated(true);
+                    updateMetadata();
                     break;
                 case "3":
-                    updateMetadataName();
+                    updateLastUpdated(true);
                     break;
                 case "4":
-                    updateMetadataIconLink();
-                    break;
-                case "5":
                     return;
                 default:
                     System.out.println("Invalid input.");

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" th:href="${metadata.iconLink}" href="https://avatars.githubusercontent.com/u/113565962?v=4">
+<link rel="icon" type="image/x-icon" th:href="${metadata.iconLink}">
 <head th:replace="~{template.html :: head}"></head>
 <head>
-    <title th:text="'Blogs - '+${metadata.name}">Blogs - Jason Yau</title>
-    <meta name="twitter:title" content="Blogs - Jason Yau" th:content="'Blogs - '+${metadata.name}"/>
-    <meta name="description" content="Blogs posted by Jason Yau, software engineer and student at the University of Central Florida">
-    <meta name="twitter:description" content="Blogs posted by Jason Yau, software engineer and student at the University of Central Florida"/>
+    <title th:text="'Blogs - '+${metadata.name}"></title>
+    <meta name="twitter:title" th:content="'Blogs - '+${metadata.name}"/>
+    <meta name="description" th:content="'Blogs posted by '+${metadata.name}">
+    <meta name="twitter:description" th:content="'Blogs posted by '+${metadata.name}"/>
     <link href="/css/blogs.css" rel="stylesheet" type="text/css"/>
 </head>
 

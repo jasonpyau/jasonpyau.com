@@ -9,12 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Metadata;
+import com.jasonpyau.form.MetadataUpdateForm;
 import com.jasonpyau.service.MetadataService;
 import com.jasonpyau.util.Response;
 
@@ -52,21 +53,12 @@ public class MetadataController {
         return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/update/name", produces = "application/json")
+    @PatchMapping(path = "/update", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> updateName(HttpServletRequest request, @RequestParam(required = true) String name) {
-        Metadata metadata = metadataService.updateName(name);
-        return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
-    }
-
-    @PatchMapping(path = "/update/icon_link", produces = "application/json")
-    @AuthorizeAdmin
-    @RateLimit(RateLimit.ADMIN_TOKEN)
-    @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> updateIconLink(HttpServletRequest request, @RequestParam(required = true) String iconLink) {
-        Metadata metadata = metadataService.updateIconLink(iconLink);
+    public ResponseEntity<HashMap<String, Object>> updateWithForm(HttpServletRequest request, @RequestBody MetadataUpdateForm metadataUpdateForm) {
+        Metadata metadata = metadataService.updateWithForm(metadataUpdateForm);
         return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 }
