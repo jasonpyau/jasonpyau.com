@@ -18,14 +18,6 @@ public class AdminPanel {
     private static final Properties properties = new Properties();
     private static final Scanner scan = new Scanner(System.in);
 
-    private static void getMessages(String pageSize, String pageNum) {
-        apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
-    }
-
-    private static void deleteMessage(String id) {
-        apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
-    }
-
     private static void getMetadata() {
         apiCall("/metadata/get", "{ }", "GET", false);
     }
@@ -233,6 +225,29 @@ public class AdminPanel {
 
     private static void getAboutMe() {
         apiCall("/about_me/get", "{ }", "GET", false);
+    }
+
+    private static void newLink() {
+        System.out.println("Input the display name of the link:");
+        String name = scan.nextLine();
+        System.out.println("Input the href of the link:");
+        String href = scan.nextLine();
+        System.out.println("Input the Simple Icons slug for the link (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies (e.g. LinkedIn) were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
+        String simpleIconsIconSlug = scan.nextLine();
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.");
+        String hexFill = scan.nextLine();
+        String body = "{\"name\": \""+name+"\"," +
+                        "\"href\": \""+href+"\"," +
+                        "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"," +
+                        "\"hexFill\": \""+hexFill+"\"}";
+        boolean success = apiCall("/links/new", body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void newBlog() {
@@ -603,10 +618,53 @@ public class AdminPanel {
         return sb.toString();
     }
 
-    private static void printGetMessagesMenu() {
-        System.out.println("=======================");
-        System.out.println("     MESSAGES MENU     ");
-        System.out.println("=======================");
+    private static void printLinksMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("       LINKS MENU      ");
+            System.out.println("=======================");
+            System.out.println("1.) New Link");
+            System.out.println("5.) Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    newLink();
+                    break;
+                case "5":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
+    private static void printMessagesMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("     MESSAGES MENU     ");
+            System.out.println("=======================");
+            System.out.println("1.)  Get Messages");
+            System.out.println("2.)  Delete Messages");
+            System.out.println("3.)  Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    getMessages();
+                    break;
+                case "2":
+                    deleteMessages();
+                    break;
+                case "3":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
+    private static void getMessages() {
         System.out.println("You may leave blank any field for the default value.");
         System.out.print("Input a page size: ");
         String pageSize = scan.nextLine();
@@ -617,7 +675,7 @@ public class AdminPanel {
         int pageNum = (pageNumInput.isBlank() || !pageNumInput.matches("\\d+")) ? 0 : Integer.parseInt(pageNumInput);
         System.out.println();
         while (true) {
-            getMessages(pageSize, String.valueOf(pageNum));
+            apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
             System.out.println("0.) Return");
             System.out.println("1.) Next page");
             String input = scan.nextLine();
@@ -629,14 +687,10 @@ public class AdminPanel {
         }
     }
 
-    private static void printDeleteMessagesMenu() {
-        System.out.println("=======================");
-        System.out.println("     MESSAGES MENU     ");
-        System.out.println("=======================");
+    private static void deleteMessages() {
         System.out.print("Input id of the message you would like to delete: ");
         String id = scan.nextLine();
-        System.out.println();
-        deleteMessage(id);
+        apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
     private static void printContinue() {
@@ -653,8 +707,8 @@ public class AdminPanel {
         System.out.println("3.)  Projects Menu");
         System.out.println("4.)  Skills Menu");
         System.out.println("5.)  About Me Menu");
-        System.out.println("6.)  Get Messages");
-        System.out.println("7.)  Delete Message");
+        System.out.println("6.)  Messages Menu");
+        System.out.println("7.)  Links Menu");
         System.out.println("8.)  Metadata Menu");
         System.out.println("9.)  Shut down Server");
         System.out.println("10.) Exit");
@@ -676,11 +730,11 @@ public class AdminPanel {
                 printAboutMeMenu();
                 break;
             case "6":
-                printGetMessagesMenu();
+                printMessagesMenu();
                 printContinue();
                 break;
             case "7":
-                printDeleteMessagesMenu();
+                printLinksMenu();
                 printContinue();
                 break;
             case "8":
