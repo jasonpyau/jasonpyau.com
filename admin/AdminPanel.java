@@ -287,6 +287,15 @@ public class AdminPanel {
         }
     }
 
+    private static void deleteLink() {
+        System.out.println("Input the id of the link you'd like to delete:");
+        String id = scan.nextLine();
+        boolean success = apiCall("/links/delete/"+id, "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
     private static void getLinks() {
         apiCall("/links/get", "{ }", "GET", false);
     }
@@ -667,6 +676,7 @@ public class AdminPanel {
             System.out.println("1.) New Link");
             System.out.println("2.) Update Link");
             System.out.println("3.) Move Link to Top");
+            System.out.println("4.) Delete Link");
             System.out.println("5.) Get all Links in Order");
             System.out.println("6.) Back");
             String input = scan.nextLine();
@@ -679,6 +689,9 @@ public class AdminPanel {
                     break;
                 case "3":
                     moveLinkToTop();
+                    break;
+                case "4":
+                    deleteLink();
                     break;
                 case "5":
                     getLinks();

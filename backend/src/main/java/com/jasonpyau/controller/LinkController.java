@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +56,15 @@ public class LinkController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> moveLinkToTop(HttpServletRequest request, @PathVariable("id") Integer id) {
         linkService.moveLinkToTop(id);
+        return Response.success();
+    }
+
+    @DeleteMapping(path = "/delete/{id}", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> deleteLink(HttpServletRequest request, @PathVariable("id") Integer id) {
+        linkService.deleteLink(id);
         return Response.success();
     }
 

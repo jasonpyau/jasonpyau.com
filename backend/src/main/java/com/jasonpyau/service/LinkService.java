@@ -56,6 +56,15 @@ public class LinkService {
         updateLink(new Link(), id);
     }
 
+    @CacheEvict(cacheNames = CacheUtil.LINK_CACHE, allEntries = true)
+    public void deleteLink(Integer id) {
+        Optional<Link> optional = linkRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new ResourceNotFoundException(Link.LINK_ID_ERROR);
+        }
+        linkRepository.delete(optional.get());
+    }
+
     @Cacheable(cacheNames = CacheUtil.LINK_CACHE)
     public List<Link> getLinks() {
         return linkRepository.findAllByLastUpdatedUnixTime();
