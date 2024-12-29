@@ -27,6 +27,7 @@ import lombok.Setter;
 @Table(name = "links", indexes = @Index(name = "last_updated_unix_time_ind", columnList = "last_updated_unix_time"))
 public class Link {
 
+    public static final String LINK_ID_ERROR = "Invalid 'id', link not found.";
     public static final String LINK_NAME_ERROR = "'name' should be between 1-30 characters.";
     public static final String LINK_HREF_ERROR = "'href' should be between 7-500 characters and start with 'http://' or 'https://'.";
     public static final String LINK_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";

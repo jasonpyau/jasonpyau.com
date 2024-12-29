@@ -250,6 +250,47 @@ public class AdminPanel {
         }
     }
 
+    private static void updateLink() {
+        StringBuilder sb = new StringBuilder();
+        System.out.println("Input the id of the link you'd like to update:");
+        String id = scan.nextLine(), input;
+        System.out.println("You may leave blank any fields you don't want to update.");
+        System.out.println("You may input \"ERASE!!!\" to erase the current value for any optional fields.");
+        System.out.println("Input the display name of the link:");
+        input = scan.nextLine();
+        sb.append("{\"name\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the href of the link:");
+        input = scan.nextLine();
+        sb.append("\"href\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the Simple Icons slug for the link (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies (e.g. LinkedIn) were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
+        input = scan.nextLine();
+        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.");
+        input = scan.nextLine();
+        sb.append("\"hexFill\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
+        boolean success = apiCall("/links/update/"+id, sb.toString(), "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void moveLinkToTop() {
+        System.out.println("Input the id of the link you'd like to move to the top:");
+        String id = scan.nextLine();
+        boolean success = apiCall("/links/move_to_top/"+id, "{ }", "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void getLinks() {
+        apiCall("/links/get", "{ }", "GET", false);
+    }
+
     private static void newBlog() {
         System.out.println("Input title of blog:");
         String title = scan.nextLine();
@@ -624,13 +665,25 @@ public class AdminPanel {
             System.out.println("       LINKS MENU      ");
             System.out.println("=======================");
             System.out.println("1.) New Link");
-            System.out.println("5.) Back");
+            System.out.println("2.) Update Link");
+            System.out.println("3.) Move Link to Top");
+            System.out.println("5.) Get all Links in Order");
+            System.out.println("6.) Back");
             String input = scan.nextLine();
             switch (input) {
                 case "1":
                     newLink();
                     break;
+                case "2":
+                    updateLink();
+                    break;
+                case "3":
+                    moveLinkToTop();
+                    break;
                 case "5":
+                    getLinks();
+                    break;
+                case "6":
                     return;
                 default:
                     System.out.println("Invalid input.");

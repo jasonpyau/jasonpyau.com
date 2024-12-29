@@ -53,7 +53,7 @@ public class MetadataController {
         return new ResponseEntity<>(Response.createBody("metadata", metadata), HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/update", produces = "application/json")
+    @PatchMapping(path = "/update", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin

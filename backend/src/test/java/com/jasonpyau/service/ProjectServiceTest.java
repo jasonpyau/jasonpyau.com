@@ -38,14 +38,15 @@ public class ProjectServiceTest {
                                 .endDate("06/2023")
                                 .present(false)
                                 .dateOrder("202305202306")
-                                .link("project.com")
+                                .link("https://project.com")
                                 .build();
     
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
                             .type("Language")
-                            .simpleIconsIconSlug("spring")
+                            .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
+                            .simpleIconsIconSlug("java")
                             .build();
 
     @Test

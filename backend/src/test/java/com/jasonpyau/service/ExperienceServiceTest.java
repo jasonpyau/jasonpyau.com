@@ -48,7 +48,8 @@ public class ExperienceServiceTest {
                             .id(1)
                             .name("Java")
                             .type("Language")
-                            .simpleIconsIconSlug("spring")
+                            .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
+                            .simpleIconsIconSlug("java")
                             .build();
 
     @Test
