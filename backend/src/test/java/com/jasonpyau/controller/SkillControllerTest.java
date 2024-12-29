@@ -30,7 +30,7 @@ public class SkillControllerTest {
     private Skill skill1 = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type("Language")
+                            .type(Skill.Type.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
                             .build();
@@ -38,7 +38,7 @@ public class SkillControllerTest {
     private Skill skill2 = Skill.builder()
                             .id(2)
                             .name("Git")
-                            .type("Software")
+                            .type(Skill.Type.SOFTWARE)
                             .link("https://en.wikipedia.org/wiki/Git")
                             .simpleIconsIconSlug("git")
                             .build();
@@ -58,7 +58,7 @@ public class SkillControllerTest {
             .andExpect(jsonPath("$.skills.Language", hasSize(1)))
             .andExpect(jsonPath("$.skills.Language[0].id", is(skill1.getId())))
             .andExpect(jsonPath("$.skills.Language[0].name", is(skill1.getName())))
-            .andExpect(jsonPath("$.skills.Language[0].type", is(skill1.getType())))
+            .andExpect(jsonPath("$.skills.Language[0].type", is(skill1.getType().getJsonValue())))
             .andExpect(jsonPath("$.skills.Language[0].link", is(skill1.getLink())))
             .andExpect(jsonPath("$.skills.Language[0].simpleIconsIconSlug", is(skill1.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.skills.Framework/Library", hasSize(0)))
@@ -66,7 +66,7 @@ public class SkillControllerTest {
             .andExpect(jsonPath("$.skills.Software", hasSize(1)))
             .andExpect(jsonPath("$.skills.Software[0].id", is(skill2.getId())))
             .andExpect(jsonPath("$.skills.Software[0].name", is(skill2.getName())))
-            .andExpect(jsonPath("$.skills.Software[0].type", is(skill2.getType())))
+            .andExpect(jsonPath("$.skills.Software[0].type", is(skill2.getType().getJsonValue())))
             .andExpect(jsonPath("$.skills.Software[0].link", is(skill2.getLink())))
             .andExpect(jsonPath("$.skills.Software[0].simpleIconsIconSlug", is(skill2.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.status", is("success")));

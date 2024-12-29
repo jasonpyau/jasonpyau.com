@@ -24,7 +24,7 @@ public class AboutMe {
 
     @Id
     @Column(name = "id")
-    private Integer id = 1;
+    private final Integer id = 1;
     
     @Column(name = "text", columnDefinition = "varchar(1000)")
     @Size(max = 1000, message = ABOUT_ME_TEXT_ERROR)

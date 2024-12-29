@@ -26,7 +26,9 @@ public class AboutMeService {
     public String getAboutMe() {
         Optional<AboutMe> optional = aboutMeRepository.findById(1);
         if (!optional.isPresent()) {
-            return AboutMe.ABOUT_ME_LOAD_ERROR;
+            AboutMe aboutMe = new AboutMe("This is the default About Me.");
+            setAboutMe(aboutMe);
+            return aboutMe.getText();
         }
         return optional.get().getText();
     }

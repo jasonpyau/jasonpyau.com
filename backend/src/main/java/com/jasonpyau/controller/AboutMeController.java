@@ -3,7 +3,6 @@ package com.jasonpyau.controller;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,13 +33,13 @@ public class AboutMeController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> setAboutMe(HttpServletRequest request, @Valid @RequestBody AboutMe aboutMe) {
         aboutMeService.setAboutMe(aboutMe);
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getAboutMe(HttpServletRequest request) {
-        return new ResponseEntity<>(Response.createBody("text", aboutMeService.getAboutMe()), HttpStatus.OK);
+        return Response.success(Response.createBody("text", aboutMeService.getAboutMe()));
     }
 }

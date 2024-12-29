@@ -1,12 +1,10 @@
 package com.jasonpyau.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,11 +37,8 @@ public class SkillController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @Valid @RequestBody Skill skill) {
-        String errorMessage = skillService.newSkill(skill);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        skillService.newSkill(skill);
+        return Response.success();
     }
 
     @PatchMapping(path = "/update", consumes = "application/json", produces = "application/json")
@@ -51,11 +46,8 @@ public class SkillController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateSkill(HttpServletRequest request, @RequestBody Skill skill) {
-        String errorMessage = skillService.updateSkill(skill);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        skillService.updateSkill(skill);
+        return Response.success();
     }
 
 
@@ -64,19 +56,15 @@ public class SkillController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteSkill(HttpServletRequest request, @PathVariable("name") String skillName) {
-        String errorMessage = skillService.deleteSkill(skillName);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        skillService.deleteSkill(skillName);
+        return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
-        HashMap<String, List<Skill>> skills = skillService.getSkills();
-        return new ResponseEntity<>(Response.createBody("skills", skills), HttpStatus.OK);
+        return Response.success(Response.createBody("skills", skillService.getSkills()));
     }
 
     @GetMapping(path = "/svg/{name}", produces = "image/svg+xml")
@@ -92,8 +80,7 @@ public class SkillController {
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> validTypes(HttpServletRequest request) {
-        List<String> validTypes = skillService.validTypes();
-        return new ResponseEntity<>(Response.createBody("validTypes", validTypes), HttpStatus.OK);
+        return Response.success(Response.createBody("validTypes", skillService.validTypes()));
     }
     
 }

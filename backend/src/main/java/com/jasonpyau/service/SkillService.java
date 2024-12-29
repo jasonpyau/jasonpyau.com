@@ -1,6 +1,5 @@
 package com.jasonpyau.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +17,8 @@ import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.exception.ResourceAlreadyExistsException;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.SkillRepository;
 import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.Patch;
@@ -38,25 +39,19 @@ public class SkillService {
 
     private JsonNode iconSvgData = SkillIconSvgData.get();
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
-    public String newSkill(Skill skill) {
+    public void newSkill(Skill skill) {
         if (skillRepository.findSkillByName(skill.getName()).isPresent()) {
-            return Skill.SKILL_ALREADY_EXISTS_ERROR;
-        }
-        if (!skill.checkValidType()) {
-            return Skill.SKILL_TYPE_ERROR;
+            throw new ResourceAlreadyExistsException(Skill.SKILL_ALREADY_EXISTS_ERROR);
         }
         skillRepository.save(skill);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
-    public String updateSkill(Skill updateSkill) {
+    public void updateSkill(Skill updateSkill) {
         Optional<Skill> optional = skillRepository.findSkillByName(updateSkill.getName());
         if (!optional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         Skill skill = optional.get();
         Patch.merge(updateSkill, skill, "id", "name");
@@ -64,30 +59,23 @@ public class SkillService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-        if (!skill.checkValidType()) {
-            return Skill.SKILL_TYPE_ERROR;
-        }
         skillRepository.save(skill);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE, CacheUtil.SKILL_ICON_SVG_CACHE}, allEntries = true)
-    public String deleteSkill(String skillName) {
+    public void deleteSkill(String skillName) {
         Optional<Skill> optional = skillRepository.findSkillByName(skillName);
         if (!optional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         skillRepository.delete(optional.get());
-        return null;
     }
 
     @Cacheable(cacheNames = CacheUtil.SKILL_CACHE)
     public HashMap<String, List<Skill>> getSkills() {
         HashMap<String, List<Skill>> res = new HashMap<>();
-        List<String> types = validTypes();
-        for (String type : types) {
-            res.put(type, skillRepository.findAllSkillNameByType(type));
+        for (Skill.Type type : Skill.Type.values()) {
+            res.put(type.getJsonValue(), skillRepository.findAllSkillsByTypeName(type.name()));
         }
         return res;
     }
@@ -136,7 +124,7 @@ public class SkillService {
     }
 
     public List<String> validTypes() {
-        return new ArrayList<String>(Skill.validTypes);
+        return Skill.validTypes();
     }
 
     public Optional<Skill> getSkillByName(String skillName) {

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Message;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.form.PaginationForm;
 import com.jasonpyau.repository.ContactRepository;
 import com.jasonpyau.util.DateFormat;
@@ -40,14 +41,12 @@ public class ContactService {
         return page;
     }
 
-    // Returns error message if applicable, else null.
-    public String deleteMessage(Long id) {
+    public void deleteMessage(Long id) {
         Optional<Message> optional = contactRepository.findById(id);
         if (!optional.isPresent()) {
-            return Message.MESSAGE_ID_ERROR;
+            throw new ResourceNotFoundException(Message.MESSAGE_ID_ERROR);
         }
         contactRepository.delete(optional.get());
-        return null;
     }
 
 }

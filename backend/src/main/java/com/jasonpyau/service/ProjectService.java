@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Project;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.DateFormat;
@@ -44,12 +45,11 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String updateProject(Project updateProject, Integer id) {
+    public void updateProject(Project updateProject, Integer id) {
         Optional<Project> optional = projectRepository.findById(id);
         if (!optional.isPresent()) {
-            return Project.PROJECT_ID_ERROR;
+            throw new ResourceNotFoundException(Project.PROJECT_ID_ERROR);
         }
         Project project = optional.get();
         Patch.merge(updateProject, project, "id", "dateOrder");
@@ -58,15 +58,13 @@ public class ProjectService {
             throw new ConstraintViolationException(violations);
         }
         newProject(project);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String deleteProject(Integer id) {
+    public void deleteProject(Integer id) {
         Optional<Project> optional = projectRepository.findById(id);
         if (!optional.isPresent()) {
-            return Project.PROJECT_ID_ERROR;
+            throw new ResourceNotFoundException(Project.PROJECT_ID_ERROR);
         }
         Project project = optional.get();
         Set<Skill> skills = project.getSkills();
@@ -75,7 +73,6 @@ public class ProjectService {
         }
         skills.clear();
         projectRepository.delete(project);
-        return null;
     }
 
     @Cacheable(cacheNames = CacheUtil.PROJECT_CACHE)
@@ -83,38 +80,34 @@ public class ProjectService {
         return projectRepository.findAllByDate();
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String newProjectSkill(String skillName, Integer id) {
+    public void newProjectSkill(String skillName, Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         if (!projectOptional.isPresent()) {
-            return Project.PROJECT_ID_ERROR;
+            throw new ResourceNotFoundException(Project.PROJECT_ID_ERROR);
         }
         Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
         if (!skillOptional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         Project project = projectOptional.get();
         project.addSkill(skillOptional.get());
         projectRepository.save(project);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String deleteProjectSkill(String skillName, Integer id) {
+    public void deleteProjectSkill(String skillName, Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         if (!projectOptional.isPresent()) {
-            return Project.PROJECT_ID_ERROR;
+            throw new ResourceNotFoundException(Project.PROJECT_ID_ERROR);
         }
         Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
         if (!skillOptional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         Project project = projectOptional.get();
         project.deleteSkill(skillOptional.get());
         projectRepository.save(project);
-        return null;
     }
 
     @Scheduled(fixedRate = 8, timeUnit = TimeUnit.HOURS)

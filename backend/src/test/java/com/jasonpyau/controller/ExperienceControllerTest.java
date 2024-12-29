@@ -48,7 +48,7 @@ public class ExperienceControllerTest {
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type("Language")
+                            .type(Skill.Type.LANGUAGE)
                             .simpleIconsIconSlug("spring")
                             .build();
     
@@ -77,7 +77,7 @@ public class ExperienceControllerTest {
             .andExpect(jsonPath("$.experiences[0].skills", hasSize(1)))
             .andExpect(jsonPath("$.experiences[0].skills[0].id", is(skill.getId())))
             .andExpect(jsonPath("$.experiences[0].skills[0].name", is(skill.getName())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].type", is(skill.getType())))
+            .andExpect(jsonPath("$.experiences[0].skills[0].type", is(skill.getType().getJsonValue())))
             .andExpect(jsonPath("$.experiences[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.experiences[0].logoLink", is(experience.getLogoLink())))
             .andExpect(jsonPath("$.experiences[0].companyLink", is(experience.getCompanyLink())));

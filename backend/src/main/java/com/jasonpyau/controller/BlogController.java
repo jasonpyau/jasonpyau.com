@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +41,7 @@ public class BlogController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newBlog(HttpServletRequest request, @Valid @RequestBody NewBlogForm newBlogForm) {
         blogService.newBlog(newBlogForm);
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        return Response.success();
     }
 
     @DeleteMapping(path = "/delete/{id}", produces = "application/json")
@@ -50,11 +49,8 @@ public class BlogController {
     @AuthorizeAdmin
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteBlog(HttpServletRequest request, @PathVariable("id") Long id) {
-        String errorMessage = blogService.deleteBlog(id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        blogService.deleteBlog(id);
+        return Response.success();
     }
 
     @GetMapping(path = "/get/page", produces = "application/json")
@@ -66,29 +62,23 @@ public class BlogController {
         Page<Blog> page = blogService.getBlogs(request, blogSearchForm, paginationForm);
         String[] keys = {"blogs", "totalPages", "hasNext"};
         Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
-        return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);
+        return Response.success(Response.createBody(keys, values));
     }
 
     @PostMapping(path = "/like/{id}", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> likeBlog(HttpServletRequest request, @PathVariable("id") Long id) {
-        String errorMessage = blogService.like(request, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        blogService.like(request, id);
+        return Response.success();
     }
 
     @PostMapping(path = "/unlike/{id}", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> unlikeBlog(HttpServletRequest request, @PathVariable("id") Long id) {
-        String errorMessage = blogService.unlike(request, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        blogService.unlike(request, id);
+        return Response.success();
     }
     
 }

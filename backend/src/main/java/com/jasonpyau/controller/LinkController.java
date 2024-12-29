@@ -3,7 +3,6 @@ package com.jasonpyau.controller;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -38,7 +37,7 @@ public class LinkController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newLink(HttpServletRequest request, @Valid @RequestBody Link link) {
         linkService.newLink(link);
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        return Response.success();
     }
 
     @PatchMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
@@ -46,11 +45,8 @@ public class LinkController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateLink(HttpServletRequest request, @RequestBody Link updateLink, @PathVariable("id") Integer id) {
-        String errorMessage = linkService.updateLink(updateLink, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        linkService.updateLink(updateLink, id);
+        return Response.success();
     }
 
     @PatchMapping(path = "/move_to_top/{id}", produces = "application/json")
@@ -58,18 +54,15 @@ public class LinkController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> moveLinkToTop(HttpServletRequest request, @PathVariable("id") Integer id) {
-        String errorMessage = linkService.moveLinkToTop(id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        linkService.moveLinkToTop(id);
+        return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getLinks(HttpServletRequest request) {
-        return new ResponseEntity<>(Response.createBody("links", linkService.getLinks()), HttpStatus.OK);
+        return Response.success(Response.createBody("links", linkService.getLinks()));
     }
     
 }

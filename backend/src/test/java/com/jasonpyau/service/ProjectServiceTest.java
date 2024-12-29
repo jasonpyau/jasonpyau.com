@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.BDDMockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.jasonpyau.entity.Project;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ProjectRepository;
 
 import jakarta.validation.ConstraintViolationException;
@@ -44,7 +46,7 @@ public class ProjectServiceTest {
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type("Language")
+                            .type(Skill.Type.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
                             .build();
@@ -54,8 +56,9 @@ public class ProjectServiceTest {
         given(projectRepository.findById(1)).willReturn(Optional.of(project));
         Project updateProject = new Project();
         updateProject.setName("Project2");
-        String errorMessage = projectService.updateProject(updateProject, 1);
-        assertEquals(null, errorMessage);
+        assertDoesNotThrow(() -> {
+            projectService.updateProject(updateProject, 1);
+        });
     }
 
     @Test
@@ -63,29 +66,36 @@ public class ProjectServiceTest {
         given(projectRepository.findById(1)).willReturn(Optional.of(project));
         Project updateProject = new Project();
         updateProject.setName("a".repeat(100));
-        assertThrows(ConstraintViolationException.class, () -> {
+        ConstraintViolationException e = assertThrows(ConstraintViolationException.class, () -> {
             projectService.updateProject(updateProject, 1);
         });
+        assertEquals(e.getConstraintViolations().size(), 1);
+        assertEquals(e.getConstraintViolations().iterator().next().getMessage(), Project.PROJECT_NAME_ERROR);
     }
 
     @Test
     public void testUpdateProject_ProjectIdError() {
-        String errorMessage = projectService.updateProject(project, 2);
-        assertEquals(Project.PROJECT_ID_ERROR, errorMessage);
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> {
+            projectService.updateProject(project, 2);
+        });
+        assertEquals(Project.PROJECT_ID_ERROR, e.getMessage());
     }
 
     @Test
     public void testNewProjectSkill() {
         given(projectRepository.findById(1)).willReturn(Optional.of(project));
         given(skillService.getSkillByName("Java")).willReturn(Optional.of(skill));
-        String errorMessage = projectService.newProjectSkill("Java", 1);
-        assertEquals(null, errorMessage);
+        assertDoesNotThrow(() -> {
+            projectService.newProjectSkill("Java", 1);
+        });
     }
 
     @Test
     public void testNewProjectSkill_SkillNotFound_Error() {
         given(projectRepository.findById(1)).willReturn(Optional.of(project));
-        String errorMessage = projectService.newProjectSkill("Java", 1);
-        assertEquals(Skill.SKILL_NOT_FOUND_ERROR, errorMessage);
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> {
+            projectService.newProjectSkill("Java", 1);
+        });
+        assertEquals(Skill.SKILL_NOT_FOUND_ERROR, e.getMessage());
     }
 }

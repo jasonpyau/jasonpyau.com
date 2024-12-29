@@ -1,14 +1,18 @@
 package com.jasonpyau.entity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +23,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -37,14 +42,28 @@ import lombok.Setter;
 @Table(name = "skills", indexes = @Index(name = "type_name_ind", columnList = "type, name"))
 public class Skill {
 
+    public enum Type {
+        LANGUAGE("Language"),
+        FRAMEWORK_OR_LIBRARY("Framework/Library"),
+        DATABASE("Database"),
+        SOFTWARE("Software");
+
+        @Getter
+        @JsonValue
+        private final String jsonValue;
+
+        Type(String jsonValue) {
+            this.jsonValue = jsonValue;
+        }
+    }
+
     public static final String SKILL_NAME_ERROR = "'name' should be between 1-25 characters.";
     public static final String SKILL_ALREADY_EXISTS_ERROR = "Skill already exists.";
     public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
     public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
-    public static final String SKILL_TYPE_ERROR = "Invalid 'type'.";
+    public static final String SKILL_TYPE_ERROR = "'type' should be one of the following: "+validTypes().toString();
     public static final String SKILL_ICON_EMPTY_SVG = "";
-    public static final HashSet<String> validTypes = new HashSet<>(Arrays.asList("Language", "Framework/Library", "Database", "Software"));
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,8 +76,9 @@ public class Skill {
     private String name;
 
     @Column(name = "type", nullable = false)
-    @NotBlank(message = SKILL_TYPE_ERROR)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Type type;
 
     @Column(name = "link", nullable = true)
     @Size(max = 250, message = SKILL_LINK_ERROR)
@@ -90,8 +110,11 @@ public class Skill {
                 inverseJoinColumns = @JoinColumn(name = "experience_id", referencedColumnName = "id"))
     private final Set<Experience> experiences = new HashSet<>();
 
-    public boolean checkValidType() {
-        return validTypes.contains(type);
+    public static List<String> validTypes() {
+        ArrayList<String> validTypes = new ArrayList<>();
+        for (Type type : Type.values()) {
+            validTypes.add(type.getJsonValue());
+        }
+        return validTypes;
     }
-
 }

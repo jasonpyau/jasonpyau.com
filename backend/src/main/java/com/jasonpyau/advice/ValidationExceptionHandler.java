@@ -5,11 +5,14 @@ import java.util.HashSet;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.jasonpyau.entity.Skill;
 import com.jasonpyau.util.Response;
 
 import jakarta.validation.ConstraintViolationException;
@@ -56,6 +59,18 @@ public class ValidationExceptionHandler {
         }
         body.put("reason", sb.toString());
         return res;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<HashMap<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof InvalidFormatException) {
+            InvalidFormatException invalidFormatException = (InvalidFormatException)cause;
+            if (invalidFormatException.getTargetType().equals(Skill.Type.class)) {
+                return Response.errorMessage(Skill.SKILL_TYPE_ERROR, HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        return Response.errorMessage(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

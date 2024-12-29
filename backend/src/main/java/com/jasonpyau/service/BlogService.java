@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Blog;
 import com.jasonpyau.entity.User;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.form.BlogSearchForm;
 import com.jasonpyau.form.NewBlogForm;
 import com.jasonpyau.form.PaginationForm;
@@ -43,14 +44,12 @@ public class BlogService {
         blogRepository.save(blog);
     }
 
-    // Returns error message if applicable, else null.
-    public String deleteBlog(Long id) {
+    public void deleteBlog(Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return Blog.BLOG_ID_ERROR;
+            throw new ResourceNotFoundException(Blog.BLOG_ID_ERROR);
         }
         blogRepository.delete(optional.get());
-        return null;
     }
 
     // Returns requested Blog, else null. Also returns previous and next blogs
@@ -88,30 +87,26 @@ public class BlogService {
         return page;
     }
 
-    // Returns error message if applicable, else null.
-    public String like(HttpServletRequest request, Long id) {
+    public void like(HttpServletRequest request, Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return Blog.BLOG_ID_ERROR;
+            throw new ResourceNotFoundException(Blog.BLOG_ID_ERROR);
         }
         User user = userService.getUser(request);
         Blog blog = optional.get();
         blog.like(user);
         blogRepository.save(blog);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
-    public String unlike(HttpServletRequest request, Long id) {
+    public void unlike(HttpServletRequest request, Long id) {
         Optional<Blog> optional = blogRepository.findById(id);
         if (!optional.isPresent()) {
-            return Blog.BLOG_ID_ERROR;
+            throw new ResourceNotFoundException(Blog.BLOG_ID_ERROR);
         }
         User user = userService.getUser(request);
         Blog blog = optional.get();
         blog.unlike(user);
         blogRepository.save(blog);
-        return null;
     }
 
     // Returns null if error (current blog cannot be found with the given blogSearchForm).

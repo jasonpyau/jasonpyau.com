@@ -9,6 +9,14 @@ public class Response {
     
     private Response() {};
 
+    public static ResponseEntity<HashMap<String, Object>> success(HashMap<String, Object> body) {
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    } 
+
+    public static ResponseEntity<HashMap<String, Object>> success() {
+        return new ResponseEntity<>(createBody(), HttpStatus.OK);
+    }
+
     public static HashMap<String, Object> createBody() {
         return createBody(new String[] {}, new Object[] {});
     }

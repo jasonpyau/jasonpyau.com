@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Link;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.LinkRepository;
 import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.DateFormat;
@@ -35,10 +36,10 @@ public class LinkService {
     }
 
     @CacheEvict(cacheNames = CacheUtil.LINK_CACHE, allEntries = true)
-    public String updateLink(Link updateLink, Integer id) {
+    public void updateLink(Link updateLink, Integer id) {
         Optional<Link> optional = linkRepository.findById(id);
         if (!optional.isPresent()){
-            return Link.LINK_ID_ERROR;
+            throw new ResourceNotFoundException(Link.LINK_ID_ERROR);
         }
         Link link = optional.get();
         Patch.merge(updateLink, link, "id", "lastUpdatedUnixTime");
@@ -48,12 +49,11 @@ public class LinkService {
         }
         link.setLastUpdatedUnixTime(DateFormat.getUnixTime());
         linkRepository.save(link);
-        return null;
     }
 
     @CacheEvict(cacheNames = CacheUtil.LINK_CACHE, allEntries = true)
-    public String moveLinkToTop(Integer id) {
-        return updateLink(new Link(), id);
+    public void moveLinkToTop(Integer id) {
+        updateLink(new Link(), id);
     }
 
     @Cacheable(cacheNames = CacheUtil.LINK_CACHE)
