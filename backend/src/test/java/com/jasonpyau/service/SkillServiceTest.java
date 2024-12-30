@@ -36,6 +36,7 @@ public class SkillServiceTest {
                             .type(Skill.Type.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
+                            .hexFill("#ffffff")
                             .build();
     
     private Skill springBoot = Skill.builder()
@@ -44,6 +45,7 @@ public class SkillServiceTest {
                             .type(Skill.Type.FRAMEWORK_OR_LIBRARY)
                             .link("https://en.wikipedia.org/wiki/Spring_Boot")
                             .simpleIconsIconSlug("springboot")
+                            .hexFill("#ffffff")
                             .build();                  
 
     @Test

@@ -49,6 +49,7 @@ public class ProjectControllerTest {
                             .name("Java")
                             .type(Skill.Type.LANGUAGE)
                             .simpleIconsIconSlug("spring")
+                            .hexFill("#ffffff")
                             .build();
     @BeforeEach
     public void setUp() {
@@ -75,6 +76,7 @@ public class ProjectControllerTest {
             .andExpect(jsonPath("$.projects[0].skills[0].name", is(skill.getName())))
             .andExpect(jsonPath("$.projects[0].skills[0].type", is(skill.getType().getJsonValue())))
             .andExpect(jsonPath("$.projects[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.projects[0].skills[0].hexFill", is(skill.getHexFill())))
             .andExpect(jsonPath("$.projects[0].link", is(project.getLink())));
     }
 }

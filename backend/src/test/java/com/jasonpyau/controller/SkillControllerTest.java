@@ -33,6 +33,7 @@ public class SkillControllerTest {
                             .type(Skill.Type.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
+                            .hexFill("#ffffff")
                             .build();
 
     private Skill skill2 = Skill.builder()
@@ -41,6 +42,7 @@ public class SkillControllerTest {
                             .type(Skill.Type.SOFTWARE)
                             .link("https://en.wikipedia.org/wiki/Git")
                             .simpleIconsIconSlug("git")
+                            .hexFill("#ffffff")
                             .build();
 
     @Test
@@ -61,6 +63,7 @@ public class SkillControllerTest {
             .andExpect(jsonPath("$.skills.Language[0].type", is(skill1.getType().getJsonValue())))
             .andExpect(jsonPath("$.skills.Language[0].link", is(skill1.getLink())))
             .andExpect(jsonPath("$.skills.Language[0].simpleIconsIconSlug", is(skill1.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.skills.Language[0].hexFill", is(skill1.getHexFill())))
             .andExpect(jsonPath("$.skills.Framework/Library", hasSize(0)))
             .andExpect(jsonPath("$.skills.Database", hasSize(0)))
             .andExpect(jsonPath("$.skills.Software", hasSize(1)))
@@ -69,6 +72,7 @@ public class SkillControllerTest {
             .andExpect(jsonPath("$.skills.Software[0].type", is(skill2.getType().getJsonValue())))
             .andExpect(jsonPath("$.skills.Software[0].link", is(skill2.getLink())))
             .andExpect(jsonPath("$.skills.Software[0].simpleIconsIconSlug", is(skill2.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.skills.Software[0].hexFill", is(skill2.getHexFill())))
             .andExpect(jsonPath("$.status", is("success")));
     }
     

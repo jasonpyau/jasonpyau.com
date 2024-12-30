@@ -62,6 +62,7 @@ public class Skill {
     public static final String SKILL_NOT_FOUND_ERROR = "Skill with given 'name' not found.";
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
     public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
+    public static final String SKILL_HEX_FILL_ERROR = "'hexFill' should be either blank or in the form '#xxx' or '#xxxxxx', where x is a hex digit.";
     public static final String SKILL_TYPE_ERROR = "'type' should be one of the following: "+validTypes().toString();
 
     @Id
@@ -90,6 +91,11 @@ public class Skill {
     // https://github.com/simple-icons/simple-icons/blob/master/slugs.md
     // https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md
     private String simpleIconsIconSlug;
+
+    @Column(name = "hex_fill", nullable = true)
+    @Size(max = 7, message = SKILL_HEX_FILL_ERROR)
+    @Pattern(regexp = "^([\\s]*|#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))$", message = SKILL_HEX_FILL_ERROR)
+    private String hexFill;
 
     @JsonIgnore
     @Setter(AccessLevel.NONE)

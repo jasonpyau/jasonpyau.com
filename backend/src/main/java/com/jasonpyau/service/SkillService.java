@@ -84,7 +84,11 @@ public class SkillService {
         if (skill.getSimpleIconsIconSlug() == null || skill.getSimpleIconsIconSlug().isBlank()) {
             return SimpleIconsService.EMPTY_SVG;
         }
-        return simpleIconsService.getSimpleIconsSvg(skill.getSimpleIconsIconSlug());
+        String svg = simpleIconsService.getSimpleIconsSvg(skill.getSimpleIconsIconSlug());
+        if (skill.getHexFill() != null && !skill.getHexFill().isBlank() && !svg.equals(SimpleIconsService.EMPTY_SVG)) {
+            svg = simpleIconsService.replaceSvgFill(svg, skill.getHexFill());
+        }
+        return svg;
     }
 
     public List<String> validTypes() {

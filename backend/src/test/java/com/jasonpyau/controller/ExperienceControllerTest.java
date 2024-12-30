@@ -50,6 +50,7 @@ public class ExperienceControllerTest {
                             .name("Java")
                             .type(Skill.Type.LANGUAGE)
                             .simpleIconsIconSlug("spring")
+                            .hexFill("#ffffff")
                             .build();
     
     @BeforeEach
@@ -79,6 +80,7 @@ public class ExperienceControllerTest {
             .andExpect(jsonPath("$.experiences[0].skills[0].name", is(skill.getName())))
             .andExpect(jsonPath("$.experiences[0].skills[0].type", is(skill.getType().getJsonValue())))
             .andExpect(jsonPath("$.experiences[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.experiences[0].skills[0].hexFill", is(skill.getHexFill())))
             .andExpect(jsonPath("$.experiences[0].logoLink", is(experience.getLogoLink())))
             .andExpect(jsonPath("$.experiences[0].companyLink", is(experience.getCompanyLink())));
     }

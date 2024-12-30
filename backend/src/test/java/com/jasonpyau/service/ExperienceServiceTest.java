@@ -52,6 +52,7 @@ public class ExperienceServiceTest {
                             .type(Skill.Type.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
+                            .hexFill("#ffffff")
                             .build();
 
     @Test
