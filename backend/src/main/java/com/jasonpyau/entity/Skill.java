@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -63,7 +64,12 @@ public class Skill {
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
     public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
     public static final String SKILL_HEX_FILL_ERROR = "'hexFill' should be either blank or in the form '#xxx' or '#xxxxxx', where x is a hex digit.";
-    public static final String SKILL_TYPE_ERROR = "'type' should be one of the following: "+validTypes().toString();
+    public static final String SKILL_TYPE_ERROR = "'type' should be one of the following: "+validTypes()
+                                                                                            .stream()
+                                                                                            .map(type -> String.format("'%s'", type))
+                                                                                            .collect(Collectors.toList())
+                                                                                            .toString()+".";
+    public static final String SKILL_TYPE_NULL_ERROR = "'type' should not be null.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -77,7 +83,7 @@ public class Skill {
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = SKILL_TYPE_NULL_ERROR)
     private Type type;
 
     @Column(name = "link", nullable = true)

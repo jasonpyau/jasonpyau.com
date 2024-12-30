@@ -15,14 +15,14 @@ public class SimpleIconsServiceTest {
     private SimpleIconsService simpleIconsService;
     
     @Test
-    public void getSkillIconSvgJava() {
+    public void getSimpleIconsSvgJava() {
         String svg = simpleIconsService.getSimpleIconsSvg("java");
         assertNotEquals(svg, SimpleIconsService.EMPTY_SVG);
         assertTrue(svg.contains("fill"));
     }
 
     @Test
-    public void getSkillIconSvgSpringBoot() {
+    public void getSimpleIconsSvgSpringBoot() {
         String svg = simpleIconsService.getSimpleIconsSvg("springboot");
         assertNotEquals(svg, SimpleIconsService.EMPTY_SVG);
         assertTrue(svg.contains("fill"));

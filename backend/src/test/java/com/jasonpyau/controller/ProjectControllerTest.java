@@ -48,6 +48,7 @@ public class ProjectControllerTest {
                             .id(1)
                             .name("Java")
                             .type(Skill.Type.LANGUAGE)
+                            .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("spring")
                             .hexFill("#ffffff")
                             .build();
@@ -75,6 +76,7 @@ public class ProjectControllerTest {
             .andExpect(jsonPath("$.projects[0].skills[0].id", is(skill.getId())))
             .andExpect(jsonPath("$.projects[0].skills[0].name", is(skill.getName())))
             .andExpect(jsonPath("$.projects[0].skills[0].type", is(skill.getType().getJsonValue())))
+            .andExpect(jsonPath("$.projects[0].skills[0].link", is(skill.getLink())))
             .andExpect(jsonPath("$.projects[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
             .andExpect(jsonPath("$.projects[0].skills[0].hexFill", is(skill.getHexFill())))
             .andExpect(jsonPath("$.projects[0].link", is(project.getLink())));

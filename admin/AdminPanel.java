@@ -198,11 +198,11 @@ public class AdminPanel {
                             "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
                             "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
         input = scan.nextLine();
+        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
         System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
                             "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.\n" +
                             "Ex: '#ffffff' for white, '#000000' for black.\n" +
                             "Note: You may need to disable browser cache and refresh to see the changes reflected on the site (or wait up to 30 minutes...)");
-        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
         input = scan.nextLine();
         sb.append("\"hexFill\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
         boolean success = apiCall("/skills/update", sb.toString(), "PATCH", true);
