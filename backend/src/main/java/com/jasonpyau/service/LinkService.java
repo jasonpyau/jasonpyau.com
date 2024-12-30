@@ -27,6 +27,9 @@ public class LinkService {
     @Autowired
     private LinkRepository linkRepository;
 
+    @Autowired
+    private SimpleIconsService simpleIconsService;
+
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @CacheEvict(cacheNames = CacheUtil.LINK_CACHE, allEntries = true)
@@ -68,5 +71,22 @@ public class LinkService {
     @Cacheable(cacheNames = CacheUtil.LINK_CACHE)
     public List<Link> getLinks() {
         return linkRepository.findAllByLastUpdatedUnixTime();
+    }
+
+    @Cacheable(cacheNames = CacheUtil.LINK_CACHE)
+    public String getLinkIconSvg(Integer id) {
+        Optional<Link> optional = linkRepository.findById(id);
+        if (!optional.isPresent()) {
+            return SimpleIconsService.EMPTY_SVG;
+        }
+        Link link = optional.get();
+        if (link.getSimpleIconsIconSlug() == null || link.getSimpleIconsIconSlug().isBlank()) {
+            return SimpleIconsService.EMPTY_SVG;
+        }
+        String svg = simpleIconsService.getSimpleIconsSvg(link.getSimpleIconsIconSlug());
+        if (link.getHexFill() != null && !link.getHexFill().isBlank() && !svg.equals(SimpleIconsService.EMPTY_SVG)) {
+            svg = simpleIconsService.replaceSvgFill(svg, link.getHexFill());
+        }
+        return svg;
     }
 }

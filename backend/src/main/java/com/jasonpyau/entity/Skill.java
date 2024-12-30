@@ -63,7 +63,6 @@ public class Skill {
     public static final String SKILL_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
     public static final String SKILL_LINK_ERROR = "'link' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
     public static final String SKILL_TYPE_ERROR = "'type' should be one of the following: "+validTypes().toString();
-    public static final String SKILL_ICON_EMPTY_SVG = "";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,8 +1,10 @@
 package com.jasonpyau.controller;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -73,6 +75,15 @@ public class LinkController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getLinks(HttpServletRequest request) {
         return Response.success(Response.createBody("links", linkService.getLinks()));
+    }
+
+    @GetMapping(path = "/svg/{id}", produces = "image/svg+xml")
+    @RateLimit(RateLimit.CHEAP_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<String> getLinkIconSvg(HttpServletRequest request, @PathVariable("id") Integer id) {
+        return ResponseEntity.ok()
+                            .cacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
+                            .body(linkService.getLinkIconSvg(id));
     }
     
 }
