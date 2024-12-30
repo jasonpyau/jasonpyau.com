@@ -10,9 +10,12 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.jasonpyau.entity.Message;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ContactRepository;
 import com.jasonpyau.util.DateFormat;
 
@@ -30,14 +33,17 @@ public class ContactServiceTest {
     @Test
     void testDeleteMessage() {
         given(contactRepository.findById(1L)).willReturn(Optional.of(message1));
-        String errorMessage = contactService.deleteMessage(1L);
-        assertEquals(null, errorMessage);
+        assertDoesNotThrow(() -> {
+            contactService.deleteMessage(1L);
+        });
     }
 
     @Test
     void testDeleteMessage_Message_Id_Error() {
-        String errorMessage = contactService.deleteMessage(2L);
-        assertEquals(Message.MESSAGE_ID_ERROR, errorMessage);
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> {
+            contactService.deleteMessage(2L);
+        });
+        assertEquals(Message.MESSAGE_ID_ERROR, e.getMessage());
     }
 
 }

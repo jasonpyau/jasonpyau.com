@@ -1,10 +1,8 @@
 package com.jasonpyau.controller;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -43,7 +41,7 @@ public class ProjectController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> newProject(HttpServletRequest request, @Valid @RequestBody Project project) {
         projectService.newProject(project);
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        return Response.success();
     }
 
     @PatchMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
@@ -51,11 +49,8 @@ public class ProjectController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> updateProject(HttpServletRequest request, @RequestBody Project updateProject, @PathVariable("id") Integer id) {
-        String errorMessage = projectService.updateProject(updateProject, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        projectService.updateProject(updateProject, id);
+        return Response.success();
     }
 
     @DeleteMapping(path = "/delete/{id}", produces = "application/json")
@@ -63,11 +58,8 @@ public class ProjectController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteProject(HttpServletRequest request, @PathVariable("id") Integer id) {
-        String errorMessage = projectService.deleteProject(id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        projectService.deleteProject(id);
+        return Response.success();
     }
 
     @PostMapping(path = "{id}/skills/new", produces = "application/json")
@@ -77,11 +69,8 @@ public class ProjectController {
     public ResponseEntity<HashMap<String, Object>> newProjectSkill(HttpServletRequest request, 
                                                                     @PathVariable("id") Integer id, 
                                                                     @RequestParam(required = true) @Size(min = 1, max = 25, message = Skill.SKILL_NAME_ERROR) String skillName) {
-        String errorMessage = projectService.newProjectSkill(skillName, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        projectService.newProjectSkill(skillName, id);
+        return Response.success();
     }
 
     @DeleteMapping(path = "{id}/skills/delete", produces = "application/json")
@@ -91,19 +80,15 @@ public class ProjectController {
     public ResponseEntity<HashMap<String, Object>> deleteProjectSkill(HttpServletRequest request, 
                                                                     @PathVariable("id") Integer id, 
                                                                     @RequestParam(required = true) @Size(min = 1, max = 25, message = Skill.SKILL_NAME_ERROR) String skillName) {
-        String errorMessage = projectService.deleteProjectSkill(skillName, id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        projectService.deleteProjectSkill(skillName, id);
+        return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> getProjects(HttpServletRequest request) {
-        List<Project> projects = projectService.getProjects();
-        return new ResponseEntity<>(Response.createBody("projects", projects), HttpStatus.OK);
+        return Response.success(Response.createBody("projects", projectService.getProjects()));
     }
 
 }

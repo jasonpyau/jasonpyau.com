@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ import lombok.Setter;
 public class Metadata {
 
     public static final String METADATA_NAME_ERROR = "'name' should be between 1-50 characters.";
-    public static final String METADATA_ICON_LINK_ERROR = "'iconLink' should be between 4-500 characters.";
+    public static final String METADATA_ICON_LINK_ERROR = "'iconLink' should be between 7-500 characters and start with 'http://' or 'https://'.";
     public static final String METADATA_DESCRIPTION_ERROR = "'description' should be between 1-500 characters.";
     public static final String METADATA_KEYWORDS_ERROR = "'keywords' should be between 2-500 characters.";
 
@@ -42,7 +43,8 @@ public class Metadata {
     private String name;
 
     @Column(name = "icon_link", nullable = false)
-    @Size(min = 4, max = 500, message = METADATA_ICON_LINK_ERROR)
+    @Size(min = 7, max = 500, message = METADATA_ICON_LINK_ERROR)
+    @Pattern(regexp = "^(http|https):\\/\\/(.*)$", message = METADATA_ICON_LINK_ERROR)
     @NotBlank(message = METADATA_ICON_LINK_ERROR)
     private String iconLink;
 

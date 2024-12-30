@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.util.CacheUtil;
 import com.jasonpyau.util.DateFormat;
@@ -44,12 +45,11 @@ public class ExperienceService {
         experienceRepository.save(experience);
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String updateExperience(Experience updateExperience, Integer id) {
+    public void updateExperience(Experience updateExperience, Integer id) {
         Optional<Experience> optional = experienceRepository.findById(id);
         if (!optional.isPresent()) {
-            return Experience.EXPERIENCE_ID_ERROR;
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
         }
         Experience experience = optional.get();
         Patch.merge(updateExperience, experience, "id", "dateOrder");
@@ -58,15 +58,13 @@ public class ExperienceService {
             throw new ConstraintViolationException(violations);
         }
         newExperience(experience);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String deleteExperience(Integer id) {
+    public void deleteExperience(Integer id) {
         Optional<Experience> optional = experienceRepository.findById(id);
         if (!optional.isPresent()) {
-            return Experience.EXPERIENCE_ID_ERROR;
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
         }
         Experience experience = optional.get();
         Set<Skill> skills = experience.getSkills();
@@ -75,41 +73,36 @@ public class ExperienceService {
         }
         skills.clear();
         experienceRepository.delete(experience);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String newExperienceSkill(String skillName, Integer id) {
+    public void newExperienceSkill(String skillName, Integer id) {
         Optional<Experience> experienceOptional = experienceRepository.findById(id);
         if (!experienceOptional.isPresent()) {
-            return Experience.EXPERIENCE_ID_ERROR;
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
         }
         Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
         if (!skillOptional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         Experience experience = experienceOptional.get();
         experience.addSkill(skillOptional.get());
         experienceRepository.save(experience);
-        return null;
     }
 
-    // Returns error message if applicable, else null.
     @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
-    public String deleteExperienceSkill(String skillName, Integer id) {
+    public void deleteExperienceSkill(String skillName, Integer id) {
         Optional<Experience> experienceOptional = experienceRepository.findById(id);
         if (!experienceOptional.isPresent()) {
-            return Experience.EXPERIENCE_ID_ERROR;
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
         }
         Optional<Skill> skillOptional = skillService.getSkillByName(skillName);
         if (!skillOptional.isPresent()) {
-            return Skill.SKILL_NOT_FOUND_ERROR;
+            throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
         Experience experience = experienceOptional.get();
         experience.deleteSkill(skillOptional.get());
         experienceRepository.save(experience);
-        return null;
     }
 
     @Cacheable(cacheNames = CacheUtil.EXPERIENCE_CACHE)

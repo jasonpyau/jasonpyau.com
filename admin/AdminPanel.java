@@ -10,19 +10,13 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class AdminPanel {
 
     private static final Properties properties = new Properties();
     private static final Scanner scan = new Scanner(System.in);
-
-    private static void getMessages(String pageSize, String pageNum) {
-        apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
-    }
-
-    private static void deleteMessage(String id) {
-        apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
-    }
 
     private static void getMetadata() {
         apiCall("/metadata/get", "{ }", "GET", false);
@@ -168,10 +162,15 @@ public class AdminPanel {
                             "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
                             "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
         String simpleIconsIconSlug = scan.nextLine();
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.\n" +
+                            "Ex: '#ffffff' for white, '#000000' for black.");
+        String hexFill = scan.nextLine();
         String body = "{\"name\": \""+name+"\"," +
                         "\"type\": \""+type+"\"," +
                         "\"link\": \""+link+"\"," +
-                        "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"}";
+                        "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"," +
+                        "\"hexFill\": \""+hexFill+"\"}";
         boolean success = apiCall("/skills/new", body, "POST", true);
         if (success) {
             updateLastUpdated(false);
@@ -199,7 +198,13 @@ public class AdminPanel {
                             "Additionally, icons for Microsoft technologies and Java were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
                             "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
         input = scan.nextLine();
-        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
+        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.\n" +
+                            "Ex: '#ffffff' for white, '#000000' for black.\n" +
+                            "Note: You may need to disable browser cache and refresh to see the changes reflected on the site (or wait up to 30 minutes...)");
+        input = scan.nextLine();
+        sb.append("\"hexFill\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
         boolean success = apiCall("/skills/update", sb.toString(), "PATCH", true);
         if (success) {
             updateLastUpdated(false);
@@ -231,6 +236,82 @@ public class AdminPanel {
 
     private static void getAboutMe() {
         apiCall("/about_me/get", "{ }", "GET", false);
+    }
+
+    private static void newLink() {
+        System.out.println("Input the display name of the link:");
+        String name = scan.nextLine();
+        System.out.println("Input the href of the link:");
+        String href = scan.nextLine();
+        System.out.println("Input the Simple Icons slug for the link (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies (e.g. LinkedIn) were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
+        String simpleIconsIconSlug = scan.nextLine();
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.\n" +
+                            "Ex: '#ffffff' for white, '#000000' for black.");
+        String hexFill = scan.nextLine();
+        String body = "{\"name\": \""+name+"\"," +
+                        "\"href\": \""+href+"\"," +
+                        "\"simpleIconsIconSlug\": \""+simpleIconsIconSlug+"\"," +
+                        "\"hexFill\": \""+hexFill+"\"}";
+        boolean success = apiCall("/links/new", body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void updateLink() {
+        StringBuilder sb = new StringBuilder();
+        System.out.println("Input the id of the link you'd like to update:");
+        String id = scan.nextLine(), input;
+        System.out.println("You may leave blank any fields you don't want to update.");
+        System.out.println("You may input \"ERASE!!!\" to erase the current value for any optional fields.");
+        System.out.println("Input the display name of the link:");
+        input = scan.nextLine();
+        sb.append("{\"name\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the href of the link:");
+        input = scan.nextLine();
+        sb.append("\"href\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the Simple Icons slug for the link (optional). See here:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/master/slugs.md\n\n" +
+                            "Additionally, icons for Microsoft technologies (e.g. LinkedIn) were removed in Simple Icons version >= 7.0.0. You may also use:\n" +
+                            "https://github.com/simple-icons/simple-icons/blob/6.23.0/slugs.md\n");
+        input = scan.nextLine();
+        sb.append("\"simpleIconsIconSlug\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input the hex fill for the simpleIconsIconSlug given (optional).\n" +
+                            "If this value is not given and simpleIconsIconSlug was given, the hex value used will be from Simple Icons.\n" +
+                            "Ex: '#ffffff' for white, '#000000' for black.\n" +
+                            "Note: You may need to disable browser cache and refresh to see the changes reflected on the site (or wait up to 30 minutes...)");
+        input = scan.nextLine();
+        sb.append("\"hexFill\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
+        boolean success = apiCall("/links/update/"+id, sb.toString(), "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void moveLinkToTop() {
+        System.out.println("Input the id of the link you'd like to move to the top:");
+        String id = scan.nextLine();
+        boolean success = apiCall("/links/move_to_top/"+id, "{ }", "PATCH", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void deleteLink() {
+        System.out.println("Input the id of the link you'd like to delete:");
+        String id = scan.nextLine();
+        boolean success = apiCall("/links/delete/"+id, "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void getLinks() {
+        apiCall("/links/get", "{ }", "GET", false);
     }
 
     private static void newBlog() {
@@ -601,10 +682,69 @@ public class AdminPanel {
         return sb.toString();
     }
 
-    private static void printGetMessagesMenu() {
-        System.out.println("=======================");
-        System.out.println("     MESSAGES MENU     ");
-        System.out.println("=======================");
+    private static void printLinksMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("       LINKS MENU      ");
+            System.out.println("=======================");
+            System.out.println("1.) New Link");
+            System.out.println("2.) Update Link");
+            System.out.println("3.) Move Link to Top");
+            System.out.println("4.) Delete Link");
+            System.out.println("5.) Get all Links in Order");
+            System.out.println("6.) Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    newLink();
+                    break;
+                case "2":
+                    updateLink();
+                    break;
+                case "3":
+                    moveLinkToTop();
+                    break;
+                case "4":
+                    deleteLink();
+                    break;
+                case "5":
+                    getLinks();
+                    break;
+                case "6":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
+    private static void printMessagesMenu() {
+        while (true) {
+            System.out.println("=======================");
+            System.out.println("     MESSAGES MENU     ");
+            System.out.println("=======================");
+            System.out.println("1.)  Get Messages");
+            System.out.println("2.)  Delete Messages");
+            System.out.println("3.)  Back");
+            String input = scan.nextLine();
+            switch (input) {
+                case "1":
+                    getMessages();
+                    break;
+                case "2":
+                    deleteMessages();
+                    break;
+                case "3":
+                    return;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            printContinue();
+        }
+    }
+
+    private static void getMessages() {
         System.out.println("You may leave blank any field for the default value.");
         System.out.print("Input a page size: ");
         String pageSize = scan.nextLine();
@@ -615,7 +755,7 @@ public class AdminPanel {
         int pageNum = (pageNumInput.isBlank() || !pageNumInput.matches("\\d+")) ? 0 : Integer.parseInt(pageNumInput);
         System.out.println();
         while (true) {
-            getMessages(pageSize, String.valueOf(pageNum));
+            apiCall("/contact/get?pageSize="+pageSize+"&pageNum="+pageNum, "{ }", "GET", false);
             System.out.println("0.) Return");
             System.out.println("1.) Next page");
             String input = scan.nextLine();
@@ -627,14 +767,10 @@ public class AdminPanel {
         }
     }
 
-    private static void printDeleteMessagesMenu() {
-        System.out.println("=======================");
-        System.out.println("     MESSAGES MENU     ");
-        System.out.println("=======================");
+    private static void deleteMessages() {
         System.out.print("Input id of the message you would like to delete: ");
         String id = scan.nextLine();
-        System.out.println();
-        deleteMessage(id);
+        apiCall("/contact/delete/"+id, "{ }", "DELETE", true);
     }
 
     private static void printContinue() {
@@ -651,8 +787,8 @@ public class AdminPanel {
         System.out.println("3.)  Projects Menu");
         System.out.println("4.)  Skills Menu");
         System.out.println("5.)  About Me Menu");
-        System.out.println("6.)  Get Messages");
-        System.out.println("7.)  Delete Message");
+        System.out.println("6.)  Messages Menu");
+        System.out.println("7.)  Links Menu");
         System.out.println("8.)  Metadata Menu");
         System.out.println("9.)  Shut down Server");
         System.out.println("10.) Exit");
@@ -674,11 +810,11 @@ public class AdminPanel {
                 printAboutMeMenu();
                 break;
             case "6":
-                printGetMessagesMenu();
+                printMessagesMenu();
                 printContinue();
                 break;
             case "7":
-                printDeleteMessagesMenu();
+                printLinksMenu();
                 printContinue();
                 break;
             case "8":
@@ -700,16 +836,26 @@ public class AdminPanel {
         try {
             properties.load(new FileInputStream("AdminPanel.properties"));
             if (properties.getProperty("SERVER_URL") == null) {
-                System.out.println("WARNING: SERVER_URL is null");
+                System.out.println("ERROR: 'SERVER_URL' is null. Add the property 'SERVER_URL' to AdminPanel.properties.");
                 printContinue();
+                System.exit(1);
+            } else {
+                Matcher matcher = Pattern.compile("^(http|https):\\/\\/(.*)$").matcher(properties.getProperty("SERVER_URL"));
+                if (!matcher.find()) {
+                    System.out.println("ERROR: 'SERVER_URL' does not start with start with 'http://' or 'https://'.");
+                    printContinue();
+                    System.exit(1);
+                }
             }
             if (properties.getProperty("ADMIN_PANEL_PASSWORD") == null) {
-                System.out.println("WARNING: ADMIN_PANEL_PASSWORD is null");
+                System.out.println("ERROR: 'ADMIN_PANEL_PASSWORD' is null. Add the property 'ADMIN_PANEL_PASSWORD' to AdminPanel.properties.");
                 printContinue();
+                System.exit(1);
             }
         } catch (Exception e) {
-            System.out.println("Error in loading configuration file:\n"+e.getMessage());
+            System.out.println("ERROR: "+e.getMessage());
             printContinue();
+            System.exit(1);
         }
         while (true) {
             printMainMenu();

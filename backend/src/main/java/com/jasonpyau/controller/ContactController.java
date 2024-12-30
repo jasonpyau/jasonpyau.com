@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -39,7 +38,7 @@ public class ContactController {
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> sendMessage(HttpServletRequest request, @Valid @RequestBody Message message) {
         contactService.sendMessage(message);
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        return Response.success();
     }
 
     @DeleteMapping(path = "/delete/{id}", produces = "application/json")
@@ -47,11 +46,8 @@ public class ContactController {
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> deleteMessage(HttpServletRequest request, @PathVariable("id") Long id) {
-        String errorMessage = contactService.deleteMessage(id);
-        if (errorMessage != null) {
-            return Response.errorMessage(errorMessage, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return new ResponseEntity<>(Response.createBody(), HttpStatus.OK);
+        contactService.deleteMessage(id);
+        return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
@@ -62,6 +58,6 @@ public class ContactController {
         Page<Message> page = contactService.getMessages(paginationForm);
         String[] keys = {"messages", "totalPages", "hasNext"};
         Object[] values = {page.getContent(), page.getTotalPages(), page.hasNext()};
-        return new ResponseEntity<>(Response.createBody(keys, values), HttpStatus.OK);
+        return Response.success(Response.createBody(keys, values));
     }
 }

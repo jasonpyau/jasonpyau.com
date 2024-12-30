@@ -1,2 +1,4 @@
+# EX: http://localhost:9000
 SERVER_URL=YOUR_SERVER_URL_HERE
+# EX: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ADMIN_PANEL_PASSWORD=YOUR_ADMIN_PANEL_PASSWORD_HERE

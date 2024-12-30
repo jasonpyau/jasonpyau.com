@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,69 +19,71 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
-import com.jasonpyau.entity.Skill;
-import com.jasonpyau.service.SkillService;
+import com.jasonpyau.entity.Link;
+import com.jasonpyau.service.LinkService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping(path = "/skills")
-public class SkillController {
+@Validated
+@RequestMapping(path="/links")
+public class LinkController {
 
     @Autowired
-    private SkillService skillService;
+    private LinkService linkService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> newSkill(HttpServletRequest request, @Valid @RequestBody Skill skill) {
-        skillService.newSkill(skill);
+    public ResponseEntity<HashMap<String, Object>> newLink(HttpServletRequest request, @Valid @RequestBody Link link) {
+        linkService.newLink(link);
         return Response.success();
     }
 
-    @PatchMapping(path = "/update", consumes = "application/json", produces = "application/json")
+    @PatchMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> updateSkill(HttpServletRequest request, @RequestBody Skill skill) {
-        skillService.updateSkill(skill);
+    public ResponseEntity<HashMap<String, Object>> updateLink(HttpServletRequest request, @RequestBody Link updateLink, @PathVariable("id") Integer id) {
+        linkService.updateLink(updateLink, id);
         return Response.success();
     }
 
-
-    @DeleteMapping(path = "/delete/{name}", produces = "application/json")
+    @PatchMapping(path = "/move_to_top/{id}", produces = "application/json")
     @AuthorizeAdmin
     @RateLimit(RateLimit.ADMIN_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> deleteSkill(HttpServletRequest request, @PathVariable("name") String skillName) {
-        skillService.deleteSkill(skillName);
+    public ResponseEntity<HashMap<String, Object>> moveLinkToTop(HttpServletRequest request, @PathVariable("id") Integer id) {
+        linkService.moveLinkToTop(id);
+        return Response.success();
+    }
+
+    @DeleteMapping(path = "/delete/{id}", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> deleteLink(HttpServletRequest request, @PathVariable("id") Integer id) {
+        linkService.deleteLink(id);
         return Response.success();
     }
 
     @GetMapping(path = "/get", produces = "application/json")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> getSkills(HttpServletRequest request) {
-        return Response.success(Response.createBody("skills", skillService.getSkills()));
+    public ResponseEntity<HashMap<String, Object>> getLinks(HttpServletRequest request) {
+        return Response.success(Response.createBody("links", linkService.getLinks()));
     }
 
-    @GetMapping(path = "/svg/{name}", produces = "image/svg+xml")
+    @GetMapping(path = "/svg/{id}", produces = "image/svg+xml")
     @RateLimit(RateLimit.CHEAP_TOKEN)
     @CrossOrigin
-    public ResponseEntity<String> getSkillIconSvg(HttpServletRequest request, @PathVariable("name") String skillName) {
+    public ResponseEntity<String> getLinkIconSvg(HttpServletRequest request, @PathVariable("id") Integer id) {
         return ResponseEntity.ok()
                             .cacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
-                            .body(skillService.getSkillIconSvg(skillName));
-    }
-
-    @GetMapping(path = "/valid_types", produces = "application/json")
-    @RateLimit(RateLimit.DEFAULT_TOKEN)
-    @CrossOrigin
-    public ResponseEntity<HashMap<String, Object>> validTypes(HttpServletRequest request) {
-        return Response.success(Response.createBody("validTypes", skillService.validTypes()));
+                            .body(linkService.getLinkIconSvg(id));
     }
     
 }

@@ -55,17 +55,13 @@ public class MetadataService {
         return metadataRepository.save(metadata);
     }
 
-    private void validateMetadata(Metadata metadata) {
+    public Metadata updateWithForm(MetadataUpdateForm metadataUpdateForm) {
+        Metadata metadata = getMetadata();
+        Patch.merge(metadataUpdateForm, metadata, "id", "lastUpdated", "views");
         Set<ConstraintViolation<Metadata>> violations = validator.validate(metadata);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    public Metadata updateWithForm(MetadataUpdateForm metadataUpdateForm) {
-        Metadata metadata = getMetadata();
-        Patch.merge(metadataUpdateForm, metadata, "id", "lastUpdated", "views");
-        validateMetadata(metadata);
         return metadataRepository.save(metadata);
     }
 

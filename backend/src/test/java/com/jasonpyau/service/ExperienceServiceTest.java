@@ -9,12 +9,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.BDDMockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
 
 import jakarta.validation.ConstraintViolationException;
@@ -47,8 +49,10 @@ public class ExperienceServiceTest {
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type("Language")
-                            .simpleIconsIconSlug("spring")
+                            .type(Skill.Type.LANGUAGE)
+                            .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
+                            .simpleIconsIconSlug("java")
+                            .hexFill("#ffffff")
                             .build();
 
     @Test
@@ -59,8 +63,9 @@ public class ExperienceServiceTest {
         updateExperience.setStartDate("09/2024");
         updateExperience.setEndDate("09/2024");
         updateExperience.setPresent(true);
-        String errorMessage = experienceService.updateExperience(updateExperience, 1);
-        assertEquals(null, errorMessage);
+        assertDoesNotThrow(() -> {
+            experienceService.updateExperience(updateExperience, 1);
+        });
     }
 
     @Test
@@ -71,23 +76,28 @@ public class ExperienceServiceTest {
         updateExperience.setStartDate("09/2024");
         updateExperience.setEndDate("Not an end date");
         updateExperience.setPresent(true);
-        assertThrows(ConstraintViolationException.class, () -> {
+        ConstraintViolationException e = assertThrows(ConstraintViolationException.class, () -> {
             experienceService.updateExperience(updateExperience, 1);
         });
+        assertEquals(e.getConstraintViolations().size(), 1);
+        assertEquals(e.getConstraintViolations().iterator().next().getMessage(), Experience.EXPERIENCE_END_DATE_ERROR);
     }
 
     @Test
     public void testNewExperienceSkill() {
         given(experienceRepository.findById(1)).willReturn(Optional.of(experience));
         given(skillService.getSkillByName("Java")).willReturn(Optional.of(skill));
-        String errorMessage = experienceService.newExperienceSkill("Java", 1);
-        assertEquals(null, errorMessage);
+        assertDoesNotThrow(() -> {
+            experienceService.newExperienceSkill("Java", 1);
+        });
     }
 
     @Test
     public void testNewExperienceSkill_SkillNotFound_Error() {
         given(experienceRepository.findById(1)).willReturn(Optional.of(experience));
-        String errorMessage = experienceService.newExperienceSkill("Java", 1);
-        assertEquals(Skill.SKILL_NOT_FOUND_ERROR, errorMessage);
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> {
+            experienceService.newExperienceSkill("Java", 1);
+        });
+        assertEquals(Skill.SKILL_NOT_FOUND_ERROR, e.getMessage());
     }
 }

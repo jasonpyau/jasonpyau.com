@@ -47,8 +47,10 @@ public class ProjectControllerTest {
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type("Language")
+                            .type(Skill.Type.LANGUAGE)
+                            .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("spring")
+                            .hexFill("#ffffff")
                             .build();
     @BeforeEach
     public void setUp() {
@@ -73,8 +75,10 @@ public class ProjectControllerTest {
             .andExpect(jsonPath("$.projects[0].skills", hasSize(1)))
             .andExpect(jsonPath("$.projects[0].skills[0].id", is(skill.getId())))
             .andExpect(jsonPath("$.projects[0].skills[0].name", is(skill.getName())))
-            .andExpect(jsonPath("$.projects[0].skills[0].type", is(skill.getType())))
+            .andExpect(jsonPath("$.projects[0].skills[0].type", is(skill.getType().getJsonValue())))
+            .andExpect(jsonPath("$.projects[0].skills[0].link", is(skill.getLink())))
             .andExpect(jsonPath("$.projects[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.projects[0].skills[0].hexFill", is(skill.getHexFill())))
             .andExpect(jsonPath("$.projects[0].link", is(project.getLink())));
     }
 }
