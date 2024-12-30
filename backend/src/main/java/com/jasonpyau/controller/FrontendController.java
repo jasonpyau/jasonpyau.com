@@ -19,6 +19,7 @@ import com.jasonpyau.entity.Metadata;
 import com.jasonpyau.form.BlogSearchForm;
 import com.jasonpyau.service.AboutMeService;
 import com.jasonpyau.service.BlogService;
+import com.jasonpyau.service.LinkService;
 import com.jasonpyau.service.MetadataService;
 import com.jasonpyau.util.NumberFormat;
 
@@ -34,6 +35,8 @@ public class FrontendController {
     private BlogService blogService;
     @Autowired
     private AboutMeService aboutMeService;
+    @Autowired
+    private LinkService linkService;
     @Autowired
     private Environment env;
     
@@ -54,6 +57,7 @@ public class FrontendController {
     @RateLimit(RateLimit.DEFAULT_TOKEN)
     public String links(HttpServletRequest request, Model model) {
         addMetadata(model);
+        model.addAttribute("links", linkService.getLinks());
         return "links";
     }
 
