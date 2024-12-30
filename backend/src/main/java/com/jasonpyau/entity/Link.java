@@ -29,7 +29,7 @@ public class Link {
 
     public static final String LINK_ID_ERROR = "Invalid 'id', link not found.";
     public static final String LINK_NAME_ERROR = "'name' should be between 1-30 characters.";
-    public static final String LINK_HREF_ERROR = "'href' should be between 7-500 characters and start with 'http://' or 'https://'.";
+    public static final String LINK_HREF_ERROR = "'href' should be between 7-500 characters and start with 'http://' or 'https://' or 'mailto:'.";
     public static final String LINK_SIMPLE_ICONS_ICON_SLUG_ERROR = "'simpleIconsIconSlug' should be between 0-50 characters.";
     public static final String LINK_HEX_FILL_ERROR = "'hexFill' should be either blank or in the form '#xxx' or '#xxxxxx', where x is a hex digit.";
     
@@ -45,7 +45,7 @@ public class Link {
 
     @Column(name = "href", nullable = false)
     @Size(min = 7, max = 500, message = LINK_HREF_ERROR)
-    @Pattern(regexp = "^(http|https):\\/\\/(.*)$", message = LINK_HREF_ERROR)
+    @Pattern(regexp = "^((http|https):\\/\\/|mailto:)(.*)$", message = LINK_HREF_ERROR)
     @NotBlank(message = LINK_HREF_ERROR)
     private String href;
 
