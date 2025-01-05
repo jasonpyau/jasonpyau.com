@@ -4,8 +4,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Experience.ExperienceType;
 import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.service.ExperienceService;
@@ -36,14 +36,14 @@ public class ExperienceControllerTest {
     private Experience experience = Experience.builder()
                                         .id(1)
                                         .position("Software Engineer Intern")
-                                        .company("Meta")
+                                        .organization("Meta")
                                         .location("Menlo Park, CA")
                                         .startDate("05/2024")
                                         .endDate("08/2024")
                                         .present(false)
                                         .body("Software Engineer Intern working on engineering software at Meta as an Intern.")
                                         .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Meta_Platforms_Inc._logo_%28cropped%29.svg/75px-Meta_Platforms_Inc._logo_%28cropped%29.svg.png")
-                                        .companyLink(null)
+                                        .organizationLink(null)
                                         .build();
 
     private Skill skill = Skill.builder()
@@ -62,29 +62,32 @@ public class ExperienceControllerTest {
     
     @Test
     public void testGetExperiences() throws Exception {
-        List<Experience> experiences = new ArrayList<>(Arrays.asList(experience));
+        HashMap<String, List<Experience>> experiences = new HashMap<>();
+        experiences.put(ExperienceType.WORK_EXPERIENCE.name(), List.of(experience));
+        experiences.put(ExperienceType.EDUCATION.name(), List.of());
         given(experienceService.getExperiences()).willReturn(experiences);
         mockMvc.perform(MockMvcRequestBuilders.get("/experiences/get")
             .header("X-Forwarded-For", "localhost")
             .header("CF-Connecting-IP", "localhost"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.experiences", hasSize(1)))
-            .andExpect(jsonPath("$.experiences[0].id", is(experience.getId())))
-            .andExpect(jsonPath("$.experiences[0].position", is(experience.getPosition())))
-            .andExpect(jsonPath("$.experiences[0].company", is(experience.getCompany())))
-            .andExpect(jsonPath("$.experiences[0].location", is(experience.getLocation())))
-            .andExpect(jsonPath("$.experiences[0].startDate", is(experience.getStartDate())))
-            .andExpect(jsonPath("$.experiences[0].endDate", is(experience.getEndDate())))
-            .andExpect(jsonPath("$.experiences[0].present", is(experience.getPresent())))
-            .andExpect(jsonPath("$.experiences[0].body", is(experience.getBody())))
-            .andExpect(jsonPath("$.experiences[0].skills", hasSize(1)))
-            .andExpect(jsonPath("$.experiences[0].skills[0].id", is(skill.getId())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].name", is(skill.getName())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].type", is(skill.getType().getJsonValue())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].link", is(skill.getLink())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
-            .andExpect(jsonPath("$.experiences[0].skills[0].hexFill", is(skill.getHexFill())))
-            .andExpect(jsonPath("$.experiences[0].logoLink", is(experience.getLogoLink())))
-            .andExpect(jsonPath("$.experiences[0].companyLink", is(experience.getCompanyLink())));
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE", hasSize(1)))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].id", is(experience.getId())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].position", is(experience.getPosition())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].organization", is(experience.getOrganization())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].location", is(experience.getLocation())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].startDate", is(experience.getStartDate())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].endDate", is(experience.getEndDate())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].present", is(experience.getPresent())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].body", is(experience.getBody())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills", hasSize(1)))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].id", is(skill.getId())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].name", is(skill.getName())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].type", is(skill.getType().getJsonValue())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].link", is(skill.getLink())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].simpleIconsIconSlug", is(skill.getSimpleIconsIconSlug())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].hexFill", is(skill.getHexFill())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].logoLink", is(experience.getLogoLink())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].organizationLink", is(experience.getOrganizationLink())))
+            .andExpect(jsonPath("$.experiences.EDUCATION", hasSize(0)));
     }
 }

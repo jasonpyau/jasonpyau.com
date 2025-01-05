@@ -1,12 +1,16 @@
 package com.jasonpyau.entity;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.jasonpyau.util.DateFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,31 +39,47 @@ import lombok.Setter;
 @Table(name="experiences", indexes = @Index(name = "date_order_ind", columnList = "date_order"))
 public class Experience {
 
+    public enum ExperienceType {
+        WORK_EXPERIENCE,
+        EDUCATION;
+    }
+
     public static final String EXPERIENCE_ID_ERROR = "Invalid 'id', experience not found.";
-    public static final String EXPERIENCE_POSITION_ERROR = "'position' should be between 1-30 characters.";
-    public static final String EXPERIENCE_COMPANY_ERROR = "'company' should be between 1-30 characters.";
+    public static final String EXPERIENCE_POSITION_ERROR = "'position' should be between 1-50 characters.";
+    public static final String EXPERIENCE_ORGANIZATION_ERROR = "'organization' should be between 1-50 characters.";
     public static final String EXPERIENCE_LOCATION_ERROR = "'location' should be between 1-30 characters.";
     public static final String EXPERIENCE_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
     public static final String EXPERIENCE_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
     public static final String EXPERIENCE_PRESENT_ERROR = "'present' should be true or false.";
     public static final String EXPERIENCE_BODY_ERROR = "'body' should be between 1-1000 characters.";
     public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 7-500 characters and start with 'http://' or 'https://'.";
-    public static final String EXPERIENCE_COMPANY_LINK_ERROR = "'companyLink' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
+    public static final String EXPERIENCE_ORGANIZATION_LINK_ERROR = "'organizationLink' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
+    public static final String EXPERIENCE_TYPE_ERROR = "'type' should be one of the following: "+validTypes()
+                                                                                                .stream()
+                                                                                                .map(type -> String.format("'%s'", type))
+                                                                                                .toList()
+                                                                                                .toString()+".";
+    public static final String EXPERIENCE_TYPE_NULL_ERROR = "'type' should not be null.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = EXPERIENCE_TYPE_NULL_ERROR)
+    private ExperienceType type;
+
     @Column(name = "position", nullable = false)
-    @Size(min = 1, max = 30, message = EXPERIENCE_POSITION_ERROR)
+    @Size(min = 1, max = 50, message = EXPERIENCE_POSITION_ERROR)
     @NotBlank(message = EXPERIENCE_POSITION_ERROR)
     private String position;
 
-    @Column(name = "company", nullable = false)
-    @Size(min = 1, max = 30, message = EXPERIENCE_COMPANY_ERROR)
-    @NotBlank(message = EXPERIENCE_COMPANY_ERROR)
-    private String company;
+    @Column(name = "organization", nullable = false)
+    @Size(min = 1, max = 50, message = EXPERIENCE_ORGANIZATION_ERROR)
+    @NotBlank(message = EXPERIENCE_ORGANIZATION_ERROR)
+    private String organization;
 
     @Column(name = "location", nullable = false)
     @Size(min = 1, max = 30, message = EXPERIENCE_LOCATION_ERROR)
@@ -101,10 +121,10 @@ public class Experience {
     @NotBlank(message = EXPERIENCE_LOGO_LINK_ERROR)
     private String logoLink;
 
-    @Column(name = "company_link", nullable = true)
-    @Size(max = 250, message = EXPERIENCE_COMPANY_LINK_ERROR)
-    @Pattern(regexp = "^([\\s]*|(http|https):\\/\\/(.*))$", message = EXPERIENCE_COMPANY_LINK_ERROR)
-    private String companyLink;
+    @Column(name = "organization_link", nullable = true)
+    @Size(max = 250, message = EXPERIENCE_ORGANIZATION_LINK_ERROR)
+    @Pattern(regexp = "^([\\s]*|(http|https):\\/\\/(.*))$", message = EXPERIENCE_ORGANIZATION_LINK_ERROR)
+    private String organizationLink;
 
     public void createOrder() {
         String[] startSplit = this.startDate.split("/", 2);
@@ -136,5 +156,9 @@ public class Experience {
     public void deleteSkill(Skill skill) {
         skill.getExperiences().remove(this);
         this.skills.remove(skill);
+    }
+
+    public static List<String> validTypes() {
+        return Arrays.stream(ExperienceType.values()).map(ExperienceType::name).toList();
     }
 }

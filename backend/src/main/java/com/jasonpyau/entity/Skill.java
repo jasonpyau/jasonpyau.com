@@ -1,6 +1,6 @@
 package com.jasonpyau.entity;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -122,10 +122,6 @@ public class Skill {
     private final Set<Experience> experiences = new HashSet<>();
 
     public static List<String> validTypes() {
-        ArrayList<String> validTypes = new ArrayList<>();
-        for (SkillType type : SkillType.values()) {
-            validTypes.add(type.getJsonValue());
-        }
-        return validTypes;
+        return Arrays.stream(SkillType.values()).map(SkillType::getJsonValue).collect(Collectors.toList());
     }
 }

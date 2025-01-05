@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Experience.ExperienceType;
 import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.util.Response;
 
@@ -73,6 +75,8 @@ public class ValidationExceptionHandler {
             InvalidFormatException invalidFormatException = (InvalidFormatException)cause;
             if (invalidFormatException.getTargetType().equals(SkillType.class)) {
                 return Response.errorMessage(Skill.SKILL_TYPE_ERROR, HttpStatus.NOT_ACCEPTABLE);
+            } else if (invalidFormatException.getTargetType().equals(ExperienceType.class)) {
+                return Response.errorMessage(Experience.EXPERIENCE_TYPE_ERROR, HttpStatus.NOT_ACCEPTABLE);
             }
         }
         return Response.errorMessage(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);

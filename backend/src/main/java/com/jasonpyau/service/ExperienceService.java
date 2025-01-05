@@ -1,5 +1,6 @@
 package com.jasonpyau.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Experience.ExperienceType;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.util.CacheUtil;
@@ -105,9 +107,17 @@ public class ExperienceService {
         experienceRepository.save(experience);
     }
 
+    public List<String> validTypes() {
+        return Experience.validTypes();
+    }
+
     @Cacheable(cacheNames = CacheUtil.EXPERIENCE_CACHE)
-    public List<Experience> getExperiences() {
-        return experienceRepository.findAllByDate();
+    public HashMap<String, List<Experience>> getExperiences() {
+        HashMap<String, List<Experience>> res = new HashMap<>();
+        for (ExperienceType experienceType : ExperienceType.values()) {
+            res.put(experienceType.name(), experienceRepository.findAllByTypeNameOrderedByDate(experienceType.name()));
+        }
+        return res;
     }
 
     @Scheduled(fixedRate = 8, timeUnit = TimeUnit.HOURS)
@@ -116,7 +126,7 @@ public class ExperienceService {
         List<Experience> experiences = experienceRepository.findAll();
         for (Experience experience : experiences) {
             if (experience.syncEndDate()) {
-                System.out.printf("%s: Synced endDate for: '%s' at '%s'\n", DateFormat.MMddyyyyhhmmss(), experience.getPosition(), experience.getCompany());
+                System.out.printf("%s: Synced endDate for: '%s' at '%s'\n", DateFormat.MMddyyyyhhmmss(), experience.getPosition(), experience.getOrganization());
                 experienceRepository.save(experience);
             }
         }

@@ -90,4 +90,11 @@ public class ExperienceController {
     public ResponseEntity<HashMap<String, Object>> getExperiences(HttpServletRequest request) {
         return Response.success(Response.createBody("experiences", experienceService.getExperiences()));
     }
+
+    @GetMapping(path = "/valid_types", produces = "application/json")
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> validTypes(HttpServletRequest request) {
+        return Response.success(Response.createBody("validTypes", experienceService.validTypes()));
+    }
 }

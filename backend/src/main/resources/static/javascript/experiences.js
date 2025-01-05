@@ -25,10 +25,10 @@ addEventListener('DOMContentLoaded', async(e) => {
                 <div class="d-flex mx-4">
                     <div class="w-100 mx-2">
                         <div class="fs-5 my-2">
-                            ${experience.companyLink ? `
-                                <a class="fw-bold text-decoration-underline text-white" id="Company" href="${experience.companyLink}" target="_blank">${experience.company}</a>
+                            ${experience.organizationLink ? `
+                                <a class="fw-bold text-decoration-underline text-white" id="Organization" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
                                 `:`
-                                <span class="fw-bold text-decoration-underline" id="Company">${experience.company}</span>
+                                <span class="fw-bold text-decoration-underline" id="Organization">${experience.organization}</span>
                             `}
                             <span class="fw-semibold" id="Location">- ${experience.location}</span>   
                         </div>
