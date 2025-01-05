@@ -811,15 +811,12 @@ public class AdminPanel {
                 break;
             case "6":
                 printMessagesMenu();
-                printContinue();
                 break;
             case "7":
                 printLinksMenu();
-                printContinue();
                 break;
             case "8":
                 printMetadataMenu();
-                printContinue();
                 break;
             case "9":
                 shutDownServer();

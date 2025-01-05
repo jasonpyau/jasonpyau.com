@@ -24,7 +24,7 @@ public class SimpleIconsService {
 
     public static final String EMPTY_SVG = "";
     
-    public final JsonNode v6_23_0IconsData = getV6_23_0IconsData();
+    private final JsonNode v6_23_0IconsData = getV6_23_0IconsData();
 
     private JsonNode getV6_23_0IconsData() {
         ObjectMapper objectMapper = new ObjectMapper();
