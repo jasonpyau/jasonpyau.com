@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.jasonpyau.entity.Project;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.repository.ProjectRepository;
 import com.jasonpyau.service.ProjectService;
 
@@ -47,7 +48,7 @@ public class ProjectControllerTest {
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type(Skill.Type.LANGUAGE)
+                            .type(SkillType.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("spring")
                             .hexFill("#ffffff")

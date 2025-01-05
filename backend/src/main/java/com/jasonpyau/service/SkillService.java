@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.exception.ResourceAlreadyExistsException;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.SkillRepository;
@@ -68,7 +69,7 @@ public class SkillService {
     @Cacheable(cacheNames = CacheUtil.SKILL_CACHE)
     public HashMap<String, List<Skill>> getSkills() {
         HashMap<String, List<Skill>> res = new HashMap<>();
-        for (Skill.Type type : Skill.Type.values()) {
+        for (SkillType type : SkillType.values()) {
             res.put(type.getJsonValue(), skillRepository.findAllSkillsByTypeName(type.name()));
         }
         return res;

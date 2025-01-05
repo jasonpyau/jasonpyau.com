@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.service.SkillService;
 
 @WebMvcTest(SkillController.class)
@@ -30,7 +31,7 @@ public class SkillControllerTest {
     private Skill skill1 = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type(Skill.Type.LANGUAGE)
+                            .type(SkillType.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
                             .hexFill("#ffffff")
@@ -39,7 +40,7 @@ public class SkillControllerTest {
     private Skill skill2 = Skill.builder()
                             .id(2)
                             .name("Git")
-                            .type(Skill.Type.SOFTWARE)
+                            .type(SkillType.SOFTWARE)
                             .link("https://en.wikipedia.org/wiki/Git")
                             .simpleIconsIconSlug("git")
                             .hexFill("#ffffff")
