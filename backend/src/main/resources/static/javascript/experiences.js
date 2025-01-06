@@ -49,10 +49,12 @@ function loadExperiences(experiences, type) {
                                 `}
                                 <span class="fw-semibold" id="Location">- ${experience.location}</span>   
                             </div>
-                            <div class="fs-6 my-1 fw-semibold fst-italic" id="DateContainer">
+                            <div class="fs-6 my-1 fw-semibold" id="DateContainer">
                                 <span id="StartDate">${experience.startDate}</span>
                                 <span>-</span>
                                 <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
+                                <span>·</span>
+                                <span class="fst-italic" id="TimeElasped">${getYrsAndMos(experience.startDate, experience.endDate)}</span>
                             </div>
                             <div class="fs-6 my-4 fw-semibold me-3" id="Body">
                                 ${experience.body}
@@ -79,7 +81,7 @@ function loadExperiences(experiences, type) {
                             <div class="fs-5 my-1">
                                 ${experience.position}
                             </div>
-                            <div class="fs-6 my-1 fw-semibold fst-italic" id="DateContainer">
+                            <div class="fs-6 my-1 fw-semibold" id="DateContainer">
                                 <span id="StartDate">${experience.startDate}</span>
                                 <span>-</span>
                                 <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
@@ -112,4 +114,23 @@ function loadExperiences(experiences, type) {
         }
     });
     spinner.style.display = "none";
+}
+
+function getYrsAndMos(startDate, endDate) {
+    const startMonth = +startDate.substring(0, 2), startYear = +startDate.substring(3);
+    const endMonth = +endDate.substring(0, 2), endYear = +endDate.substring(3);
+    // If startDate = endDate, diffInMonths = 1.
+    const diffInMonths = (endYear-startYear)*12+(endMonth-startMonth)+1;
+    const years = Math.floor(diffInMonths/12), months = diffInMonths%12;
+    if (years > 0) {
+        if (months > 0) {
+            return `${years} yr${years === 1 ? '' : 's'} ${months} mo${months === 1 ? '' : 's'}`;
+        } else {
+            return `${years} yr${years === 1 ? '' : 's'}`;
+        }
+    } else if (months > 0) {
+        return `${months} mo${months === 1 ? '' : 's'}`;
+    } else {
+        return "0 mos";
+    }
 }
