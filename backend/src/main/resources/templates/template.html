@@ -32,15 +32,16 @@
               <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                   <li class="my-auto mx-2 nav-item dropdown">
-                    <a class="fs-4 fw-semibold nav-link dropdown-toggle" href="/#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Home" id="nav-link-home">
+                    <a class="fs-4 fw-semibold nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Home" id="nav-link-home">
                       Home
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="/#AboutMe" title="About Me">About Me</a></li>
-                      <li><a class="dropdown-item" href="/#Experiences" title="Experiences">Experiences</a></li>
-                      <li><a class="dropdown-item" href="/#Projects" title="Projects">Projects</a></li>
-                      <li><a class="dropdown-item" href="/#Skills" title="Skills">Skills</a></li>
-                      <li><a class="dropdown-item" href="/#Contact" title="Contact Me">Contact Me</a></li>
+                      <li><a class="dropdown-item" href="/#AboutMe" onclick="scrollToHeader('AboutMe')" title="About Me">About Me</a></li>
+                      <li><a class="dropdown-item" href="/#Experience" onclick="scrollToHeader('Experience')" title="Experience">Experience</a></li>
+                      <li><a class="dropdown-item" href="/#Projects" onclick="scrollToHeader('Projects')" title="Projects">Projects</a></li>
+                      <li><a class="dropdown-item" href="/#Skills" onclick="scrollToHeader('Skills')" title="Skills">Skills</a></li>
+                      <li><a class="dropdown-item" href="/#Education" onclick="scrollToHeader('Education')" title="Skills">Education</a></li>
+                      <li><a class="dropdown-item" href="/#Contact" onclick="scrollToHeader('Contact')" title="Contact Me">Contact Me</a></li>
                     </ul>
                   </li>
                   <li class="my-auto mx-2 nav-item">
@@ -114,6 +115,14 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/javascript/apiCall.js" type="module"></script>
         <script src="/javascript/repoStats.js" type="module"></script>
+        <script>
+            // This script guarantees that the header is scrolled to.
+            window.scrollToHeader = function(headerId) {
+                if (document.getElementById(headerId)) {
+                    document.getElementById(headerId).scrollIntoView({behavior: 'smooth'});
+                }
+            }
+        </script>
     </th:block>
 
 </body>

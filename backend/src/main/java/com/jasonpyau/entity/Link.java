@@ -45,7 +45,7 @@ public class Link {
 
     @Column(name = "href", nullable = false)
     @Size(min = 7, max = 500, message = LINK_HREF_ERROR)
-    @Pattern(regexp = "^((http|https):\\/\\/|mailto:)(.*)$", message = LINK_HREF_ERROR)
+    @Pattern(regexp = "^((http|https):\\/\\/|mailto:|\\/)(.*)$", message = LINK_HREF_ERROR)
     @NotBlank(message = LINK_HREF_ERROR)
     private String href;
 

@@ -1,6 +1,6 @@
 package com.jasonpyau.entity;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +43,7 @@ import lombok.Setter;
 @Table(name = "skills", indexes = @Index(name = "type_name_ind", columnList = "type, name"))
 public class Skill {
 
-    public enum Type {
+    public enum SkillType {
         LANGUAGE("Language"),
         FRAMEWORK_OR_LIBRARY("Framework/Library"),
         DATABASE("Database"),
@@ -53,7 +53,7 @@ public class Skill {
         @JsonValue
         private final String jsonValue;
 
-        Type(String jsonValue) {
+        SkillType(String jsonValue) {
             this.jsonValue = jsonValue;
         }
     }
@@ -84,7 +84,7 @@ public class Skill {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = SKILL_TYPE_NULL_ERROR)
-    private Type type;
+    private SkillType type;
 
     @Column(name = "link", nullable = true)
     @Size(max = 250, message = SKILL_LINK_ERROR)
@@ -122,10 +122,6 @@ public class Skill {
     private final Set<Experience> experiences = new HashSet<>();
 
     public static List<String> validTypes() {
-        ArrayList<String> validTypes = new ArrayList<>();
-        for (Type type : Type.values()) {
-            validTypes.add(type.getJsonValue());
-        }
-        return validTypes;
+        return Arrays.stream(SkillType.values()).map(SkillType::getJsonValue).collect(Collectors.toList());
     }
 }

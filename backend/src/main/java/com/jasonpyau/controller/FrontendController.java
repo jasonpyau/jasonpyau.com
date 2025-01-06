@@ -10,6 +10,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -91,7 +92,7 @@ public class FrontendController {
     @GetMapping({"/resume", "/resume/"})
     public String resume() throws IOException {
         String resumeLink = env.getProperty("com.jasonpyau.resume-link");
-        if (resumeLink != null && !resumeLink.isBlank()) {
+        if (StringUtils.hasText(resumeLink)) {
             return "redirect:"+resumeLink;
         }
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

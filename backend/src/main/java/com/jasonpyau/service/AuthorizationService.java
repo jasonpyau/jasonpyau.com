@@ -2,6 +2,7 @@ package com.jasonpyau.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,6 +24,6 @@ public class AuthorizationService {
             return false;
         }
         String password = request.getHeader("Authorization");
-        return (password != null && !password.isBlank() && password.equals(appPassword));
+        return (StringUtils.hasText(password) && password.equals(appPassword));
     }
 }

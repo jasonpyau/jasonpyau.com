@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.exception.ResourceAlreadyExistsException;
 import com.jasonpyau.repository.SkillRepository;
 
@@ -33,7 +34,7 @@ public class SkillServiceTest {
     private Skill java = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type(Skill.Type.LANGUAGE)
+                            .type(SkillType.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
                             .hexFill("#ffffff")
@@ -42,7 +43,7 @@ public class SkillServiceTest {
     private Skill springBoot = Skill.builder()
                             .id(1)
                             .name("Spring Boot")
-                            .type(Skill.Type.FRAMEWORK_OR_LIBRARY)
+                            .type(SkillType.FRAMEWORK_OR_LIBRARY)
                             .link("https://en.wikipedia.org/wiki/Spring_Boot")
                             .simpleIconsIconSlug("springboot")
                             .hexFill("#ffffff")
@@ -50,7 +51,7 @@ public class SkillServiceTest {
 
     @Test
     public void newSkill_SkillAlreadyExistsError() {
-        given(skillRepository.findSkillByName("Java")).willReturn(Optional.of(java));
+        given(skillRepository.findByName("Java")).willReturn(Optional.of(java));
         ResourceAlreadyExistsException e = assertThrows(ResourceAlreadyExistsException.class, () -> {
             skillService.newSkill(java);
         });
@@ -58,21 +59,21 @@ public class SkillServiceTest {
     }
 
     @Test void getSkills() {
-        given(skillRepository.findAllSkillsByTypeName(Skill.Type.LANGUAGE.name())).willReturn(List.of(java));
-        given(skillRepository.findAllSkillsByTypeName(Skill.Type.FRAMEWORK_OR_LIBRARY.name())).willReturn(List.of(springBoot));
+        given(skillRepository.findAllByTypeNameOrderedByName(SkillType.LANGUAGE.name())).willReturn(List.of(java));
+        given(skillRepository.findAllByTypeNameOrderedByName(SkillType.FRAMEWORK_OR_LIBRARY.name())).willReturn(List.of(springBoot));
         assertDoesNotThrow(() -> {
             HashMap<String, List<Skill>> skills = skillService.getSkills();
             assertNotEquals(skills, null);
-            assertNotEquals(skills.get(Skill.Type.LANGUAGE.getJsonValue()), null);
-            assertEquals(skills.get(Skill.Type.LANGUAGE.getJsonValue()).size(), 1);
-            assertEquals(skills.get(Skill.Type.LANGUAGE.getJsonValue()).get(0), java);
-            assertNotEquals(skills.get(Skill.Type.FRAMEWORK_OR_LIBRARY.getJsonValue()), null);
-            assertEquals(skills.get(Skill.Type.FRAMEWORK_OR_LIBRARY.getJsonValue()).size(), 1);
-            assertEquals(skills.get(Skill.Type.FRAMEWORK_OR_LIBRARY.getJsonValue()).get(0), springBoot);
-            assertNotEquals(skills.get(Skill.Type.DATABASE.getJsonValue()), null);
-            assertEquals(skills.get(Skill.Type.DATABASE.getJsonValue()).size(), 0);
-            assertNotEquals(skills.get(Skill.Type.SOFTWARE.getJsonValue()), null);
-            assertEquals(skills.get(Skill.Type.SOFTWARE.getJsonValue()).size(), 0);
+            assertNotEquals(skills.get(SkillType.LANGUAGE.getJsonValue()), null);
+            assertEquals(skills.get(SkillType.LANGUAGE.getJsonValue()).size(), 1);
+            assertEquals(skills.get(SkillType.LANGUAGE.getJsonValue()).get(0), java);
+            assertNotEquals(skills.get(SkillType.FRAMEWORK_OR_LIBRARY.getJsonValue()), null);
+            assertEquals(skills.get(SkillType.FRAMEWORK_OR_LIBRARY.getJsonValue()).size(), 1);
+            assertEquals(skills.get(SkillType.FRAMEWORK_OR_LIBRARY.getJsonValue()).get(0), springBoot);
+            assertNotEquals(skills.get(SkillType.DATABASE.getJsonValue()), null);
+            assertEquals(skills.get(SkillType.DATABASE.getJsonValue()).size(), 0);
+            assertNotEquals(skills.get(SkillType.SOFTWARE.getJsonValue()), null);
+            assertEquals(skills.get(SkillType.SOFTWARE.getJsonValue()).size(), 0);
         });
     }
 }

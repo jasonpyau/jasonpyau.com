@@ -1,5 +1,6 @@
 package com.jasonpyau.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.jasonpyau.entity.Message;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ContactRepository;
-import com.jasonpyau.util.DateFormat;
 
 @ExtendWith(MockitoExtension.class)
 public class ContactServiceTest {
@@ -28,11 +28,23 @@ public class ContactServiceTest {
     @InjectMocks
     private ContactService contactService;
 
-    private Message message1 = new Message(1L, "Message1", "test1@gmail.com", "This is a test body of Message1", DateFormat.yyyyMMddHHmmss());
+    private Message message;
+
+    @BeforeEach
+    public void setUp() {
+        this.message = Message.builder()
+        .id(1L)
+        .name("Jason Yau")
+        .contactInfo("test@jasonpyau.com")
+        .body("This is a test body of the message!")
+        .date(null)
+        .sender(null)
+        .build();
+    }
 
     @Test
     void testDeleteMessage() {
-        given(contactRepository.findById(1L)).willReturn(Optional.of(message1));
+        given(contactRepository.findById(1L)).willReturn(Optional.of(message));
         assertDoesNotThrow(() -> {
             contactService.deleteMessage(1L);
         });

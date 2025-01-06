@@ -26,6 +26,7 @@ public class UserService {
         this.activeProfile = activeProfile;
     }
 
+    // Use if you want to get the user without querying the database and creating a new user (if the user doesn't exist).
     public User getDummyUser(HttpServletRequest request) {
         String hashedAddress = getUserAddress(request);
         User user = new User();
@@ -35,13 +36,13 @@ public class UserService {
 
     public User getUser(HttpServletRequest request) {
         String hashedAddress = getUserAddress(request);
-        Optional<User> optional = userRepository.findUserByAddress(hashedAddress);
+        Optional<User> optional = userRepository.findByAddress(hashedAddress);
         if (optional.isPresent()) {
             return optional.get();
         } else {
             User user = new User();
             user.setAddress(hashedAddress);
-            return user;
+            return userRepository.save(user);
         }
     }
 

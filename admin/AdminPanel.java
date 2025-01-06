@@ -616,12 +616,17 @@ public class AdminPanel {
     private static String getExperienceBody() {
         StringBuilder sb = new StringBuilder();
         String input;
+        System.out.println("Loading valid types for an experience...");
+        apiCall("/experiences/valid_types", "{ }", "GET", false);
+        System.out.println("These are the valid types. Input the type of experience:");
+        input = scan.nextLine();
+        sb.append("{\"type\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience position:");
         input = scan.nextLine();
-        sb.append("{\"position\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input experience company:");
+        sb.append("\"position\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input experience organization/company:");
         input = scan.nextLine();
-        sb.append("\"company\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        sb.append("\"organization\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience location:");
         input = scan.nextLine();
         sb.append("\"location\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
@@ -646,9 +651,9 @@ public class AdminPanel {
         System.out.println("Input experience logo link:");
         input = scan.nextLine();
         sb.append("\"logoLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input experience company link (optional):");
+        System.out.println("Input experience organization/company link (optional):");
         input = scan.nextLine();
-        sb.append("\"companyLink\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
+        sb.append("\"organizationLink\": " + ((!input.isBlank()) ? input.equals("ERASE!!!") ? "\"\"" : "\""+input+"\"" : "null") + "} ");
         return sb.toString();
     }
 
@@ -811,15 +816,12 @@ public class AdminPanel {
                 break;
             case "6":
                 printMessagesMenu();
-                printContinue();
                 break;
             case "7":
                 printLinksMenu();
-                printContinue();
                 break;
             case "8":
                 printMetadataMenu();
-                printContinue();
                 break;
             case "9":
                 shutDownServer();

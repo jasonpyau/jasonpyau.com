@@ -37,7 +37,7 @@ public class ContactController {
     @RateLimit(RateLimit.EXPENSIVE_TOKEN)
     @CrossOrigin
     public ResponseEntity<HashMap<String, Object>> sendMessage(HttpServletRequest request, @Valid @RequestBody Message message) {
-        contactService.sendMessage(message);
+        contactService.sendMessage(request, message);
         return Response.success();
     }
 

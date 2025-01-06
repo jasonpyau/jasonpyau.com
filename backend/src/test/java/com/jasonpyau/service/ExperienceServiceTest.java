@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Experience.ExperienceType;
+import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
 
@@ -35,21 +37,22 @@ public class ExperienceServiceTest {
 
     private Experience experience = Experience.builder()
                                         .id(1)
+                                        .type(ExperienceType.WORK_EXPERIENCE)
                                         .position("Software Engineer Intern")
-                                        .company("Meta")
+                                        .organization("Meta")
                                         .location("Menlo Park, CA")
                                         .startDate("05/2024")
                                         .endDate("08/2024")
                                         .present(false)
                                         .body("Software Engineer Intern working on engineering software at Meta as an Intern.")
                                         .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Meta_Platforms_Inc._logo_%28cropped%29.svg/75px-Meta_Platforms_Inc._logo_%28cropped%29.svg.png")
-                                        .companyLink(null)
+                                        .organizationLink(null)
                                         .build();
 
     private Skill skill = Skill.builder()
                             .id(1)
                             .name("Java")
-                            .type(Skill.Type.LANGUAGE)
+                            .type(SkillType.LANGUAGE)
                             .link("https://en.wikipedia.org/wiki/Java_(programming_language)")
                             .simpleIconsIconSlug("java")
                             .hexFill("#ffffff")

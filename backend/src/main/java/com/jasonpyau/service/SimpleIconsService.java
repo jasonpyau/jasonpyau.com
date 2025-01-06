@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,7 +25,7 @@ public class SimpleIconsService {
 
     public static final String EMPTY_SVG = "";
     
-    public final JsonNode v6_23_0IconsData = getV6_23_0IconsData();
+    private final JsonNode v6_23_0IconsData = getV6_23_0IconsData();
 
     private JsonNode getV6_23_0IconsData() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +38,7 @@ public class SimpleIconsService {
 
     @Cacheable(cacheNames = CacheUtil.SIMPLE_ICONS_SVG_CACHE)
     public String getSimpleIconsSvg(String simpleIconsIconSlug) {
-        if (simpleIconsIconSlug == null || simpleIconsIconSlug.isBlank()) {
+        if (!StringUtils.hasText(simpleIconsIconSlug)) {
             return EMPTY_SVG;
         }
         RestClient restClient = RestClient.create();

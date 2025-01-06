@@ -14,6 +14,8 @@ import com.jasonpyau.form.PaginationForm;
 import com.jasonpyau.repository.ContactRepository;
 import com.jasonpyau.util.DateFormat;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class ContactService {
     
@@ -21,12 +23,15 @@ public class ContactService {
     private ContactRepository contactRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private UserService userService;
 
-    public void sendMessage(Message message) {
+    public void sendMessage(HttpServletRequest request, Message message) {
         String name = message.getName();
         String contactInfo = message.getContactInfo();
         String body = message.getBody();
         message.setDate(DateFormat.yyyyMMddHHmmss());
+        message.setSender(userService.getUser(request));
         contactRepository.save(message);
         String emailSubject = name + " sent you a message";
         String emailBody = "Name: " + name + "\n" +
@@ -37,7 +42,7 @@ public class ContactService {
 
     public Page<Message> getMessages(PaginationForm paginationForm) {
         Pageable pageable = PageRequest.of(paginationForm.getPageNum(), paginationForm.getPageSize());
-        Page<Message> page = contactRepository.findAllWithPaginationOrderedByDate(pageable);
+        Page<Message> page = contactRepository.findAllJoinedWithSenderWithPaginationOrderedByDate(pageable);
         return page;
     }
 
