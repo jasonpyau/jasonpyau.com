@@ -31,6 +31,6 @@ public class UserRepositoryTest {
         String hashedAddress = Hash.SHA256("localhost");
         user.setAddress(hashedAddress);
         userRepository.save(user);
-        assertEquals(userRepository.findUserByAddress(hashedAddress).isPresent(), true);
+        assertEquals(userRepository.findByAddress(hashedAddress).isPresent(), true);
     }
 }

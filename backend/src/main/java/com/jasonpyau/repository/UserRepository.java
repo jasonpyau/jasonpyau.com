@@ -12,5 +12,5 @@ import com.jasonpyau.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE address = :address", nativeQuery = true)
-    public Optional<User> findUserByAddress(@Param("address") String address);
+    public Optional<User> findByAddress(@Param("address") String address);
 }

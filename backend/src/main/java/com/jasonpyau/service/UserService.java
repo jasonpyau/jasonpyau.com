@@ -36,7 +36,7 @@ public class UserService {
 
     public User getUser(HttpServletRequest request) {
         String hashedAddress = getUserAddress(request);
-        Optional<User> optional = userRepository.findUserByAddress(hashedAddress);
+        Optional<User> optional = userRepository.findByAddress(hashedAddress);
         if (optional.isPresent()) {
             return optional.get();
         } else {

@@ -36,7 +36,7 @@ public class SkillService {
 
     @CacheEvict(cacheNames = {CacheUtil.SKILL_CACHE}, allEntries = true)
     public void newSkill(Skill skill) {
-        if (skillRepository.findSkillByName(skill.getName()).isPresent()) {
+        if (skillRepository.findByName(skill.getName()).isPresent()) {
             throw new ResourceAlreadyExistsException(Skill.SKILL_ALREADY_EXISTS_ERROR);
         }
         skillRepository.save(skill);
@@ -44,7 +44,7 @@ public class SkillService {
 
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public void updateSkill(Skill updateSkill) {
-        Optional<Skill> optional = skillRepository.findSkillByName(updateSkill.getName());
+        Optional<Skill> optional = skillRepository.findByName(updateSkill.getName());
         if (!optional.isPresent()) {
             throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
@@ -59,7 +59,7 @@ public class SkillService {
 
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
     public void deleteSkill(String skillName) {
-        Optional<Skill> optional = skillRepository.findSkillByName(skillName);
+        Optional<Skill> optional = skillRepository.findByName(skillName);
         if (!optional.isPresent()) {
             throw new ResourceNotFoundException(Skill.SKILL_NOT_FOUND_ERROR);
         }
@@ -70,14 +70,14 @@ public class SkillService {
     public HashMap<String, List<Skill>> getSkills() {
         HashMap<String, List<Skill>> res = new HashMap<>();
         for (SkillType type : SkillType.values()) {
-            res.put(type.getJsonValue(), skillRepository.findAllSkillsByTypeName(type.name()));
+            res.put(type.getJsonValue(), skillRepository.findAllByTypeNameOrderedByName(type.name()));
         }
         return res;
     }
 
     @Cacheable(cacheNames = CacheUtil.SKILL_CACHE)
     public String getSkillIconSvg(String skillName) {
-        Optional<Skill> optional = skillRepository.findSkillByName(skillName);
+        Optional<Skill> optional = skillRepository.findByName(skillName);
         if (!optional.isPresent()) {
             return SimpleIconsService.EMPTY_SVG;
         }
@@ -97,7 +97,7 @@ public class SkillService {
     }
 
     public Optional<Skill> getSkillByName(String skillName) {
-        return skillRepository.findSkillByName(skillName);
+        return skillRepository.findByName(skillName);
     }
 
 }

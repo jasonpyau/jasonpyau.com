@@ -51,7 +51,7 @@ public class SkillServiceTest {
 
     @Test
     public void newSkill_SkillAlreadyExistsError() {
-        given(skillRepository.findSkillByName("Java")).willReturn(Optional.of(java));
+        given(skillRepository.findByName("Java")).willReturn(Optional.of(java));
         ResourceAlreadyExistsException e = assertThrows(ResourceAlreadyExistsException.class, () -> {
             skillService.newSkill(java);
         });
@@ -59,8 +59,8 @@ public class SkillServiceTest {
     }
 
     @Test void getSkills() {
-        given(skillRepository.findAllSkillsByTypeName(SkillType.LANGUAGE.name())).willReturn(List.of(java));
-        given(skillRepository.findAllSkillsByTypeName(SkillType.FRAMEWORK_OR_LIBRARY.name())).willReturn(List.of(springBoot));
+        given(skillRepository.findAllByTypeNameOrderedByName(SkillType.LANGUAGE.name())).willReturn(List.of(java));
+        given(skillRepository.findAllByTypeNameOrderedByName(SkillType.FRAMEWORK_OR_LIBRARY.name())).willReturn(List.of(springBoot));
         assertDoesNotThrow(() -> {
             HashMap<String, List<Skill>> skills = skillService.getSkills();
             assertNotEquals(skills, null);

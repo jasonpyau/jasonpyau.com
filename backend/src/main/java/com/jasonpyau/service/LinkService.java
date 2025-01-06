@@ -70,7 +70,7 @@ public class LinkService {
 
     @Cacheable(cacheNames = CacheUtil.LINK_CACHE)
     public List<Link> getLinks() {
-        return linkRepository.findAllByLastUpdatedUnixTime();
+        return linkRepository.findAllOrderedByLastUpdatedUnixTime();
     }
 
     @Cacheable(cacheNames = CacheUtil.LINK_CACHE)

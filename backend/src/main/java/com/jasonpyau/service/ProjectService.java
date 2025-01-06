@@ -77,7 +77,7 @@ public class ProjectService {
 
     @Cacheable(cacheNames = CacheUtil.PROJECT_CACHE)
     public List<Project> getProjects() {
-        return projectRepository.findAllByDate();
+        return projectRepository.findAllOrderedByDate();
     }
 
     @CacheEvict(cacheNames = {CacheUtil.PROJECT_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
