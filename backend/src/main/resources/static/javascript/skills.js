@@ -9,16 +9,16 @@ addEventListener('DOMContentLoaded', async(e) => {
         return;
     }
     const skillsByType = json.skills;
-    Object.keys(skillsByType).map((key) => {
+    Object.keys(skillsByType).map((type) => {
         const skillsRow = document.createElement('div');
         skillsRow.innerHTML = `
-            <u class="fs-3 HeaderTextColor fw-bold" id="SkillType">${key}</u>
+            <u class="fs-3 HeaderTextColor fw-bold" id="SkillType">${type}</u>
             <div class="Rounded my-3 py-2 SkillsRowContainer" id="SkillsRowContainer">
 
             </div>
         `;
         const skillsRowContainer = skillsRow.querySelector("#SkillsRowContainer");
-        loadSkills(skillsByType[key], skillsRowContainer);
+        loadSkills(skillsByType[type], skillsRowContainer);
         document.getElementById("SkillsTypeRow").appendChild(skillsRow);
     });
     document.getElementById("skillSpinner").style.display = "none";

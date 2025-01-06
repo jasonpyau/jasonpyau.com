@@ -9,48 +9,96 @@ addEventListener('DOMContentLoaded', async(e) => {
         alert(`Error in loading experiences, refresh. If this problem persists, contact me.\n\nReason: ${json.reason}`);
         return;
     }
-    const experiences = json.experiences;
+    const experiencesByType = json.experiences;
+    Object.keys(experiencesByType).map((type) => {
+        loadExperiences(experiencesByType[type], type);
+    });
+    if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+            element.scrollIntoView({behavior: "smooth"});
+        }
+    }
+});
+
+function loadExperiences(experiences, type) {
+    const spinnerId = (type === "WORK_EXPERIENCE") ? "experienceSpinner" : "educationSpinner";
+    const containerId = (type === "WORK_EXPERIENCE") ? "ExperienceContainer" : "EducationContainer";
+    const spinner = document.getElementById(spinnerId);
+    const container = document.getElementById(containerId);
     if (!experiences.length) {
-        document.getElementById("experienceSpinner").style.display = "none";
+        spinner.style.display = "none";
         return;
     }
     const lastExperience = experiences[experiences.length-1];
     experiences.map((experience) => {
         let experienceElement = document.createElement('div');
-        experienceElement.innerHTML = `
-            <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
-                <div class="fs-3 fw-bold mx-4 my-2 text-decoration-underline" id="Position">
-                    ${experience.position}
-                </div>
-                <div class="d-flex mx-4">
-                    <div class="w-100 mx-2">
-                        <div class="fs-5 my-2">
-                            ${experience.organizationLink ? `
-                                <a class="fw-bold text-decoration-underline text-white" id="Organization" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
-                                `:`
-                                <span class="fw-bold text-decoration-underline" id="Organization">${experience.organization}</span>
-                            `}
-                            <span class="fw-semibold" id="Location">- ${experience.location}</span>   
-                        </div>
-                        <div class="fs-6 my-2 fw-semibold fst-italic" id="DateContainer">
-                            <span id="StartDate">${experience.startDate}</span>
-                            <span>-</span>
-                            <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
-                        </div>
-                        <div class="fs-6 my-4 fw-semibold me-3" id="Body">
-                            ${experience.body}
-                        </div>
-                        <div class="my-3" id="ExperienceSkillsContainer">
-                        </div>
+        if (type === "WORK_EXPERIENCE") {
+            experienceElement.innerHTML = `
+                <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
+                    <div class="fs-3 fw-bold mx-4 my-2 text-decoration-underline" id="Position">
+                        ${experience.position}
                     </div>
-                    <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}"/>
+                    <div class="d-flex mx-4">
+                        <div class="w-100 mx-2">
+                            <div class="fs-5 my-1">
+                                ${experience.organizationLink ? `
+                                    <a class="fw-bold text-decoration-underline text-white opaque_when_hovered" id="Organization" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
+                                    `:`
+                                    <span class="fw-bold text-decoration-underline" id="Organization">${experience.organization}</span>
+                                `}
+                                <span class="fw-semibold" id="Location">- ${experience.location}</span>   
+                            </div>
+                            <div class="fs-6 my-1 fw-semibold fst-italic" id="DateContainer">
+                                <span id="StartDate">${experience.startDate}</span>
+                                <span>-</span>
+                                <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
+                            </div>
+                            <div class="fs-6 my-4 fw-semibold me-3" id="Body">
+                                ${experience.body}
+                            </div>
+                            <div class="my-3" id="ExperienceSkillsContainer">
+                            </div>
+                        </div>
+                        <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}"/>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else if (type === "EDUCATION") {
+            experienceElement.innerHTML = `
+                <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
+                    <div class="fs-3 fw-bold mx-4 my-2 text-decoration-underline" title="${experience.location}">
+                        ${experience.organizationLink ? `
+                            <a class="text-white opaque_when_hovered" id="Organization" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
+                            `:`
+                            <span id="Organization">${experience.organization}</span>
+                        `}
+                    </div>
+                    <div class="d-flex mx-4">
+                        <div class="w-100 mx-2">
+                            <div class="fs-5 my-1">
+                                ${experience.position}
+                            </div>
+                            <div class="fs-6 my-1 fw-semibold fst-italic" id="DateContainer">
+                                <span id="StartDate">${experience.startDate}</span>
+                                <span>-</span>
+                                <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
+                            </div>
+                            <div class="fs-6 my-4 fw-semibold me-3" id="Body">
+                                ${experience.body}
+                            </div>
+                            <div class="my-3" id="ExperienceSkillsContainer">
+                            </div>
+                        </div>
+                        <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}"/>
+                    </div>
+                </div>
+            `;
+        }
         // Replace the temp div with the div child.
         experienceElement = experienceElement.firstElementChild;
         loadSkills(experience.skills, experienceElement.querySelector("#ExperienceSkillsContainer"));
-        document.getElementById("ExperienceContainer").appendChild(experienceElement);
+        container.appendChild(experienceElement);
         if (experience !== lastExperience) {
             let verticalLine = document.createElement("div");
             verticalLine.innerHTML = `
@@ -60,14 +108,8 @@ addEventListener('DOMContentLoaded', async(e) => {
             `;
             // Replace the temp div with the div child.
             verticalLine = verticalLine.firstElementChild;
-            document.getElementById("ExperienceContainer").appendChild(verticalLine);
+            container.appendChild(verticalLine);
         }
     });
-    document.getElementById("experienceSpinner").style.display = "none";
-    if (window.location.hash) {
-        const element = document.querySelector(window.location.hash);
-        if (element) {
-            element.scrollIntoView({behavior: "smooth"});
-        }
-    }
-});
+    spinner.style.display = "none";
+}
