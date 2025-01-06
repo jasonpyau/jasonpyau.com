@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.entity.Skill.SkillType;
@@ -82,11 +83,11 @@ public class SkillService {
             return SimpleIconsService.EMPTY_SVG;
         }
         Skill skill = optional.get();
-        if (skill.getSimpleIconsIconSlug() == null || skill.getSimpleIconsIconSlug().isBlank()) {
+        if (!StringUtils.hasText(skillName)) {
             return SimpleIconsService.EMPTY_SVG;
         }
         String svg = simpleIconsService.getSimpleIconsSvg(skill.getSimpleIconsIconSlug());
-        if (skill.getHexFill() != null && !skill.getHexFill().isBlank() && !svg.equals(SimpleIconsService.EMPTY_SVG)) {
+        if (StringUtils.hasText(skill.getHexFill()) && !svg.equals(SimpleIconsService.EMPTY_SVG)) {
             svg = simpleIconsService.replaceSvgFill(svg, skill.getHexFill());
         }
         return svg;
