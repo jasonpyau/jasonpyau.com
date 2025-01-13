@@ -15,4 +15,5 @@ public class MetadataUpdateForm {
     private String iconLink;
     private String description;
     private String keywords;
+    private String resumeLink;
 }

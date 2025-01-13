@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Controller;
@@ -38,8 +37,6 @@ public class FrontendController {
     private AboutMeService aboutMeService;
     @Autowired
     private LinkService linkService;
-    @Autowired
-    private Environment env;
     
     @GetMapping("/")
     @RateLimit(RateLimit.DEFAULT_TOKEN)
@@ -90,8 +87,9 @@ public class FrontendController {
     }
 
     @GetMapping({"/resume", "/resume/"})
-    public String resume() throws IOException {
-        String resumeLink = env.getProperty("com.jasonpyau.resume-link");
+    @RateLimit(RateLimit.DEFAULT_TOKEN)
+    public String resume(HttpServletRequest request) throws IOException {
+        String resumeLink = metadataService.getMetadata().getResumeLink();
         if (StringUtils.hasText(resumeLink)) {
             return "redirect:"+resumeLink;
         }

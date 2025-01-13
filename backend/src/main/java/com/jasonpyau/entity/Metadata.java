@@ -26,6 +26,7 @@ public class Metadata {
     public static final String METADATA_ICON_LINK_ERROR = "'iconLink' should be between 7-500 characters and start with 'http://' or 'https://'.";
     public static final String METADATA_DESCRIPTION_ERROR = "'description' should be between 1-500 characters.";
     public static final String METADATA_KEYWORDS_ERROR = "'keywords' should be between 2-500 characters.";
+    public static final String METADATA_RESUME_LINK_ERROR = "'resumeLink' should be between 2-500 characters and start with 'http://' or 'https://' or '/'.";
 
     @Id
     @Column(name = "id")
@@ -57,5 +58,11 @@ public class Metadata {
     @Size(min = 2, max = 500, message = METADATA_KEYWORDS_ERROR)
     @NotBlank(message = METADATA_KEYWORDS_ERROR)
     private String keywords;
+
+    @Column(name = "resume_link", nullable = false)
+    @Size(min = 2, max = 500, message = METADATA_RESUME_LINK_ERROR)
+    @Pattern(regexp = "^((http|https):\\/\\/|\\/)(.*)$", message = METADATA_RESUME_LINK_ERROR)
+    @NotBlank(message = METADATA_RESUME_LINK_ERROR)
+    private String resumeLink;
 
 }

@@ -44,7 +44,10 @@ public class AdminPanel {
         sb.append("\"description\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input keywords for the website that will be used for SEO (a comma-separated list of phrases):");
         input = scan.nextLine();
-        sb.append("\"keywords\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");
+        sb.append("\"keywords\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
+        System.out.println("Input a link to your resume:");
+        input = scan.nextLine();
+        sb.append("\"resumeLink\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + "} ");
         boolean success = apiCall("/metadata/update", sb.toString(), "PATCH", true);
         if (success) {
             updateLastUpdated(false);

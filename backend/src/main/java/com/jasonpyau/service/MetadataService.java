@@ -35,6 +35,7 @@ public class MetadataService {
                                         .iconLink("https://avatars.githubusercontent.com/u/113565962?v=4")
                                         .description("Jason Yau is a software engineer and a student studying Computer Science.")
                                         .keywords("software engineer, Computer Science, Java, developer")
+                                        .resumeLink("/files/Resume_Template.pdf")
                                         .build();
             metadataRepository.save(metadata);
             return metadata;
