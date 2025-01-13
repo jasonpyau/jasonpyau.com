@@ -40,7 +40,7 @@ function loadSkill(skill, container) {
     const element = document.createElement('span');
     element.className = "m-1 btn btn-dark btn-sm";
     element.innerHTML = `
-        <a class="text-decoration-none text-white" ${(skill.link) ? `href="${skill.link}" target="_blank"` : `href="javascript:void(0);"`}>
+        <a class="text-decoration-none text-white" title="${skill.name}" ${(skill.link) ? `href="${skill.link}" target="_blank"` : `href="javascript:void(0);"`}>
             ${skill.simpleIconsIconSlug ? `<img src="/skills/svg/${encodeURIComponent(skill.name)}" class="mx-1" height="16px" width="16px"/>` : ""}
             <span>
                 ${skill.name}
