@@ -10,11 +10,6 @@
     "description": "Used to send email notifications after someone sends a message via the 'Contact Me' section."
   },
   {
-    "name": "com.jasonpyau.resume-link",
-    "type": "java.lang.String",
-    "description": "jasonpyau.com/resume will redirect to this link."
-  },
-  {
     "name": "com.jasonpyau.rate-limit.tokens-per-interval",
     "type": "java.lang.Integer",
     "description": "Number of tokens allowed to be used per interval per user for RateLimitService.java. Default value: 600"

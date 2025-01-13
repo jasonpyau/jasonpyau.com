@@ -2,6 +2,7 @@ package com.jasonpyau.service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
@@ -25,14 +26,20 @@ public class SimpleIconsService {
 
     public static final String EMPTY_SVG = "";
     
-    private final JsonNode v6_23_0IconsData = getV6_23_0IconsData();
+    private final HashMap<String, JsonNode> v6_23_0IconsData = getV6_23_0IconsData();
 
-    private JsonNode getV6_23_0IconsData() {
-        ObjectMapper objectMapper = new ObjectMapper();
+    private HashMap<String, JsonNode> getV6_23_0IconsData() {
         try {
-            return objectMapper.readTree(new URL("https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json")).get("icons");
+            ObjectMapper objectMapper = new ObjectMapper();
+            URL url = new URL("https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json");
+            JsonNode iconsDataArray = objectMapper.readTree(url).get("icons");
+            HashMap<String, JsonNode> res = new HashMap<>();
+            for (JsonNode data : iconsDataArray) {
+                res.put(data.get("title").asText(), data);
+            }
+            return res;
         } catch (IOException e) {
-            return objectMapper.createObjectNode();
+            return new HashMap<>();
         }
     }
 
@@ -65,13 +72,11 @@ public class SimpleIconsService {
         try {
             String svg = second.join();
             Matcher matcher = Pattern.compile("<title>(.*?)</title>").matcher(svg);
-            if (matcher.find() && v6_23_0IconsData != null) {
+            if (matcher.find()) {
                 String title = matcher.group(1);
-                for (JsonNode data : v6_23_0IconsData) {
-                    if (data.get("title").asText().equals(title)) {
-                        svg = replaceSvgFill(svg, "#"+data.get("hex").asText());
-                        break;
-                    }
+                JsonNode iconData = v6_23_0IconsData.get(title);
+                if (iconData != null) {
+                    svg = replaceSvgFill(svg, "#"+iconData.get("hex").asText());
                 }
             }
             return svg;

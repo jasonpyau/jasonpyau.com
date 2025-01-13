@@ -38,6 +38,7 @@ public class MetadataServiceTest {
                                     .iconLink("https://avatars.githubusercontent.com/u/113565962?v=4")
                                     .description("Jason Yau is a software engineer and a student studying Computer Science.")
                                     .keywords("software engineer, Computer Science, Java, developer")
+                                    .resumeLink("/files/Resume_Template.pdf")
                                     .build();
         dummy = Metadata.builder()
                         .lastUpdated(originalMetadata.getLastUpdated())
@@ -46,6 +47,7 @@ public class MetadataServiceTest {
                         .iconLink(originalMetadata.getIconLink())
                         .description(originalMetadata.getDescription())
                         .keywords(originalMetadata.getKeywords())
+                        .resumeLink(originalMetadata.getResumeLink())
                         .build();
     }
 
@@ -61,6 +63,7 @@ public class MetadataServiceTest {
         assertEquals(originalMetadata.getIconLink(), metadata.getIconLink());
         assertEquals(originalMetadata.getDescription(), metadata.getDescription());
         assertEquals(originalMetadata.getKeywords(), metadata.getKeywords());
+        assertEquals(originalMetadata.getResumeLink(), metadata.getResumeLink());
     }
 
     @Test
@@ -75,6 +78,7 @@ public class MetadataServiceTest {
         assertEquals(originalMetadata.getIconLink(), metadata.getIconLink());
         assertEquals(originalMetadata.getDescription(), metadata.getDescription());
         assertEquals(originalMetadata.getKeywords(), metadata.getKeywords());
+        assertEquals(originalMetadata.getResumeLink(), metadata.getResumeLink());
     }
 
     @Test
@@ -86,6 +90,7 @@ public class MetadataServiceTest {
                                                                     .iconLink(originalMetadata.getIconLink())
                                                                     .description("I'm a Java software developer!")
                                                                     .keywords("Java, software developer")
+                                                                    .resumeLink(originalMetadata.getResumeLink())
                                                                     .build();
         Metadata metadata = metadataService.updateWithForm(metadataUpdateForm);
         assertEquals(originalMetadata.getId(), metadata.getId());
@@ -95,5 +100,6 @@ public class MetadataServiceTest {
         assertEquals(metadataUpdateForm.getIconLink(), metadata.getIconLink());
         assertEquals(metadataUpdateForm.getDescription(), metadata.getDescription());
         assertEquals(metadataUpdateForm.getKeywords(), metadata.getKeywords());
+        assertEquals(metadataUpdateForm.getResumeLink(), metadata.getResumeLink());
     }
 }

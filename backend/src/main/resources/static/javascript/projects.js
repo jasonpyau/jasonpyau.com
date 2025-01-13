@@ -13,7 +13,7 @@ addEventListener('DOMContentLoaded', async(e) => {
     projects.map((project) => {
         let projectElement = document.createElement('span');
         projectElement.innerHTML = `
-            <a class="Project move_when_hovered" id="Project${project.id}" href="${project.link}" target="_blank">
+            <a class="Project move_when_hovered" id="Project${project.id}" href="${project.link}" target="_blank" title="${project.name}">
                 <u class="HeaderTextColor fw-bold fs-4" id="Name">
                     ${project.name}
                 </u>
