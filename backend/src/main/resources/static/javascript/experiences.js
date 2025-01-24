@@ -36,7 +36,7 @@ function loadExperiences(experiences, type) {
         if (type === "WORK_EXPERIENCE") {
             experienceElement.innerHTML = `
                 <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
-                    <div class="fs-3 fw-bold mx-4 my-2 text-decoration-underline" id="Position">
+                    <div class="fs-3 fw-bold mx-4 my-2" id="Position">
                         ${experience.position}
                     </div>
                     <div class="d-flex mx-4">
@@ -63,7 +63,7 @@ function loadExperiences(experiences, type) {
                             </div>
                         </div>
                         ${experience.organizationLink ? `<a href="${experience.organizationLink}" target="_blank" class="opaque_when_hovered">` : ""}
-                            <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}" title="${experience.organization}" alt="${experience.organization} Logo"/>
+                            <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}" title="${experience.organization}" alt="${experience.organization} Logo" loading="lazy"/>
                         ${experience.organizationLink ? `</a>` : ""}
                         </div>
                 </div>
@@ -95,7 +95,7 @@ function loadExperiences(experiences, type) {
                             </div>
                         </div>
                         ${experience.organizationLink ? `<a href="${experience.organizationLink}" target="_blank" class="opaque_when_hovered">` : ""}
-                            <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}" title="${experience.organization}" alt="${experience.organization} Logo"/>
+                            <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}" title="${experience.organization}" alt="${experience.organization} Logo" loading="lazy"/>
                         ${experience.organizationLink ? `</a>` : ""}
                     </div>
                 </div>

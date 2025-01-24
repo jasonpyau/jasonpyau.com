@@ -18,7 +18,7 @@
     <div class="bg-gradient bg-dark" id="BodyContainer">
         <div class="d-flex flex-column align-items-center my-2" th:each="link: ${links}">
             <a th:href="${link.href}" target="_blank" class="p-2 LinkButton opaque_when_hovered" th:title="${link.name}">
-                <img th:if="${link.simpleIconsIconSlug != null && !link.simpleIconsIconSlug.isBlank()}" width="16px" height="16px" th:src="'/links/svg/'+${link.id}" class="mx-2"/>
+                <img th:if="${link.simpleIconsIconSlug != null && !link.simpleIconsIconSlug.isBlank()}" width="16px" height="16px" th:src="'/links/svg/'+${link.id}" class="mx-2" th:alt="${link.name}+' Icon'"/>
                 <span th:text="${link.name}"></span>
             </a>
         </div>
