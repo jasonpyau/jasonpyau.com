@@ -1,6 +1,8 @@
 package com.jasonpyau.service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -31,14 +33,14 @@ public class SimpleIconsService {
     private HashMap<String, JsonNode> getV6_23_0IconsData() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            URL url = new URL("https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json");
+            URL url = new URI("https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json").toURL();
             JsonNode iconsDataArray = objectMapper.readTree(url).get("icons");
             HashMap<String, JsonNode> res = new HashMap<>();
             for (JsonNode data : iconsDataArray) {
                 res.put(data.get("title").asText(), data);
             }
             return res;
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             return new HashMap<>();
         }
     }
@@ -66,20 +68,25 @@ public class SimpleIconsService {
             return res.getBody();
         });
         try {
-            return first.join();
+            String svg = first.join();
+            if (StringUtils.hasText(svg)) {
+                return svg;
+            }
         } catch (CompletionException e) {}
         // If we got here, we used simple-icons/6.23.0.
         try {
             String svg = second.join();
-            Matcher matcher = Pattern.compile("<title>(.*?)</title>").matcher(svg);
-            if (matcher.find()) {
-                String title = matcher.group(1);
-                JsonNode iconData = v6_23_0IconsData.get(title);
-                if (iconData != null) {
-                    svg = replaceSvgFill(svg, "#"+iconData.get("hex").asText());
+            if (StringUtils.hasText(svg)) {
+                Matcher matcher = Pattern.compile("<title>(.*?)</title>").matcher(svg);
+                if (matcher.find()) {
+                    String title = matcher.group(1);
+                    JsonNode iconData = v6_23_0IconsData.get(title);
+                    if (iconData != null) {
+                        svg = replaceSvgFill(svg, "#"+iconData.get("hex").asText());
+                    }
                 }
+                return svg;
             }
-            return svg;
         } catch (CompletionException e) {}
         return EMPTY_SVG;
     }

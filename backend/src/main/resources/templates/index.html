@@ -70,17 +70,17 @@
 
             <br id="Contact"><br><br>
             <u class="display-5 d-flex justify-content-center HeaderTextColor fw-bold">Contact Me</u>
-            <div class="container-xxl ThemeToSecondaryGradient Rounded d-flex align-items-center my-3 flex-column">
+            <form class="container-xxl ThemeToSecondaryGradient Rounded d-flex align-items-center my-3 flex-column">
                 <div class="form-floating mb-3 w-75 mt-3">
-                    <input class="form-control SecondaryColor text-white" id="NameInput" placeholder="John Doe">
+                    <input class="form-control SecondaryColor text-white" id="NameInput" placeholder="John Doe" required minlength="3">
                     <label for="NameInput">Name</label>
                 </div>
                 <div class="form-floating mb-3 w-75">
-                    <input class="form-control SecondaryColor text-white" id="ContactInfoInput" placeholder="johndoe@example.com">
+                    <input class="form-control SecondaryColor text-white" id="ContactInfoInput" placeholder="johndoe@example.com" required minlength="6">
                     <label for="ContactInfoInput">Contact Information</label>
                 </div>
                 <div class="form-floating mb-3 w-75">
-                    <textarea class="form-control SecondaryColor text-white" id="MessageInput" placeholder="Message"></textarea>
+                    <textarea class="form-control SecondaryColor text-white" id="MessageInput" placeholder="Message" required minlength="15"></textarea>
                     <label for="MessageInput">Message</label>
                 </div>
                 <div id="SubmitContainer" class="d-flex align-items-center flex-column">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="SuccessMessage" id="ContactFormSuccess">Success</div>
                     <div class="ErrorMessage" id="ContactFormError">Error</div>
-                    <button class="btn btn-primary border-0" onclick="contactFormSubmit()" type="submit" title="Send Message" id="ContactMeSendButton">Send</button>
+                    <input class="btn btn-primary border-0" onclick="contactFormSubmit(event)" type="submit" title="Send Message" id="ContactMeSendButton" value="Send">
                     <div>
                         Note: This sends an email notification to me.
                     </div>
@@ -98,7 +98,7 @@
                         <a class="text-white opaque_when_hovered" href="/links" title="Socials">Email / Linkedin.</a>
                     </div>
                 </div>
-            </div>
+            </form>
             <br>
             <br>
         </div>        

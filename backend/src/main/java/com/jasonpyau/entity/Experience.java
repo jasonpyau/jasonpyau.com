@@ -105,8 +105,8 @@ public class Experience {
     @Column(name = "date_order", nullable = false)
     private String dateOrder;
 
-    @Column(name = "body", nullable = false, columnDefinition = "varchar(1000)")
-    @Size(min = 1, max = 1000, message = EXPERIENCE_BODY_ERROR)
+    @Column(name = "body", nullable = false, columnDefinition = "varchar(2000)")
+    @Size(min = 1, max = 2000, message = EXPERIENCE_BODY_ERROR)
     @NotBlank(message = EXPERIENCE_BODY_ERROR)
     private String body;
 

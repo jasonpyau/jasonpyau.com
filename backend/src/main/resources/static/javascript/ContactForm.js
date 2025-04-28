@@ -2,7 +2,20 @@ import { apiCall } from "./apiCall.js";
 
 window.contactFormSubmit = contactFormSubmit;
 
-async function contactFormSubmit() {
+async function contactFormSubmit(event) {
+    event.preventDefault();
+    const contactFormSuccessElement = document.getElementById("ContactFormSuccess");
+    const contactFormErrorElement = document.getElementById("ContactFormError");
+    contactFormSuccessElement.style.display = "none";
+    contactFormErrorElement.style.display = "none";
+    const form = event.srcElement.form;
+    if (!form) {
+        return;
+    }
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
     const name = document.getElementById("NameInput").value;
     const contactInfo = document.getElementById("ContactInfoInput").value;
     const message = document.getElementById("MessageInput").value;
@@ -15,10 +28,6 @@ async function contactFormSubmit() {
         contactInfo: contactInfo,
         body: message
     };
-    const contactFormSuccessElement = document.getElementById("ContactFormSuccess");
-    const contactFormErrorElement = document.getElementById("ContactFormError");
-    contactFormSuccessElement.style.display = "none";
-    contactFormErrorElement.style.display = "none";
     document.getElementById("ContactMeSendButton").classList.add("disabled");
     document.getElementById("ContactMeSpinner").style.display = "block";
     const result = await apiCall(url, "POST", headers, body);
