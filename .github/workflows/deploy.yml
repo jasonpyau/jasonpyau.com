@@ -12,41 +12,52 @@ jobs:
     runs-on: self-hosted
     
     steps:
-      - name: File Permissions
+      - name: Ensure permissions allow for the removal of existing files in the runner working directory
         run: |
             sudo chown -R $USER:$USER .
-      - name: Checkout
+      - name: Checkout files
         uses: actions/checkout@v4
-      - name: Create AdminPanel.properties on Admin Panel
+      - name: Copy files to desired directory and set file permissions
         env:
-          PROPERTIES: ${{ secrets.ADMIN_PANEL_PROPERTIES }}
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
         run: |
-            echo "$PROPERTIES" > admin/AdminPanel.properties
-      - name: Create secrets.properties on Spring Boot
+            sudo rsync -a . "$TARGET_FOLDER"
+            sudo chown -R $USER:$USER "$TARGET_FOLDER"
+            sudo chmod u+x "$TARGET_FOLDER/admin/runAdmin.sh"
+            sudo chmod u+x "$TARGET_FOLDER/backend/mvnw"
+      - name: Create AdminPanel.properties for Admin Panel application
         env:
-          PROPERTIES: ${{ secrets.SECRETS_PROPERTIES  }}
+          ADMIN_PANEL_PROPERTIES: ${{ secrets.ADMIN_PANEL_PROPERTIES }}
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
         run: |
-            echo "$PROPERTIES" > backend/src/main/resources/secrets.properties
-      - name: Run Unit Tests
+            echo "$ADMIN_PANEL_PROPERTIES" > "$TARGET_FOLDER/admin/AdminPanel.properties"
+      - name: Create secrets.properties for Spring Boot application
+        env:
+          SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES  }}
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
         run: |
-            cd backend
-            sudo mvn test
-      - name: Shut Down Old Version
+            echo "$SECRETS_PROPERTIES" > "$TARGET_FOLDER/backend/src/main/resources/secrets.properties"
+      - name: Run unit tests
+        env:
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
         run: |
-            cd admin
-            bash runAdmin.sh << EOF > /dev/null
+            cd "$TARGET_FOLDER/backend"
+            sudo ./mvnw test
+      - name: Shut down old version
+        env:
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
+        run: |
+            "$TARGET_FOLDER/admin/runAdmin.sh" << EOF > /dev/null
             9
             y
 
             10
             EOF
-      - name: Copy files to desired directory and run Spring Boot
+      - name: Run Spring Boot application
         env:
-          TARGET: ${{ secrets.TARGET_FOLDER }}
+          TARGET_FOLDER: ${{ secrets.TARGET_FOLDER }}
+          TARGET_LOG_FOLDER: ${{ secrets.TARGET_LOG_FOLDER }}
         run: |
-            sudo find "$TARGET" &> /dev/null && sudo rm -r "$TARGET"
-            sudo mkdir "$TARGET"
-            sudo mv -v ./* "$TARGET" &> /dev/null
-            cd "$TARGET"
-            cd backend
-            sudo nohup mvn spring-boot:run > spring-log.txt 2>&1 &
+            cd "$TARGET_FOLDER/backend"
+            DATE=$(date "+%Y%m%d")
+            sudo nohup ./mvnw spring-boot:run >> "$TARGET_LOG_FOLDER/spring-log_$DATE.txt" 2>&1 &
