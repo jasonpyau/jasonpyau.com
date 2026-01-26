@@ -1,6 +1,7 @@
 package com.jasonpyau.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -18,8 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.jasonpyau.util.CacheUtil;
 
 @Service
@@ -34,12 +35,14 @@ public class SimpleIconsService {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             URL url = new URI("https://raw.githubusercontent.com/simple-icons/simple-icons/6.23.0/_data/simple-icons.json").toURL();
-            JsonNode iconsDataArray = objectMapper.readTree(url).get("icons");
-            HashMap<String, JsonNode> res = new HashMap<>();
-            for (JsonNode data : iconsDataArray) {
-                res.put(data.get("title").asText(), data);
+            try (InputStream inputStream = url.openStream()) {
+                JsonNode iconsDataArray = objectMapper.readTree(inputStream).get("icons");
+                HashMap<String, JsonNode> res = new HashMap<>();
+                for (JsonNode data : iconsDataArray) {
+                    res.put(data.get("title").asString(), data);
+                }
+                return res;
             }
-            return res;
         } catch (IOException | URISyntaxException e) {
             return new HashMap<>();
         }
@@ -82,7 +85,7 @@ public class SimpleIconsService {
                     String title = matcher.group(1);
                     JsonNode iconData = v6_23_0IconsData.get(title);
                     if (iconData != null) {
-                        svg = replaceSvgFill(svg, "#"+iconData.get("hex").asText());
+                        svg = replaceSvgFill(svg, "#"+iconData.get("hex").asString());
                     }
                 }
                 return svg;
