@@ -92,7 +92,10 @@ public class AdminPanel {
         String id = scan.nextLine();
         System.out.println("Input the name of the skill:");
         String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall(String.format("/experiences/%s/skills/new?skillName=%s", id, skillName), "{ }", "POST", true);
+        boolean success = apiCall(String.format("/experiences/%s/skills/new?skillName=%s", id, skillName), "{ }", "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void deleteExperienceSkill() {
@@ -100,7 +103,10 @@ public class AdminPanel {
         String id = scan.nextLine();
         System.out.println("Input the name of the skill:");
         String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall(String.format("/experiences/%s/skills/delete?skillName=%s", id, skillName), "{ }", "DELETE", true);
+        boolean success = apiCall(String.format("/experiences/%s/skills/delete?skillName=%s", id, skillName), "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void newProject() {
@@ -140,7 +146,10 @@ public class AdminPanel {
         String id = scan.nextLine();
         System.out.println("Input the name of the skill:");
         String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall(String.format("/projects/%s/skills/new?skillName=%s", id, skillName), "{ }", "POST", true);
+        boolean success = apiCall(String.format("/projects/%s/skills/new?skillName=%s", id, skillName), "{ }", "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void deleteProjectSkill() {
@@ -148,7 +157,10 @@ public class AdminPanel {
         String id = scan.nextLine();
         System.out.println("Input the name of the skill:");
         String skillName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
-        apiCall(String.format("/projects/%s/skills/delete?skillName=%s", id, skillName), "{ }", "DELETE", true);
+        boolean success = apiCall(String.format("/projects/%s/skills/delete?skillName=%s", id, skillName), "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
     }
 
     private static void newSkill() {
