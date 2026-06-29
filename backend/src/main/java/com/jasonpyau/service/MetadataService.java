@@ -3,7 +3,6 @@ package com.jasonpyau.service;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jasonpyau.entity.Metadata;
@@ -16,12 +15,13 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class MetadataService {
 
-    @Autowired
-    private MetadataRepository metadataRepository;
+    private final MetadataRepository metadataRepository;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     

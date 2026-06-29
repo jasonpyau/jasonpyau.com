@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -23,15 +22,15 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class SkillService {
 
-    @Autowired
-    private SkillRepository skillRepository;
+    private final SkillRepository skillRepository;
 
-    @Autowired
-    private SimpleIconsService simpleIconsService;
+    private final SimpleIconsService simpleIconsService;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 

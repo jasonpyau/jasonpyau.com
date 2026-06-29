@@ -3,7 +3,6 @@ package com.jasonpyau.controller;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Controller;
@@ -25,18 +24,16 @@ import com.jasonpyau.util.NumberFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class FrontendController {
 
-    @Autowired
-    private MetadataService metadataService;
-    @Autowired
-    private BlogService blogService;
-    @Autowired
-    private AboutMeService aboutMeService;
-    @Autowired
-    private LinkService linkService;
+    private final MetadataService metadataService;
+    private final BlogService blogService;
+    private final AboutMeService aboutMeService;
+    private final LinkService linkService;
     
     @GetMapping("/")
     @RateLimit(RateLimit.DEFAULT_TOKEN)

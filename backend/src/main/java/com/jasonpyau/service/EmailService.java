@@ -1,19 +1,20 @@
 package com.jasonpyau.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class EmailService {
     
     private static String fromEmail;
     private static String toEmail;
     
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     @SuppressWarnings("static-access")

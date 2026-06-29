@@ -2,7 +2,6 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,14 +23,15 @@ import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(path="/contact")
 public class ContactController {
     
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
     
     @PostMapping(path = "/send", consumes = "application/json", produces = "application/json")
     @RateLimit(RateLimit.EXPENSIVE_TOKEN)

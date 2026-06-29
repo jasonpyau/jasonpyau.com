@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,15 +22,15 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private SkillService skillService;
+    private final SkillService skillService;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 

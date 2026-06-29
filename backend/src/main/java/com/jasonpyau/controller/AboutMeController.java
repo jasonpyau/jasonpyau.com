@@ -2,7 +2,6 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,13 +18,14 @@ import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/about_me")
 public class AboutMeController {
     
-    @Autowired
-    private AboutMeService aboutMeService;
+    private final AboutMeService aboutMeService;
 
     @PutMapping(path = "/update", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin

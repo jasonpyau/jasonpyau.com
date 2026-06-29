@@ -3,7 +3,6 @@ package com.jasonpyau.controller;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,14 +24,15 @@ import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(path="/links")
 public class LinkController {
 
-    @Autowired
-    private LinkService linkService;
+    private final LinkService linkService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin

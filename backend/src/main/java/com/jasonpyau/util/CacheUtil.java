@@ -2,7 +2,6 @@ package com.jasonpyau.util;
 
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import com.jasonpyau.service.RateLimitService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Component
 @EnableCaching
 public class CacheUtil {
@@ -21,8 +23,7 @@ public class CacheUtil {
     public static final String ABOUT_ME_CACHE = "aboutMeCache";
     public static final String LINK_CACHE = "linkCache";
 
-    @Autowired
-    private RateLimitService rateLimitService;
+    private final RateLimitService rateLimitService;
 
     @Scheduled(fixedRateString = "${com.jasonpyau.cache.clear-rate:#{240}}", timeUnit = TimeUnit.MINUTES)
     @CacheEvict(cacheNames = {SKILL_CACHE, SIMPLE_ICONS_SVG_CACHE, PROJECT_CACHE, EXPERIENCE_CACHE, ABOUT_ME_CACHE, LINK_CACHE}, allEntries = true)

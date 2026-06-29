@@ -2,7 +2,6 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,14 +25,15 @@ import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(path="/blogs")
 public class BlogController {
     
-    @Autowired
-    private BlogService blogService;
+    private final BlogService blogService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @RateLimit(RateLimit.ADMIN_TOKEN)

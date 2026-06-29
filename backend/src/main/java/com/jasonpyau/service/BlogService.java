@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,14 +21,14 @@ import com.jasonpyau.repository.BlogRepository;
 import com.jasonpyau.util.DateFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class BlogService {
 
-    @Autowired
-    private BlogRepository blogRepository;
-    @Autowired
-    private UserService userService;
+    private final BlogRepository blogRepository;
+    private final UserService userService;
 
     public void newBlog(NewBlogForm newBlogForm) {
         Blog blog = Blog.builder()

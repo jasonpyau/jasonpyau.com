@@ -2,7 +2,6 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -26,14 +25,15 @@ import com.jasonpyau.util.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(path = "/experiences")
 public class ExperienceController {
     
-    @Autowired
-    private ExperienceService experienceService;
+    private final ExperienceService experienceService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
