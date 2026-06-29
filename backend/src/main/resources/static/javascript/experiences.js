@@ -36,26 +36,30 @@ function loadExperiences(experiences, type) {
         if (type === "WORK_EXPERIENCE") {
             experienceElement.innerHTML = `
                 <div class="Rounded Experience my-1 py-2 border border-white" id="Experience${experience.id}">
-                    <div class="fs-3 fw-bold mx-4 my-2" id="Position">
-                        ${experience.position}
+                    <div class="mx-4 my-1">
+                        ${experience.organizationLink ? `
+                            <a class="fs-3 fw-bold text-decoration-underline text-white opaque_when_hovered" id="Organization" title="${experience.organization}" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
+                            `:`
+                            <span class="fs-3 fw-bold text-decoration-underline" id="Organization">${experience.organization}</span>
+                        `}
+                        <span class="fs-6 fw-semibold mx-1" id="Location">- ${experience.location}</span>   
                     </div>
                     <div class="d-flex mx-4">
                         <div class="w-100 mx-2">
-                            <div class="fs-5 my-1" title="${experience.organization} - ${experience.location}">
-                                ${experience.organizationLink ? `
-                                    <a class="fw-bold text-decoration-underline text-white opaque_when_hovered" id="Organization" href="${experience.organizationLink}" target="_blank">${experience.organization}</a>
-                                    `:`
-                                    <span class="fw-bold text-decoration-underline" id="Organization">${experience.organization}</span>
-                                `}
-                                <span class="fw-semibold" id="Location">- ${experience.location}</span>   
-                            </div>
-                            <div class="fs-6 my-1 fw-semibold" id="DateContainer">
-                                <span id="StartDate">${experience.startDate}</span>
-                                <span>-</span>
-                                <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
-                                <span>·</span>
-                                <span class="fst-italic" id="TimeElasped">${getYrsAndMos(experience.startDate, experience.endDate)}</span>
-                            </div>
+                            ${(experience.positions.map((position) => `
+                                <div class="mx-1 my-2">
+                                    <div class="fs-5 fw-bold" id="Position">
+                                        ${position.positionName}
+                                    </div>
+                                    <div class="fs-6 mx-1 fw-semibold" id="DateContainer">
+                                        <span id="StartDate">${position.startDate}</span>
+                                        <span>-</span>
+                                        <span id="EndDate">${position.present ? "Present" : position.endDate}</span>
+                                        <span>·</span>
+                                        <span class="fst-italic" id="TimeElasped">${getYrsAndMos(position.startDate, position.endDate)}</span>
+                                    </div>
+                                </div>
+                            `)).join("")}
                             <div class="fs-6 my-4 fw-semibold me-3" id="Body">
                                 ${experience.body}
                             </div>
@@ -65,7 +69,7 @@ function loadExperiences(experiences, type) {
                         ${experience.organizationLink ? `<a href="${experience.organizationLink}" target="_blank" class="opaque_when_hovered">` : ""}
                             <img class="ExperienceLogo my-3" height="180px" width="180px" src="${experience.logoLink}" title="${experience.organization}" alt="${experience.organization} Logo" loading="lazy"/>
                         ${experience.organizationLink ? `</a>` : ""}
-                        </div>
+                    </div>
                 </div>
             `;
         } else if (type === "EDUCATION") {
@@ -80,14 +84,18 @@ function loadExperiences(experiences, type) {
                     </div>
                     <div class="d-flex mx-4">
                         <div class="w-100 mx-2">
-                            <div class="fs-5 my-1">
-                                ${experience.position}
-                            </div>
-                            <div class="fs-6 my-1 fw-semibold" id="DateContainer">
-                                <span id="StartDate">${experience.startDate}</span>
-                                <span>-</span>
-                                <span id="EndDate">${experience.present ? "Present" : experience.endDate}</span>
-                            </div>
+                            ${(experience.positions.map((position) => `
+                                <div class="mx-1 my-2">
+                                    <div class="fs-5 fw-bold" id="Position">
+                                        ${position.positionName}
+                                    </div>
+                                    <div class="fs-6 mx-1 fw-semibold" id="DateContainer" title="${getYrsAndMos(position.startDate, position.endDate)}">
+                                        <span id="StartDate">${position.startDate}</span>
+                                        <span>-</span>
+                                        <span id="EndDate">${position.present ? "Present" : position.endDate}</span>
+                                    </div>
+                                </div>
+                            `)).join("")}
                             <div class="fs-6 my-4 fw-semibold me-3" id="Body">
                                 ${experience.body}
                             </div>

@@ -1,10 +1,17 @@
 package com.jasonpyau.entity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jasonpyau.util.DateFormat;
 
 import jakarta.persistence.Column;
@@ -19,6 +26,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -26,6 +34,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,19 +48,70 @@ import lombok.Setter;
 @Table(name="experiences", indexes = @Index(name = "date_order_ind", columnList = "date_order"))
 public class Experience {
 
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+    public static class Position implements Comparable<Position> {
+        public static final String EXPERIENCE_POSITION_NOT_FOUND_ERROR = "Position with the same 'positionName' does not exist.";
+        public static final String EXPERIENCE_POSITION_ALREADY_EXISTS_ERROR = "Position with the same 'positionName' already exists.";
+        public static final String EXPERIENCE_POSITION_NAME_ERROR = "'positionName' should be between 1-50 characters.";
+        public static final String EXPERIENCE_POSITION_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
+        public static final String EXPERIENCE_POSITION_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
+        public static final String EXPERIENCE_POSITION_PRESENT_ERROR = "'present' should be true or false.";
+        
+        @EqualsAndHashCode.Include
+        @Size(min = 1, max = 50, message = EXPERIENCE_POSITION_NAME_ERROR)
+        @NotBlank(message = EXPERIENCE_POSITION_NAME_ERROR)
+        private String positionName;
+        
+        @Pattern(regexp = "^(0[1-9]|1[0-2])/[1-2]{1}[0-9]{3}$", message = EXPERIENCE_POSITION_START_DATE_ERROR)
+        @NotBlank(message = EXPERIENCE_POSITION_START_DATE_ERROR)
+        private String startDate;
+        
+        @Pattern(regexp = "^(0[1-9]|1[0-2])/[1-2]{1}[0-9]{3}$", message = EXPERIENCE_POSITION_END_DATE_ERROR)
+        @NotBlank(message = EXPERIENCE_POSITION_END_DATE_ERROR)
+        private String endDate;
+        
+        @NotNull(message = EXPERIENCE_POSITION_PRESENT_ERROR)
+        private Boolean present;
+
+        public static String getSortKey(String startDate, String endDate, Boolean present) {
+            if (startDate == null || endDate == null || present == null) {
+                return "0".repeat(13);
+            }
+            String[] startSplit = startDate.split("/", 2);
+            String[] endSplit = endDate.split("/", 2);
+            // EndYYYY+EndMM+present+StartYYYY+StartMM
+            return endSplit[1]
+                + endSplit[0]
+                + (present ? "1" : "0")
+                + startSplit[1]
+                + startSplit[0];
+        }
+        
+        @JsonIgnore
+        public String getSortKey() {
+            return getSortKey(startDate, endDate, present);
+        }
+
+        @Override
+        public int compareTo(Position other) {
+            return other.getSortKey().compareTo(this.getSortKey());
+        }
+    }
+
     public enum ExperienceType {
         WORK_EXPERIENCE,
         EDUCATION;
     }
 
     public static final String EXPERIENCE_ID_ERROR = "Invalid 'id', experience not found.";
-    public static final String EXPERIENCE_POSITION_ERROR = "'position' should be between 1-50 characters.";
     public static final String EXPERIENCE_ORGANIZATION_ERROR = "'organization' should be between 1-50 characters.";
     public static final String EXPERIENCE_LOCATION_ERROR = "'location' should be between 1-30 characters.";
-    public static final String EXPERIENCE_START_DATE_ERROR = "'startDate' should be in format 'MM/YYYY'.";
-    public static final String EXPERIENCE_END_DATE_ERROR = "'endDate' should be in format 'MM/YYYY'.";
-    public static final String EXPERIENCE_PRESENT_ERROR = "'present' should be true or false.";
-    public static final String EXPERIENCE_BODY_ERROR = "'body' should be between 1-1000 characters.";
+    public static final String EXPERIENCE_BODY_ERROR = "'body' should be between 1-2000 characters.";
     public static final String EXPERIENCE_LOGO_LINK_ERROR = "'logoLink' should be between 2-500 characters and start with 'http://' or 'https://' or '/'.";
     public static final String EXPERIENCE_ORGANIZATION_LINK_ERROR = "'organizationLink' should be between 0-250 characters and if not empty, start with 'http://' or 'https://'.";
     public static final String EXPERIENCE_TYPE_ERROR = "'type' should be one of the following: "+validTypes()
@@ -71,11 +131,6 @@ public class Experience {
     @NotNull(message = EXPERIENCE_TYPE_NULL_ERROR)
     private ExperienceType type;
 
-    @Column(name = "position", nullable = false)
-    @Size(min = 1, max = 50, message = EXPERIENCE_POSITION_ERROR)
-    @NotBlank(message = EXPERIENCE_POSITION_ERROR)
-    private String position;
-
     @Column(name = "organization", nullable = false)
     @Size(min = 1, max = 50, message = EXPERIENCE_ORGANIZATION_ERROR)
     @NotBlank(message = EXPERIENCE_ORGANIZATION_ERROR)
@@ -86,19 +141,11 @@ public class Experience {
     @NotBlank(message = EXPERIENCE_LOCATION_ERROR)
     private String location;
 
-    @Column(name = "start_date", nullable = false)
-    @Pattern(regexp = "^(0[1-9]|1[0-2])/20[0-9]{2}$", message = EXPERIENCE_START_DATE_ERROR)
-    @NotBlank(message = EXPERIENCE_START_DATE_ERROR)
-    private String startDate;
-
-    @Column(name = "end_date", nullable = false)
-    @Pattern(regexp = "^(0[1-9]|1[0-2])/20[0-9]{2}$", message = EXPERIENCE_END_DATE_ERROR)
-    @NotBlank(message = EXPERIENCE_END_DATE_ERROR)
-    private String endDate;
-
-    @Column(name = "present", nullable = false)
-    @NotNull(message = EXPERIENCE_PRESENT_ERROR)
-    private Boolean present;
+    @Column(name = "positions", nullable = false)
+    @Valid
+    @JdbcTypeCode(SqlTypes.JSON)
+    @JsonIgnore
+    private final Set<Position> positions = new HashSet<>();
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -127,22 +174,26 @@ public class Experience {
     private String organizationLink;
 
     public void createOrder() {
-        String[] startSplit = this.startDate.split("/", 2);
-        String[] endSplit = this.endDate.split("/", 2);
-        // EndYYYY+EndMM+present+StartYYYY+StartMM
-        this.dateOrder = endSplit[1]
-                        + endSplit[0]
-                        + ((this.present) ? "1" : "0")
-                        + startSplit[1]
-                        + startSplit[0];
+        if (positions.isEmpty()) {
+            this.dateOrder = Position.getSortKey(null, null, null);
+        } else {
+            String firstStartDate = Collections.min(positions.stream().map(Position::getStartDate).toList());
+            String lastEndDate = Collections.max(positions.stream().map(Position::getEndDate).toList());
+            boolean hasPresent = positions.stream().anyMatch(Position::getPresent);
+            this.dateOrder = Position.getSortKey(firstStartDate, lastEndDate, hasPresent);
+        }
     }
 
-    // Returns true if there was a change to the experience's endDate.
+    // Returns true if there was a change to an endDate.
     public boolean syncEndDate() {
         boolean changed = false;
-        if (this.present) {
-            changed = !this.endDate.equals(DateFormat.MMyyyy());
-            this.endDate = DateFormat.MMyyyy();
+        for (Position position : positions) {
+            if (position.present) {
+                changed = !position.endDate.equals(DateFormat.MMyyyy());
+                position.endDate = DateFormat.MMyyyy();
+            }
+        }
+        if (changed) {
             createOrder();
         }
         return changed;
@@ -160,5 +211,14 @@ public class Experience {
 
     public static List<String> validTypes() {
         return Arrays.stream(ExperienceType.values()).map(ExperienceType::name).toList();
+    }
+
+    @JsonProperty("positions")
+    public List<Position> sortedPositions() {
+        return positions.stream().sorted().toList();
+    }
+
+    public Optional<Position> getPosition(String positionName) {
+        return positions.stream().filter(position -> position.getPositionName().equals(positionName)).findFirst();
     }
 }

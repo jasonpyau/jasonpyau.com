@@ -2,6 +2,7 @@ package com.jasonpyau.service;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.entity.Experience.ExperienceType;
+import com.jasonpyau.entity.Experience.Position;
 import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
@@ -38,12 +40,8 @@ public class ExperienceServiceTest {
     private Experience experience = Experience.builder()
                                         .id(1)
                                         .type(ExperienceType.WORK_EXPERIENCE)
-                                        .position("Software Engineer Intern")
                                         .organization("Meta")
                                         .location("Menlo Park, CA")
-                                        .startDate("05/2024")
-                                        .endDate("08/2024")
-                                        .present(false)
                                         .body("Software Engineer Intern working on engineering software at Meta as an Intern.")
                                         .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Meta_Platforms_Inc._logo_%28cropped%29.svg/75px-Meta_Platforms_Inc._logo_%28cropped%29.svg.png")
                                         .organizationLink(null)
@@ -58,14 +56,23 @@ public class ExperienceServiceTest {
                             .hexFill("#ffffff")
                             .build();
 
+    private Position position = Position.builder()
+                                        .positionName("Software Engineer Intern")
+                                        .startDate("05/2024")
+                                        .endDate("08/2024")
+                                        .present(false)
+                                        .build();
+
+    @BeforeEach
+    public void setUp() {
+        experience.getPositions().add(position);
+    }
+
     @Test
     public void testUpdateExperience() {
         given(experienceRepository.findById(1)).willReturn(Optional.of(experience));
         Experience updateExperience = new Experience();
-        updateExperience.setPosition("Software Engineer");
-        updateExperience.setStartDate("09/2024");
-        updateExperience.setEndDate("09/2024");
-        updateExperience.setPresent(true);
+        updateExperience.setBody(".".repeat(2000));
         assertDoesNotThrow(() -> {
             experienceService.updateExperience(updateExperience, 1);
         });
@@ -75,15 +82,12 @@ public class ExperienceServiceTest {
     public void testUpdateExperience_ConstraintViolationException() {
         given(experienceRepository.findById(1)).willReturn(Optional.of(experience));
         Experience updateExperience = new Experience();
-        updateExperience.setPosition("Software Engineer");
-        updateExperience.setStartDate("09/2024");
-        updateExperience.setEndDate("Not an end date");
-        updateExperience.setPresent(true);
+        updateExperience.setBody(".".repeat(2001));
         ConstraintViolationException e = assertThrows(ConstraintViolationException.class, () -> {
             experienceService.updateExperience(updateExperience, 1);
         });
         assertEquals(e.getConstraintViolations().size(), 1);
-        assertEquals(e.getConstraintViolations().iterator().next().getMessage(), Experience.EXPERIENCE_END_DATE_ERROR);
+        assertEquals(e.getConstraintViolations().iterator().next().getMessage(), Experience.EXPERIENCE_BODY_ERROR);
     }
 
     @Test

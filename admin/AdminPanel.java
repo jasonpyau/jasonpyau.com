@@ -87,6 +87,45 @@ public class AdminPanel {
         apiCall("/experiences/get", "{ }", "GET", false);
     }
 
+    private static void newExperiencePosition() {
+        System.out.println("Input id of the experience you'd like to add a position to:");
+        String id = scan.nextLine();
+        System.out.println("Input experience position name:");
+        String positionName = scan.nextLine();
+        System.out.println("Input startDate ('MM/YYYY') of experience position");
+        String startDate = scan.nextLine();
+        System.out.println("Are you currently working in this experience position? [true/false]");
+        String present = scan.nextLine();
+        String endDate = null;
+        if (present.equals("true")) {
+            // Currently, endDate is a required field even if present = true. 
+            // The server has logic to always update the endDate to the current month. 
+            endDate = "12/2099";
+        } else {
+            System.out.println("Input endDate ('MM/YYYY') of experience position");
+            endDate = scan.nextLine();
+        }
+        String body = "{\"positionName\": \""+positionName+"\"," +
+                        "\"startDate\": \""+startDate+"\"," +
+                        "\"present\": \""+present+"\"," +
+                        "\"endDate\": \""+endDate+"\"}";
+        boolean success = apiCall(String.format("/experiences/%s/positions/new", id), body, "POST", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
+    private static void deleteExperiencePosition() {
+        System.out.println("Input id of the experience you'd like to remove a position from:");
+        String id = scan.nextLine();
+        System.out.println("Input the name of the position:");
+        String positionName = URLEncoder.encode(scan.nextLine(), StandardCharsets.UTF_8);
+        boolean success = apiCall(String.format("/experiences/%s/positions/delete?positionName=%s", id, positionName), "{ }", "DELETE", true);
+        if (success) {
+            updateLastUpdated(false);
+        }
+    }
+
     private static void newExperienceSkill() {
         System.out.println("Input id of the experience you'd like to add a skill to:");
         String id = scan.nextLine();
@@ -511,7 +550,9 @@ public class AdminPanel {
             System.out.println("4.) View Experiences");
             System.out.println("5.) Add Skill to Experience");
             System.out.println("6.) Delete Skill from Experience");
-            System.out.println("7.) Back");
+            System.out.println("7.) Add Position to Experience");
+            System.out.println("8.) Delete Position from Experience");
+            System.out.println("9.) Back");
             String input = scan.nextLine();
             switch (input) {
                 case "1":
@@ -533,6 +574,12 @@ public class AdminPanel {
                     deleteExperienceSkill();
                     break;
                 case "7":
+                    newExperiencePosition();
+                    break;
+                case "8":
+                    deleteExperiencePosition();
+                    break;
+                case "9":
                     return;
                 default:
                     System.out.println("Invald input.");
@@ -636,30 +683,12 @@ public class AdminPanel {
         System.out.println("These are the valid types. Input the type of experience:");
         input = scan.nextLine();
         sb.append("{\"type\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input experience position:");
-        input = scan.nextLine();
-        sb.append("\"position\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience organization/company:");
         input = scan.nextLine();
         sb.append("\"organization\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience location:");
         input = scan.nextLine();
         sb.append("\"location\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Input startDate ('MM/YYYY') of experience");
-        input = scan.nextLine();
-        sb.append("\"startDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        System.out.println("Is the experience currently being worked on? [true/false]");
-        input = scan.nextLine();
-        sb.append("\"present\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
-        if (input.equals("true")) {
-            // Currently, endDate is a required field even if present = true. 
-            // The server has logic to always update the endDate to the current month. 
-            input = "12/2099";
-        } else {
-            System.out.println("Input endDate ('MM/YYYY') of experience");
-            input = scan.nextLine();
-        }
-        sb.append("\"endDate\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");
         System.out.println("Input experience body (description):");
         input = scan.nextLine();
         sb.append("\"body\": " + ((!input.isBlank()) ? "\""+input+"\"" : "null") + ", ");

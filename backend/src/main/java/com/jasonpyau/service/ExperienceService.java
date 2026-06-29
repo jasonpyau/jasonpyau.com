@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.entity.Experience.ExperienceType;
+import com.jasonpyau.entity.Experience.Position;
+import com.jasonpyau.exception.ResourceAlreadyExistsException;
 import com.jasonpyau.exception.ResourceNotFoundException;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.util.CacheUtil;
@@ -25,25 +26,22 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class ExperienceService {
     
-    @Autowired
-    private ExperienceRepository experienceRepository;
+    private final ExperienceRepository experienceRepository;
 
-    @Autowired
-    private SkillService skillService;
+    private final SkillService skillService;
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @CacheEvict(cacheNames = CacheUtil.EXPERIENCE_CACHE, allEntries = true)
     public void newExperience(Experience experience) {
-        if (experience.getPresent()) {
-            experience.syncEndDate();
-        } else {
-            experience.createOrder();
-        }
+        experience.syncEndDate();
+        experience.createOrder();
         experienceRepository.save(experience);
     }
 
@@ -54,12 +52,14 @@ public class ExperienceService {
             throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
         }
         Experience experience = optional.get();
-        Patch.merge(updateExperience, experience, "id", "dateOrder");
+        Patch.merge(updateExperience, experience, "id", "dateOrder", "positions");
         Set<ConstraintViolation<Experience>> violations = validator.validate(experience);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-        newExperience(experience);
+        experience.syncEndDate();
+        experience.createOrder();
+        experienceRepository.save(experience);
     }
 
     @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
@@ -107,6 +107,39 @@ public class ExperienceService {
         experienceRepository.save(experience);
     }
 
+    @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public void newExperiencePosition(Position position, Integer id) {
+        Optional<Experience> experienceOptional = experienceRepository.findById(id);
+        if (!experienceOptional.isPresent()) {
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
+        }
+        Experience experience = experienceOptional.get();
+        if (experience.getPosition(position.getPositionName()).isPresent()) {
+            throw new ResourceAlreadyExistsException(Position.EXPERIENCE_POSITION_ALREADY_EXISTS_ERROR);
+        }
+        experience.getPositions().add(position);
+        experience.syncEndDate();
+        experience.createOrder();
+        experienceRepository.save(experience);
+    }
+
+    @CacheEvict(cacheNames = {CacheUtil.EXPERIENCE_CACHE, CacheUtil.SKILL_CACHE}, allEntries = true)
+    public void deleteExperiencePosition(String positionName, Integer id) {
+        Optional<Experience> experienceOptional = experienceRepository.findById(id);
+        if (!experienceOptional.isPresent()) {
+            throw new ResourceNotFoundException(Experience.EXPERIENCE_ID_ERROR);
+        }
+        Experience experience = experienceOptional.get();
+        Optional<Position> positionOptional = experience.getPosition(positionName);
+        if (!positionOptional.isPresent()) {
+            throw new ResourceNotFoundException(Position.EXPERIENCE_POSITION_NOT_FOUND_ERROR);
+        }
+        experience.getPositions().remove(positionOptional.get());
+        experience.syncEndDate();
+        experience.createOrder();
+        experienceRepository.save(experience);
+    }
+
     public List<String> validTypes() {
         return Experience.validTypes();
     }
@@ -126,7 +159,7 @@ public class ExperienceService {
         List<Experience> experiences = experienceRepository.findAll();
         for (Experience experience : experiences) {
             if (experience.syncEndDate()) {
-                System.out.printf("%s: Synced endDate for: '%s' at '%s'\n", DateFormat.MMddyyyyhhmmss(), experience.getPosition(), experience.getOrganization());
+                System.out.printf("%s: Synced endDate for: '%s'\n", DateFormat.MMddyyyyhhmmss(), experience.getOrganization());
                 experienceRepository.save(experience);
             }
         }

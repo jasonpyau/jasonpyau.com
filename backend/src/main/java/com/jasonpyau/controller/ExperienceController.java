@@ -2,7 +2,6 @@ package com.jasonpyau.controller;
 
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -20,20 +19,22 @@ import com.jasonpyau.annotation.AuthorizeAdmin;
 import com.jasonpyau.annotation.RateLimit;
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
+import com.jasonpyau.entity.Experience.Position;
 import com.jasonpyau.service.ExperienceService;
 import com.jasonpyau.util.Response;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(path = "/experiences")
 public class ExperienceController {
     
-    @Autowired
-    private ExperienceService experienceService;
+    private final ExperienceService experienceService;
 
     @PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
     @AuthorizeAdmin
@@ -81,6 +82,26 @@ public class ExperienceController {
                                                                     @PathVariable("id") Integer id, 
                                                                     @RequestParam(required = true) @Size(min = 1, max = 25, message = Skill.SKILL_NAME_ERROR) String skillName) {
         experienceService.deleteExperienceSkill(skillName, id);
+        return Response.success();
+    }
+
+    @PostMapping(path = "{id}/positions/new", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> newExperiencePosition(HttpServletRequest request, @Valid @RequestBody Position position, @PathVariable("id") Integer id) {
+        experienceService.newExperiencePosition(position, id);
+        return Response.success();
+    }
+
+    @DeleteMapping(path = "{id}/positions/delete", produces = "application/json")
+    @AuthorizeAdmin
+    @RateLimit(RateLimit.ADMIN_TOKEN)
+    @CrossOrigin
+    public ResponseEntity<HashMap<String, Object>> deleteExperiencePosition(HttpServletRequest request, 
+                                                                    @PathVariable("id") Integer id, 
+                                                                    @RequestParam(required = true) @Size(min = 1, max = 50, message = Position.EXPERIENCE_POSITION_NAME_ERROR) String positionName) {
+        experienceService.deleteExperiencePosition(positionName, id);
         return Response.success();
     }
 

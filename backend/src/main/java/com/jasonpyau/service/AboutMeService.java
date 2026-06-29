@@ -2,7 +2,6 @@ package com.jasonpyau.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,13 @@ import com.jasonpyau.entity.AboutMe;
 import com.jasonpyau.repository.AboutMeRepository;
 import com.jasonpyau.util.CacheUtil;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class AboutMeService {
 
-    @Autowired
-    private AboutMeRepository aboutMeRepository;
+    private final AboutMeRepository aboutMeRepository;
     
     @CacheEvict(cacheNames = CacheUtil.ABOUT_ME_CACHE, allEntries = true)
     public void setAboutMe(AboutMe aboutMe) {

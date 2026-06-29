@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.jasonpyau.entity.Experience;
 import com.jasonpyau.entity.Skill;
 import com.jasonpyau.entity.Experience.ExperienceType;
+import com.jasonpyau.entity.Experience.Position;
 import com.jasonpyau.entity.Skill.SkillType;
 import com.jasonpyau.repository.ExperienceRepository;
 import com.jasonpyau.service.ExperienceService;
@@ -35,12 +36,8 @@ public class ExperienceControllerTest {
 
     private Experience experience = Experience.builder()
                                         .id(1)
-                                        .position("Software Engineer Intern")
                                         .organization("Meta")
                                         .location("Menlo Park, CA")
-                                        .startDate("05/2024")
-                                        .endDate("08/2024")
-                                        .present(false)
                                         .body("Software Engineer Intern working on engineering software at Meta as an Intern.")
                                         .logoLink("https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Meta_Platforms_Inc._logo_%28cropped%29.svg/75px-Meta_Platforms_Inc._logo_%28cropped%29.svg.png")
                                         .organizationLink(null)
@@ -54,10 +51,18 @@ public class ExperienceControllerTest {
                             .simpleIconsIconSlug("spring")
                             .hexFill("#ffffff")
                             .build();
+
+    private Position position = Position.builder()
+                                        .positionName("Software Engineer Intern")
+                                        .startDate("05/2024")
+                                        .endDate("08/2024")
+                                        .present(false)
+                                        .build();
     
     @BeforeEach
     public void setUp() {
         experience.getSkills().add(skill);
+        experience.getPositions().add(position);
     }
     
     @Test
@@ -72,12 +77,13 @@ public class ExperienceControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE", hasSize(1)))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].id", is(experience.getId())))
-            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].position", is(experience.getPosition())))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].organization", is(experience.getOrganization())))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].location", is(experience.getLocation())))
-            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].startDate", is(experience.getStartDate())))
-            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].endDate", is(experience.getEndDate())))
-            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].present", is(experience.getPresent())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].positions", hasSize(1)))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].positions[0].positionName", is(position.getPositionName())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].positions[0].startDate", is(position.getStartDate())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].positions[0].endDate", is(position.getEndDate())))
+            .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].positions[0].present", is(position.getPresent())))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].body", is(experience.getBody())))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills", hasSize(1)))
             .andExpect(jsonPath("$.experiences.WORK_EXPERIENCE[0].skills[0].id", is(skill.getId())))

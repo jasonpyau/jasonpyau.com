@@ -2,7 +2,6 @@ package com.jasonpyau.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,16 +14,15 @@ import com.jasonpyau.repository.ContactRepository;
 import com.jasonpyau.util.DateFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class ContactService {
     
-    @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private UserService userService;
+    private final ContactRepository contactRepository;
+    private final EmailService emailService;
+    private final UserService userService;
 
     public void sendMessage(HttpServletRequest request, Message message) {
         String name = message.getName();
