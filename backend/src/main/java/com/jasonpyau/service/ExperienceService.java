@@ -57,8 +57,6 @@ public class ExperienceService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-        experience.syncEndDate();
-        experience.createOrder();
         experienceRepository.save(experience);
     }
 
