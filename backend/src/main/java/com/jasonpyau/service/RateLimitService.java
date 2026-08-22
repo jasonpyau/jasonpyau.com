@@ -15,6 +15,7 @@ import com.google.common.cache.LoadingCache;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
+import io.github.bucket4j.EstimationProbe;
 import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,6 +60,12 @@ public class RateLimitService {
         String key = UserService.getUserAddress(request);
         Bucket bucket = cache.getUnchecked(key);
         return bucket.tryConsumeAndReturnRemaining(token);
+    }
+
+    public EstimationProbe estimateRateLimit(HttpServletRequest request, long token) {
+        String key = UserService.getUserAddress(request);
+        Bucket bucket = cache.getUnchecked(key);
+        return bucket.estimateAbilityToConsume(token);
     }
 
     // Cleans up expired cache entries (Users that have not accessed a token in 10 minutes), returning the new cache size.
