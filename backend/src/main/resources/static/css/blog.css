@@ -6,6 +6,12 @@
     width: 90%;
 }
 
+@media (max-width: 576px) {
+    #BlogBodyContainer {
+        width: 100%;
+    }
+}
+
 #BlogTitle {
     width: 65%;
     display: block;

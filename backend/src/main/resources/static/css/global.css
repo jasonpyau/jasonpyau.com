@@ -83,6 +83,12 @@
     color: white;
 }
 
+@media (max-width: 576px) {
+    .LinkButton {
+        width: 90%;
+    }
+}
+
 .NoDecoration {
     text-decoration: none;
     color: white;
