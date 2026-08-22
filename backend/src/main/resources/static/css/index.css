@@ -13,6 +13,12 @@
     border-radius: 15px;
 }
 
+@media (max-width: 576px) {
+    .Project {
+        width: 90%;
+    }
+}
+
 .SkillsRowContainer, .Experience, #AboutMeContainer {
     margin: auto;
     height: auto;
@@ -26,8 +32,14 @@
 }
 
 @media (max-width: 1000px) {
-    .Experience, #AboutMeContainer {
+    .SkillsRowContainer, .Experience, #AboutMeContainer {
         width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    .SkillsRowContainer, .Experience, #AboutMeContainer {
+        width: 95%;
     }
 }
 

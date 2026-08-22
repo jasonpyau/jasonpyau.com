@@ -26,7 +26,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -142,7 +141,6 @@ public class Experience {
     private String location;
 
     @Column(name = "positions", nullable = false)
-    @Valid
     @JdbcTypeCode(SqlTypes.JSON)
     @JsonIgnore
     private final Set<Position> positions = new HashSet<>();
